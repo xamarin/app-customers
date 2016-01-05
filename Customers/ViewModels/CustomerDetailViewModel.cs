@@ -114,10 +114,10 @@ namespace Customers
             {
                 // send a message via MessaginCenter that we want the given customer to be deleted
                 MessagingCenter.Send(this.Account, "DeleteCustomer");
-            }
 
-            // perform a pop in order to navigate back to the customer list
-            await Navigation.PopAsync();
+                // perform a pop in order to navigate back to the customer list
+                await Navigation.PopAsync();
+            }
 
             IsBusy = false;
         }

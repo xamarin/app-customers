@@ -1,5 +1,5 @@
-﻿using Xamarin.Forms;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using Xamarin.Forms;
 
 namespace Customers
 {

@@ -1,9 +1,9 @@
 ﻿using System;
-using Microsoft.WindowsAzure.MobileServices.Sync;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
+using Microsoft.WindowsAzure.MobileServices.Sync;
+using Newtonsoft.Json.Linq;
 
 namespace Customers
 {

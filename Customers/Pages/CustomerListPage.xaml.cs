@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 
 namespace Customers
 {
@@ -12,6 +13,12 @@ namespace Customers
         public CustomerListPage()
         {
             InitializeComponent();
+
+            // on Android, we use a floating action button, not 
+            if (Device.OS == TargetPlatform.Android)
+                ToolbarItems.Clear();
+
+            fab.Clicked = AndroidAddButtonClicked;
         }
 
         void ItemTapped (object sender, ItemTappedEventArgs e)
@@ -26,6 +33,11 @@ namespace Customers
             Navigation.PushAsync(page);
 
             ((ListView)sender).SelectedItem = null;
+        }
+
+        void AndroidAddButtonClicked (object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new CustomerDetailPage() { BindingContext = new CustomerDetailViewModel() });
         }
 
         protected override void OnAppearing()

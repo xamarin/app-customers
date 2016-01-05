@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Xamarin.Forms;
 using System.Threading.Tasks;
+using Microsoft.WindowsAzure.MobileServices;
 using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
 using Microsoft.WindowsAzure.MobileServices.Sync;
-using Microsoft.WindowsAzure.MobileServices;
+using Xamarin.Forms;
 
 namespace Customers
 {
@@ -12,24 +12,9 @@ namespace Customers
     {
         public CustomerListViewModel()
         {
-            // This subscribes to the "SaveCustomer" message, and then inseets or updates the account accordingly.
-            MessagingCenter.Subscribe<Account>(this, "SaveCustomer", async (account) =>
-                {
-                    if (account.Id == null)
-                        await _AccountTable.InsertAsync(account);
-                    else
-                        await _AccountTable.UpdateAsync(account);
+            SubscribeToSaveCustomerMessages();
 
-                    await FetchLocalAccounts();
-                });
-
-            // This subscribes to the "DeleteCustomer" message, and then deletes the account accordingly.
-            MessagingCenter.Subscribe<Account>(this, "DeleteCustomer", async (account) =>
-                {
-                    await _AccountTable.DeleteAsync(account);
-
-                    await FetchLocalAccounts();
-                });
+            SubscribeToDeleteCustomerMessages();
         }
 
         MobileServiceSQLiteStore _Store;
@@ -180,6 +165,33 @@ namespace Customers
             await FetchLocalAccounts();
 
             IsBusy = false;
+        }
+
+        // This subscribes to the "SaveCustomer" message, and then inseets or updates the customer accordingly
+        void SubscribeToSaveCustomerMessages()
+        {
+
+            MessagingCenter.Subscribe<Account>(this, "SaveCustomer", async (account) =>
+                {
+                    if (account.Id == null)
+                        await _AccountTable.InsertAsync(account);
+                    else
+                        await _AccountTable.UpdateAsync(account);
+
+                    await FetchLocalAccounts();
+                });
+        }
+
+        // This subscribes to the "DeleteCustomer" message, and then deletes the customer accordingly
+        void SubscribeToDeleteCustomerMessages()
+        {
+
+            MessagingCenter.Subscribe<Account>(this, "DeleteCustomer", async (account) =>
+                {
+                    await _AccountTable.DeleteAsync(account);
+
+                    await FetchLocalAccounts();
+                });
         }
     }
 }

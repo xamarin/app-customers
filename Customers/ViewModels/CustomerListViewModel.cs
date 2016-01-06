@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.MobileServices;
-using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
-using Microsoft.WindowsAzure.MobileServices.Sync;
 using Xamarin.Forms;
 
 namespace Customers
@@ -12,14 +8,16 @@ namespace Customers
     {
         public CustomerListViewModel()
         {
+            DataSource = new CustomerDataSource();
+
             SubscribeToSaveCustomerMessages();
 
             SubscribeToDeleteCustomerMessages();
         }
 
-        MobileServiceSQLiteStore _Store;
+        IDataSource<Customer> DataSource;
 
-        ObservableCollection<Account> _Accounts;
+        ObservableCollection<Customer> _Accounts;
 
         Command _LoadCustomersCommand;
 
@@ -29,55 +27,16 @@ namespace Customers
 
         bool _IsSeeded;
 
-        static IMobileServiceSyncTable<Account> _AccountTable;
-
-        public static IMobileServiceSyncTable<Account> AccountTable { get { return _AccountTable; } }
-
-        public static IMobileServiceClient MobileServiceClient { get { return _LazyMobileServiceClient.Value; } }
-
-        private static Lazy<MobileServiceClient> _LazyMobileServiceClient = 
-            new Lazy<MobileServiceClient>(() =>
-                new MobileServiceClient("http://xamarincrmservice.azurewebsites.net/"));
-
-        public async Task SeedLocalDataAsync()
-        {
-            await InitializeLocalDataStore();
-
-            await FetchRemoteAccounts();
-
-            _IsSeeded = true;
-        }
-
-        async Task InitializeLocalDataStore()
-        {
-            _Store = new MobileServiceSQLiteStore("syncstore.db");
-
-            _Store.DefineTable<Account>();
-
-            await MobileServiceClient.SyncContext.InitializeAsync(_Store, new CustomSyncHandler());
-
-            _AccountTable = MobileServiceClient.GetSyncTable<Account>();
-        }
-
-        /// <summary>
-        /// Populates the public Accounts property.
-        /// </summary>
-        /// <returns>A Task.</returns>
-        async Task FetchLocalAccounts()
-        {
-            Accounts = new ObservableCollection<Account>(await _AccountTable.OrderBy(x => x.LastName).ToEnumerableAsync());
-        }
-
         /// <summary>
         /// Fetchs the accounts from the remote table into the local table.
         /// </summary>
         /// <returns>A Task.</returns>
-        async Task FetchRemoteAccounts()
+        async Task FetchCustomers()
         {
-            await _AccountTable.PullAsync("syncAccounts", _AccountTable.Where(x => !x.Deleted));
+            Accounts = new ObservableCollection<Customer>(await DataSource.GetItems(0, 1000));
         }
 
-        public ObservableCollection<Account> Accounts
+        public ObservableCollection<Customer> Accounts
         {
             get { return _Accounts; }
             set
@@ -98,12 +57,9 @@ namespace Customers
         async Task ExecuteLoadCustomersCommand()
         {
             IsBusy = true;
-            LoadCustomersCommand.ChangeCanExecute(); 
+            LoadCustomersCommand.ChangeCanExecute();
 
-            if (!_IsSeeded)
-                await SeedLocalDataAsync();
-
-            await FetchLocalAccounts();
+            await FetchCustomers();
 
             IsBusy = false;
             LoadCustomersCommand.ChangeCanExecute(); 
@@ -160,37 +116,40 @@ namespace Customers
 
             IsBusy = true;
 
-            await FetchRemoteAccounts();
+            await FetchCustomers();
 
-            await FetchLocalAccounts();
+//            await FetchLocalAccounts();
 
             IsBusy = false;
         }
 
-        // This subscribes to the "SaveCustomer" message, and then inseets or updates the customer accordingly
         void SubscribeToSaveCustomerMessages()
         {
-
-            MessagingCenter.Subscribe<Account>(this, "SaveCustomer", async (account) =>
+            // This subscribes to the "SaveCustomer" message, and then inserts or updates the customer accordingly
+            MessagingCenter.Subscribe<Customer>(this, "SaveCustomer", async (customer) =>
                 {
-                    if (account.Id == null)
-                        await _AccountTable.InsertAsync(account);
-                    else
-                        await _AccountTable.UpdateAsync(account);
+                    IsBusy = true;
 
-                    await FetchLocalAccounts();
+                    await DataSource.SaveItem(customer);
+
+                    await FetchCustomers();
+
+                    IsBusy = false;
                 });
         }
 
-        // This subscribes to the "DeleteCustomer" message, and then deletes the customer accordingly
         void SubscribeToDeleteCustomerMessages()
         {
-
-            MessagingCenter.Subscribe<Account>(this, "DeleteCustomer", async (account) =>
+            // This subscribes to the "DeleteCustomer" message, and then deletes the customer accordingly
+            MessagingCenter.Subscribe<Customer>(this, "DeleteCustomer", async (customer) =>
                 {
-                    await _AccountTable.DeleteAsync(account);
+                    IsBusy = true;
 
-                    await FetchLocalAccounts();
+                    await DataSource.DeleteItem(customer.Id);
+
+                    await FetchCustomers();
+
+                    IsBusy = false;
                 });
         }
     }

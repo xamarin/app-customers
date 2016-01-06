@@ -8,12 +8,12 @@ namespace Customers
     {
         bool _IsNewCustomer;
 
-        public CustomerDetailViewModel(Account account = null)
+        public CustomerDetailViewModel(Customer account = null)
         {
             if (account == null)
             {
                 _IsNewCustomer = true;
-                _Account = new Account();
+                _Account = new Customer();
             }
             else
             {
@@ -26,9 +26,9 @@ namespace Customers
 
         public string Title { get { return _IsNewCustomer ? "New Customer" : _Account.DisplayLastNameFirst; }  }
 
-        Account _Account;
+        Customer _Account;
 
-        public Account Account
+        public Customer Account
         {
             get { return _Account; }
             set

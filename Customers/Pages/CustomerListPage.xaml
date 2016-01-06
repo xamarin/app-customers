@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Customers.CustomerListPage" xmlns:local="clr-namespace:Customers">
 	<ContentPage.ToolbarItems>
-		<ToolbarItem Text="New" Command="{Binding NewCustomerCommand}" />
+		<ToolbarItem Icon="add" Command="{Binding NewCustomerCommand}" />
 	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
 		<ListView ItemsSource="{Binding Accounts}" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
@@ -11,7 +11,7 @@
 						<ContentView HeightRequest="60" Padding="10,0">
 							<StackLayout Spacing="0">
 								<Label Text="{Binding DisplayLastNameFirst}" LineBreakMode="TailTruncation" />
-								<Label Text="{Binding JobTitle}" LineBreakMode="TailTruncation" TextColor="Silver" />
+								<Label Text="{Binding Company}" LineBreakMode="TailTruncation" TextColor="Silver" />
 							</StackLayout>
 						</ContentView>
 					</ViewCell>

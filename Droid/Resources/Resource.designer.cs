@@ -1484,6 +1484,8 @@ namespace Customers.Droid
 			global::Xamarin.Forms.Platform.Resource.Styleable.ViewStubCompat_android_id = global::Customers.Droid.Resource.Styleable.ViewStubCompat_android_id;
 			global::Xamarin.Forms.Platform.Resource.Styleable.ViewStubCompat_android_inflatedId = global::Customers.Droid.Resource.Styleable.ViewStubCompat_android_inflatedId;
 			global::Xamarin.Forms.Platform.Resource.Styleable.ViewStubCompat_android_layout = global::Customers.Droid.Resource.Styleable.ViewStubCompat_android_layout;
+			global::PCLStorage.Resource.String.ApplicationName = global::Customers.Droid.Resource.String.ApplicationName;
+			global::PCLStorage.Resource.String.Hello = global::Customers.Droid.Resource.String.Hello;
 		}
 		
 		public partial class Animation
@@ -3321,8 +3323,11 @@ namespace Customers.Droid
 			// aapt resource value: 0x7f020062
 			public const int mr_ic_settings_light = 2130837602;
 			
+			// aapt resource value: 0x7f020064
+			public const int notification_template_icon_bg = 2130837604;
+			
 			// aapt resource value: 0x7f020063
-			public const int notification_template_icon_bg = 2130837603;
+			public const int save = 2130837603;
 			
 			static Drawable()
 			{

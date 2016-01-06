@@ -1,9 +1,4 @@
 ﻿using Xamarin.Forms;
-using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
-using Microsoft.WindowsAzure.MobileServices.Sync;
-using Microsoft.WindowsAzure.MobileServices;
-using System;
-using System.Threading.Tasks;
 
 namespace Customers
 {

@@ -1,19 +1,55 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Customers.CustomerListPage" xmlns:local="clr-namespace:Customers">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Customers.CustomerListPage" xmlns:local="clr-namespace:Customers" xmlns:ic="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions">
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<local:BooleanInverter x:Key="BooleanInverter" />
+		</ResourceDictionary>
+	</ContentPage.Resources>
 	<ContentPage.ToolbarItems>
 		<ToolbarItem Icon="add" Text="New" Command="{Binding NewCustomerCommand}" />
 	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
 		<OnPlatform x:TypeArguments="View">
+
 			<OnPlatform.iOS>
-				<ListView ItemsSource="{Binding Accounts}" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+				<ListView x:Name="list" ItemsSource="{Binding Accounts}" RowHeight="60" HasUnevenRows="true" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
 					<ListView.ItemTemplate>
 						<DataTemplate>
-							<ViewCell StyleId="disclosure">
+							<ViewCell StyleId="disclosure" Height="60">
 								<ContentView Padding="10,0">
-									<StackLayout Spacing="0">
-										<Label Text="{Binding DisplayLastNameFirst}" LineBreakMode="TailTruncation" />
-										<Label Text="{Binding Company}" LineBreakMode="TailTruncation" TextColor="Silver" />
+									<StackLayout Orientation="Horizontal" Spacing="0">
+										<ContentView Padding="3" WidthRequest="54">
+											<AbsoluteLayout>
+												<ActivityIndicator 
+												IsEnabled="{Binding IsLoading, Source={x:Reference AvatarImage}}" 
+												IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}}" 
+												IsRunning="{Binding IsLoading, Source={x:Reference AvatarImage}}" 
+												HeightRequest="54"
+												WidthRequest="54"
+												VerticalOptions="Center"
+												HorizontalOptions="Center"
+												AbsoluteLayout.LayoutFlags="All" 
+												AbsoluteLayout.LayoutBounds="0,0,1,1" />
+												<ic:CircleImage
+												x:Name="AvatarImage"
+					                            BorderColor="#547799"
+					                            BorderThickness="2"
+					                            HeightRequest="50"
+												WidthRequest="50"
+												VerticalOptions="Center"
+												HorizontalOptions="Center"
+					                            Source="{Binding SmallPhotoUrl}"
+					                            IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}"
+					                            AbsoluteLayout.LayoutFlags="All" 
+												AbsoluteLayout.LayoutBounds="0,0,1,1" />
+											</AbsoluteLayout>
+										</ContentView>
+										<ContentView Padding="10,0,0,0">
+											<StackLayout Spacing="0">
+												<Label Text="{Binding DisplayLastNameFirst}" HeightRequest="30" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+												<Label Text="{Binding Company}" HeightRequest="30" VerticalTextAlignment="Start" LineBreakMode="TailTruncation" TextColor="Silver" />
+											</StackLayout>
+										</ContentView>
 									</StackLayout>
 								</ContentView>
 							</ViewCell>
@@ -21,17 +57,48 @@
 					</ListView.ItemTemplate>
 				</ListView>
 			</OnPlatform.iOS>
+
 			<OnPlatform.Android>
 				<AbsoluteLayout x:Name="absLayout">
 					<AbsoluteLayout.Children>
-						<ListView ItemsSource="{Binding Accounts}" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}" AbsoluteLayout.LayoutBounds="0.0, 0.0, 1.0, 1.0" AbsoluteLayout.LayoutFlags="All">
+						<ListView ItemsSource="{Binding Accounts}" RowHeight="60" HasUnevenRows="true" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
 							<ListView.ItemTemplate>
 								<DataTemplate>
-									<ViewCell StyleId="disclosure">
+									<ViewCell StyleId="disclosure" Height="60">
 										<ContentView Padding="10,0">
-											<StackLayout Spacing="0">
-												<Label Text="{Binding DisplayLastNameFirst}" LineBreakMode="TailTruncation" />
-												<Label Text="{Binding Company}" LineBreakMode="TailTruncation" TextColor="Silver" />
+											<StackLayout Orientation="Horizontal" Spacing="0">
+												<ContentView Padding="3" WidthRequest="54">
+													<AbsoluteLayout>
+														<ActivityIndicator 
+														IsEnabled="{Binding IsLoading, Source={x:Reference AvatarImage}}" 
+														IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}}" 
+														IsRunning="{Binding IsLoading, Source={x:Reference AvatarImage}}" 
+														HeightRequest="54"
+														WidthRequest="54"
+														VerticalOptions="Center"
+														HorizontalOptions="Center"
+														AbsoluteLayout.LayoutFlags="All" 
+														AbsoluteLayout.LayoutBounds="0,0,1,1" />
+														<ic:CircleImage
+														x:Name="AvatarImage"
+							                            BorderColor="#547799"
+							                            BorderThickness="2"
+							                            HeightRequest="50"
+														WidthRequest="50"
+														VerticalOptions="Center"
+														HorizontalOptions="Center"
+							                            Source="{Binding SmallPhotoUrl}"
+							                            IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}"
+							                            AbsoluteLayout.LayoutFlags="All" 
+														AbsoluteLayout.LayoutBounds="0,0,1,1" />
+													</AbsoluteLayout>
+												</ContentView>
+												<ContentView Padding="10,0,0,0">
+													<StackLayout Spacing="0">
+														<Label Text="{Binding DisplayLastNameFirst}" HeightRequest="30" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+														<Label Text="{Binding Company}" HeightRequest="30" VerticalTextAlignment="Start" LineBreakMode="TailTruncation" TextColor="Silver" />
+													</StackLayout>
+												</ContentView>
 											</StackLayout>
 										</ContentView>
 									</ViewCell>
@@ -42,6 +109,7 @@
 					</AbsoluteLayout.Children>
 				</AbsoluteLayout>
 			</OnPlatform.Android>
+
 		</OnPlatform>
 	</ContentPage.Content>
 </ContentPage>

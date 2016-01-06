@@ -19,7 +19,6 @@ namespace Customers
                 ToolbarItems.Clear();
 
             fab.Clicked = AndroidAddButtonClicked;
-
         }
 
         async void ItemTapped (object sender, ItemTappedEventArgs e)

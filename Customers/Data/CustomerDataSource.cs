@@ -50,7 +50,7 @@ namespace Customers
             _IsInitialized = true;
         }
 
-        public const int CustomerCount = 300;
+        private const int CustomerCount = 50;
 
         static List<Customer> GenerateCustomers(int count = CustomerCount)
         {
@@ -77,8 +77,8 @@ namespace Customers
                         State = Address.StateAbbreviation(),
                         PostalCode = Address.ZipCode(),
                         Country = "USA",
-                        ImageUrl = Avatar.Image(),
-                        SmallPhotoUrl = Avatar.Image(null, "150x150")
+                        PhotoUrl = Avatar.Image($"{firstName} {lastName}"),
+                        SmallPhotoUrl = Avatar.Image($"{firstName} {lastName}", "150x150")
                     });
             }
 

@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System;
+using Faker;
 
 namespace Customers
 {
@@ -127,6 +129,13 @@ namespace Customers
             MessagingCenter.Subscribe<Customer>(this, "SaveCustomer", async (customer) =>
                 {
                     IsBusy = true;
+
+                    if (string.IsNullOrWhiteSpace(customer.Id))
+                    {
+                        customer.Id = Guid.NewGuid().ToString();
+                        customer.PhotoUrl = Avatar.Image($"{customer.FirstName} {customer.LastName}");
+                        customer.SmallPhotoUrl = Avatar.Image($"{customer.FirstName} {customer.LastName}", "150x150");
+                    }
 
                     await DataSource.SaveItem(customer);
 

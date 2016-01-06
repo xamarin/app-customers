@@ -7,7 +7,7 @@ namespace Customers
     {
         public Customer()
         {
-            FirstName = LastName = Company = Street = Unit = City = PostalCode = State = Country = Phone = Email = string.Empty;
+            Id = FirstName = LastName = Company = Department = Email = Phone = Street = Unit = City = PostalCode = State = Country = PhotoUrl = SmallPhotoUrl = string.Empty;
         }
 
         public string Id { get; set; }
@@ -23,7 +23,6 @@ namespace Customers
         public string PostalCode { get; set; }
         public string State { get; set; }
         public string Country { get; set; }
-        public string ImageUrl { get; set; }
         public string PhotoUrl { get; set; }
         public string SmallPhotoUrl { get; set; }
 

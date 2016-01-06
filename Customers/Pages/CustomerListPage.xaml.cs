@@ -13,12 +13,6 @@ namespace Customers
         public CustomerListPage()
         {
             InitializeComponent();
-
-            // on Android, we use a floating action button, not 
-            if (Device.OS == TargetPlatform.Android)
-                ToolbarItems.Clear();
-
-            fab.Clicked = AndroidAddButtonClicked;
         }
 
         void ItemTapped (object sender, ItemTappedEventArgs e)

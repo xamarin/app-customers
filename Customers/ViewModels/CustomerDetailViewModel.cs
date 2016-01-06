@@ -13,12 +13,12 @@ namespace Customers
             if (account == null)
             {
                 _IsNewCustomer = true;
-                _Account = new Customer();
+                Account = new Customer();
             }
             else
             {
                 _IsNewCustomer = false;
-                _Account = account;
+                Account = account;
             }
         }
 

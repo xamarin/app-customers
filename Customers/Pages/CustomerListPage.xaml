@@ -4,19 +4,44 @@
 		<ToolbarItem Icon="add" Text="New" Command="{Binding NewCustomerCommand}" />
 	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
-		<ListView ItemsSource="{Binding Accounts}" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<ViewCell StyleId="disclosure">
-						<ContentView HeightRequest="60" Padding="10,0">
-							<StackLayout Spacing="0">
-								<Label Text="{Binding DisplayLastNameFirst}" LineBreakMode="TailTruncation" />
-								<Label Text="{Binding Company}" LineBreakMode="TailTruncation" TextColor="Silver" />
-							</StackLayout>
-						</ContentView>
-					</ViewCell>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
+		<OnPlatform x:TypeArguments="View">
+			<OnPlatform.iOS>
+				<ListView ItemsSource="{Binding Accounts}" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+					<ListView.ItemTemplate>
+						<DataTemplate>
+							<ViewCell StyleId="disclosure">
+								<ContentView Padding="10,0">
+									<StackLayout Spacing="0">
+										<Label Text="{Binding DisplayLastNameFirst}" LineBreakMode="TailTruncation" />
+										<Label Text="{Binding Company}" LineBreakMode="TailTruncation" TextColor="Silver" />
+									</StackLayout>
+								</ContentView>
+							</ViewCell>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+			</OnPlatform.iOS>
+			<OnPlatform.Android>
+				<AbsoluteLayout x:Name="absLayout">
+					<AbsoluteLayout.Children>
+						<ListView ItemsSource="{Binding Accounts}" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}" AbsoluteLayout.LayoutBounds="0.0, 0.0, 1.0, 1.0" AbsoluteLayout.LayoutFlags="All">
+							<ListView.ItemTemplate>
+								<DataTemplate>
+									<ViewCell StyleId="disclosure">
+										<ContentView Padding="10,0">
+											<StackLayout Spacing="0">
+												<Label Text="{Binding DisplayLastNameFirst}" LineBreakMode="TailTruncation" />
+												<Label Text="{Binding Company}" LineBreakMode="TailTruncation" TextColor="Silver" />
+											</StackLayout>
+										</ContentView>
+									</ViewCell>
+								</DataTemplate>
+							</ListView.ItemTemplate>
+						</ListView>
+						<local:FloatingActionButtonView x:Name="fab" ImageName="fab_add" ColorNormal="#547799" ColorPressed="#172839" ColorRipple="#2C3E50" AbsoluteLayout.LayoutBounds="1.0, 1.0, AutoSize, AutoSize" AbsoluteLayout.LayoutFlags="PositionProportional" />
+					</AbsoluteLayout.Children>
+				</AbsoluteLayout>
+			</OnPlatform.Android>
+		</OnPlatform>
 	</ContentPage.Content>
 </ContentPage>

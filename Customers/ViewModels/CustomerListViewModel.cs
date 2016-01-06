@@ -15,7 +15,7 @@ namespace Customers
             SubscribeToDeleteCustomerMessages();
         }
 
-        IDataSource<Customer> DataSource;
+        readonly IDataSource<Customer> DataSource;
 
         ObservableCollection<Customer> _Accounts;
 
@@ -24,8 +24,6 @@ namespace Customers
         Command _CustomersRefreshCommand;
 
         Command _NewCustomerCommand;
-
-        bool _IsSeeded;
 
         /// <summary>
         /// Fetchs the accounts from the remote table into the local table.

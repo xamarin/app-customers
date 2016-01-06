@@ -124,7 +124,7 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Localization.cs" />
-<Compile Include="Renderers\FloatingActionButtonViewRenderer.cs" />
+    <Compile Include="Renderers\FloatingActionButtonViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -155,6 +155,12 @@
     <AndroidResource Include="Resources\drawable-mdpi\save.png" />
     <AndroidResource Include="Resources\drawable-hdpi\save.png" />
     <AndroidResource Include="Resources\drawable\save.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\fab_add.png" />
+    <AndroidResource Include="Resources\drawable\fab_add.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\fab_add.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\fab_add.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\fab_add.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\fab_add.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.2.0.0.6490\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.0.0.6490\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />

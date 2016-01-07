@@ -1,5 +1,98 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Customers.CustomerDetailPage">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Customers.CustomerDetailPage" xmlns:local="clr-namespace:Customers" xmlns:ic="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions" xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps">
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<local:BooleanInverter x:Key="BooleanInverter" />
+		</ResourceDictionary>
+	</ContentPage.Resources>
+	<ContentPage.ToolbarItems>
+		<ToolbarItem Text="Edit" Command="{Binding EditCustomerCommand}" />
+	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
+		<ScrollView>
+			<StackLayout Spacing="0" VerticalOptions="StartAndExpand">
+				<ContentView Padding="10,10,0,0">
+					<!-- The Grid column widths approximate the golden ratio -->
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="382*" />
+							<ColumnDefinition Width="618*" />
+						</Grid.ColumnDefinitions>
+
+						<AbsoluteLayout Grid.Row="0" Grid.Column="0">
+							<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="5" WidthRequest="120" HeightRequest="120" Source="{Binding Account.PhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize" />
+						</AbsoluteLayout>
+
+						<AbsoluteLayout Grid.Row="0" Grid.Column="1">
+							<StackLayout Spacing="0" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0,0.5,AutoSize,AutoSize">
+								<Label Text="{Binding Account.DisplayName}" FontSize="Large" />
+								<Label Text="{Binding Account.JobTitle}" TextColor="Silver" />
+								<Label Text="{Binding Account.Company}" />
+							</StackLayout>
+						</AbsoluteLayout>
+
+					</Grid>
+				</ContentView>
+
+				<AbsoluteLayout x:Name="phone">
+					<StackLayout Spacing="0" Padding="20,10">
+						<Label Text="Phone" FontSize="Small" TextColor="Silver" LineBreakMode="TailTruncation" />
+						<Label x:Name="PhoneNumberValueLabel" Text="{Binding Account.Phone}" LineBreakMode="TailTruncation" />
+					</StackLayout>
+					<AbsoluteLayout WidthRequest="44" HeightRequest="44" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.95, 0.5, AutoSize, AutoSize">
+						<AbsoluteLayout.GestureRecognizers>
+							<TapGestureRecognizer Command="{Binding PhoneIconTappedCommand}" CommandParameter="{x:Reference PhoneNumberValueLabel}" NumberOfTapsRequired="1" />
+						</AbsoluteLayout.GestureRecognizers>
+						<AbsoluteLayout.Children>
+							<Image AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize" Aspect="AspectFit" HeightRequest="25">
+								<Image.Source>
+									<OnPlatform x:TypeArguments="ImageSource">
+										<OnPlatform.iOS>
+											<FileImageSource File="phone_ios" />
+										</OnPlatform.iOS>
+										<OnPlatform.Android>
+											<FileImageSource File="phone_android" />
+										</OnPlatform.Android>
+									</OnPlatform>
+								</Image.Source>
+							</Image>
+						</AbsoluteLayout.Children>
+					</AbsoluteLayout>
+				</AbsoluteLayout>
+				<AbsoluteLayout x:Name="address">
+					<StackLayout Spacing="0" Padding="20,10" AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional" AbsoluteLayout.LayoutBounds="0, 0.5, 1, AutoSize">
+						<Label x:Name="AddressLabel" Text="Address" FontSize="Small" TextColor="Silver" LineBreakMode="TailTruncation" />
+						<Label x:Name="StreetValue" Text="{Binding Account.Street}" LineBreakMode="TailTruncation" />
+						<Label x:Name="CityValue" Text="{Binding Account.City}" LineBreakMode="TailTruncation" />
+						<Label x:Name="StateAndPostalValue" Text="{Binding Account.StatePostal}" LineBreakMode="TailTruncation" />
+					</StackLayout>
+					<AbsoluteLayout WidthRequest="44" HeightRequest="44" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.95, 0.5, AutoSize, AutoSize">
+						<AbsoluteLayout.GestureRecognizers>
+							<TapGestureRecognizer Command="{Binding MapMarkerIconTappedCommand}" NumberOfTapsRequired="1" />
+						</AbsoluteLayout.GestureRecognizers>
+						<AbsoluteLayout.Children>
+							<Image AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize" Aspect="AspectFit" HeightRequest="25">
+								<Image.Source>
+									<OnPlatform x:TypeArguments="ImageSource">
+										<OnPlatform.iOS>
+											<FileImageSource File="map_marker_ios" />
+										</OnPlatform.iOS>
+										<OnPlatform.Android>
+											<FileImageSource File="map_marker_android" />
+										</OnPlatform.Android>
+									</OnPlatform>
+								</Image.Source>
+							</Image>
+						</AbsoluteLayout.Children>
+					</AbsoluteLayout>
+				</AbsoluteLayout>
+				<AbsoluteLayout>
+					<maps:Map x:Name="Map" IsVisible="false" HeightRequest="450" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0, 0, 1.0, AutoSize" />
+				</AbsoluteLayout>
+			</StackLayout>
+		</ScrollView>
 	</ContentPage.Content>
 </ContentPage>

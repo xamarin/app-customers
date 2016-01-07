@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Forms.Maps;
+using System.Linq;
 
 namespace Customers
 {
@@ -8,8 +10,12 @@ namespace Customers
     {
         bool _IsNewCustomer;
 
+        readonly Geocoder _Geocoder;
+
         public CustomerDetailViewModel(Customer account = null)
         {
+            _Geocoder = new Geocoder();
+
             if (account == null)
             {
                 _IsNewCustomer = true;
@@ -35,6 +41,18 @@ namespace Customers
             {
                 _Account = value;
                 OnPropertyChanged("Account");
+            }
+        }
+
+        Position _Position;
+
+        public Position Position
+        {
+            get { return _Position; }
+            set
+            {
+                _Position = value;
+                OnPropertyChanged("Position");
             }
         }
 
@@ -80,6 +98,35 @@ namespace Customers
             IsBusy = false;
         }
 
+        Command _EditCustomerCommand;
+
+        /// <summary>
+        /// Command to edit customer
+        /// </summary>
+        public Command EditCustomerCommand
+        {
+            get
+            {
+                return _EditCustomerCommand ??
+                    (_EditCustomerCommand = new Command(async () =>
+                        await ExecuteEditCustomerCommand()));
+            }
+        }
+
+        async Task ExecuteEditCustomerCommand()
+        {
+            var editPage = new CustomerEditPage();
+
+            var viewmodel = this;
+
+            viewmodel.Page = editPage;
+
+            editPage.BindingContext = viewmodel;
+
+            await Navigation.PushAsync(editPage);
+        }
+
+
         Command _DeleteCustomerCommand;
 
         /// <summary>
@@ -120,6 +167,18 @@ namespace Customers
             }
 
             IsBusy = false;
+        }
+
+        public async Task LoadPins()
+        {
+            var positions = await _Geocoder.GetPositionsForAddressAsync(Account.AddressString);
+
+            var enumerablePositions = positions as Position[] ?? positions.ToArray();
+
+            if (positions != null && enumerablePositions.Any())
+            {
+                Position = enumerablePositions.First();
+            }
         }
     }
 }

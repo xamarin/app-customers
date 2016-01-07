@@ -3,6 +3,7 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using ImageCircle.Forms.Plugin.iOS;
+using Xamarin;
 
 namespace Customers.iOS
 {
@@ -12,6 +13,8 @@ namespace Customers.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             Forms.Init();
+
+            FormsMaps.Init();
 
             LoadApplication(new App());
 

@@ -19,9 +19,8 @@
 									<StackLayout Orientation="Horizontal" Spacing="0">
 										<ContentView Padding="3" WidthRequest="54">
 											<AbsoluteLayout>
-												<ActivityIndicator IsEnabled="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsRunning="{Binding IsLoading, Source={x:Reference AvatarImage}}" HeightRequest="54" WidthRequest="54" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" />
-												<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="2" HeightRequest="50" WidthRequest="50" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding SmallPhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="All"
-													AbsoluteLayout.LayoutBounds="0,0,1,1" />
+												<ActivityIndicator BindingContext="{x:Reference AvatarImage}"  IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" HeightRequest="54" WidthRequest="54" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" />
+												<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="2" HeightRequest="50" WidthRequest="50" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding SmallPhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5,0.5,AutoSize,AutoSize" />
 											</AbsoluteLayout>
 										</ContentView>
 										<ContentView Padding="10,0,0,0">
@@ -49,9 +48,8 @@
 											<StackLayout Orientation="Horizontal" Spacing="0">
 												<ContentView Padding="3" WidthRequest="54">
 													<AbsoluteLayout>
-														<ActivityIndicator IsEnabled="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsRunning="{Binding IsLoading, Source={x:Reference AvatarImage}}" HeightRequest="54" WidthRequest="54" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" />
-														<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="2" HeightRequest="50" WidthRequest="50" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding SmallPhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="All"
-															AbsoluteLayout.LayoutBounds="0,0,1,1" />
+														<ActivityIndicator IsEnabled="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsRunning="{Binding IsLoading, Source={x:Reference AvatarImage}}" HeightRequest="54" WidthRequest="54" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0.5,0.5,1,1" />
+														<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="2" HeightRequest="50" WidthRequest="50" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding SmallPhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
 													</AbsoluteLayout>
 												</ContentView>
 												<ContentView Padding="10,0,0,0">

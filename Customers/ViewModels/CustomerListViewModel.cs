@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using System;
 using Faker;
+using Faker.Avatar;
 
 namespace Customers
 {
@@ -118,8 +119,6 @@ namespace Customers
 
             await FetchCustomers();
 
-//            await FetchLocalAccounts();
-
             IsBusy = false;
         }
 
@@ -133,8 +132,9 @@ namespace Customers
                     if (string.IsNullOrWhiteSpace(customer.Id))
                     {
                         customer.Id = Guid.NewGuid().ToString();
-                        customer.PhotoUrl = Avatar.Image($"{customer.FirstName} {customer.LastName}");
-                        customer.SmallPhotoUrl = Avatar.Image($"{customer.FirstName} {customer.LastName}", "150x150");
+                        var image = FlatHash.Image($"{customer.FirstName} {customer.LastName}");
+                        customer.PhotoUrl = image;
+                        customer.SmallPhotoUrl = image;
                     }
 
                     await DataSource.SaveItem(customer);

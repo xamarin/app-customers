@@ -6,6 +6,7 @@ using Faker;
 using Newtonsoft.Json;
 using PCLStorage;
 using Xamarin.Forms;
+using Faker.Avatar;
 
 namespace Customers
 {
@@ -61,6 +62,7 @@ namespace Customers
                 var firstName = Name.First();
                 var lastName = Name.Last();
                 var phone = Phone.CellNumber().Replace("(", "").Replace(")", "").Replace("-", "").Replace(".", "").Replace(" ", "").Substring(0, 10);
+                var image = FlatHash.Image($"{firstName} {lastName}");
 
                 customers.Add(new Customer()
                     {
@@ -77,8 +79,8 @@ namespace Customers
                         State = Address.StateAbbreviation(),
                         PostalCode = Address.ZipCode(),
                         Country = "USA",
-                        PhotoUrl = Avatar.Image($"{firstName} {lastName}"),
-                        SmallPhotoUrl = Avatar.Image($"{firstName} {lastName}", "150x150")
+                        PhotoUrl = image,
+                        SmallPhotoUrl = image
                     });
             }
 

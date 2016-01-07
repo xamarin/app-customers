@@ -89,6 +89,7 @@
 						</AbsoluteLayout.Children>
 					</AbsoluteLayout>
 				</AbsoluteLayout>
+				<ContentView HeightRequest="1" BackgroundColor="Silver" />
 				<AbsoluteLayout>
 					<maps:Map x:Name="Map" IsVisible="false" HasScrollEnabled="false" HeightRequest="450" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0, 0, 1.0, AutoSize" />
 				</AbsoluteLayout>

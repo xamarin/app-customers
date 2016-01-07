@@ -90,7 +90,7 @@
 					</AbsoluteLayout>
 				</AbsoluteLayout>
 				<AbsoluteLayout>
-					<maps:Map x:Name="Map" IsVisible="false" HeightRequest="450" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0, 0, 1.0, AutoSize" />
+					<maps:Map x:Name="Map" IsVisible="false" HasScrollEnabled="false" HeightRequest="450" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0, 0, 1.0, AutoSize" />
 				</AbsoluteLayout>
 			</StackLayout>
 		</ScrollView>

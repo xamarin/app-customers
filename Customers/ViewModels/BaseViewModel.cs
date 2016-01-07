@@ -12,7 +12,7 @@ namespace Customers
     {
         public bool IsInitialized { get; set; }
 
-        bool isBusy;
+        bool _IsBusy;
         /// <summary>
         /// Gets or sets the "IsBusy" property
         /// </summary>
@@ -21,8 +21,8 @@ namespace Customers
 
         public bool IsBusy
         {
-            get { return isBusy; }
-            set { SetProperty(ref isBusy, value, IsBusyPropertyName); }
+            get { return _IsBusy; }
+            set { SetProperty(ref _IsBusy, value, IsBusyPropertyName); }
         }
 
         INavigation _Navigation;

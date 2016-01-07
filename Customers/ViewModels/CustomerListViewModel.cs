@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using System;
-using Faker;
-using Faker.Avatar;
 
 namespace Customers
 {
@@ -28,10 +26,6 @@ namespace Customers
 
         Command _NewCustomerCommand;
 
-        /// <summary>
-        /// Fetchs the accounts from the remote table into the local table.
-        /// </summary>
-        /// <returns>A Task.</returns>
         async Task FetchCustomers()
         {
             Accounts = new ObservableCollection<Customer>(await DataSource.GetItems(0, 1000));
@@ -86,7 +80,7 @@ namespace Customers
 
             IsBusy = true;
 
-            var page = new CustomerDetailPage();
+            var page = new CustomerEditPage();
 
             var viewModel = new CustomerDetailViewModel() { Navigation = this.Navigation, Page = page };
 
@@ -116,10 +110,12 @@ namespace Customers
                 return;
 
             IsBusy = true;
+            _CustomersRefreshCommand.ChangeCanExecute();
 
             await FetchCustomers();
 
             IsBusy = false;
+            _CustomersRefreshCommand.ChangeCanExecute();
         }
 
         void SubscribeToSaveCustomerMessages()
@@ -132,9 +128,7 @@ namespace Customers
                     if (string.IsNullOrWhiteSpace(customer.Id))
                     {
                         customer.Id = Guid.NewGuid().ToString();
-                        var image = FlatHash.Image($"{customer.FirstName} {customer.LastName}");
-                        customer.PhotoUrl = image;
-                        customer.SmallPhotoUrl = image;
+                        customer.PhotoUrl = "placeholderProfileImage";
                     }
 
                     await DataSource.SaveItem(customer);

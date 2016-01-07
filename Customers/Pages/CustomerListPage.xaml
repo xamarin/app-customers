@@ -10,9 +10,8 @@
 	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
 		<OnPlatform x:TypeArguments="View">
-
 			<OnPlatform.iOS>
-				<ListView CachingStrategy="RecycleElement" ItemsSource="{Binding Accounts}" RowHeight="60" HasUnevenRows="false" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+				<ListView ItemsSource="{Binding Accounts}" RowHeight="60" HasUnevenRows="false" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
 					<ListView.ItemTemplate>
 						<DataTemplate>
 							<ViewCell StyleId="disclosure" Height="60">
@@ -20,34 +19,16 @@
 									<StackLayout Orientation="Horizontal" Spacing="0">
 										<ContentView Padding="3" WidthRequest="54">
 											<AbsoluteLayout>
-												<ActivityIndicator 
-												IsEnabled="{Binding IsLoading, Source={x:Reference AvatarImage}}" 
-												IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}}" 
-												IsRunning="{Binding IsLoading, Source={x:Reference AvatarImage}}" 
-												HeightRequest="54"
-												WidthRequest="54"
-												VerticalOptions="Center"
-												HorizontalOptions="Center"
-												AbsoluteLayout.LayoutFlags="All" 
-												AbsoluteLayout.LayoutBounds="0,0,1,1" />
-												<ic:CircleImage
-												x:Name="AvatarImage"
-					                            BorderColor="#547799"
-					                            BorderThickness="2"
-					                            HeightRequest="50"
-												WidthRequest="50"
-												VerticalOptions="Center"
-												HorizontalOptions="Center"
-					                            Source="{Binding SmallPhotoUrl}"
-					                            IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}"
-					                            AbsoluteLayout.LayoutFlags="All" 
-												AbsoluteLayout.LayoutBounds="0,0,1,1" />
+												<ActivityIndicator IsEnabled="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsRunning="{Binding IsLoading, Source={x:Reference AvatarImage}}" HeightRequest="54" WidthRequest="54" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" />
+												<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="2" HeightRequest="50" WidthRequest="50" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding SmallPhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="All"
+													AbsoluteLayout.LayoutBounds="0,0,1,1" />
 											</AbsoluteLayout>
 										</ContentView>
 										<ContentView Padding="10,0,0,0">
 											<StackLayout Spacing="0">
-												<Label Text="{Binding DisplayLastNameFirst}" HeightRequest="30" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-												<Label Text="{Binding Company}" HeightRequest="30" VerticalTextAlignment="Start" LineBreakMode="TailTruncation" TextColor="Silver" />
+												<Label Text="{Binding DisplayLastNameFirst}" HeightRequest="20" VerticalTextAlignment="End" LineBreakMode="TailTruncation" />
+												<Label Text="{Binding JobTitle}" HeightRequest="20" VerticalTextAlignment="End" FontSize="Micro" LineBreakMode="TailTruncation" TextColor="Silver" />
+												<Label Text="{Binding Company}" HeightRequest="20" VerticalTextAlignment="Start" FontSize="Micro" LineBreakMode="TailTruncation" />
 											</StackLayout>
 										</ContentView>
 									</StackLayout>
@@ -57,7 +38,6 @@
 					</ListView.ItemTemplate>
 				</ListView>
 			</OnPlatform.iOS>
-
 			<OnPlatform.Android>
 				<AbsoluteLayout x:Name="absLayout">
 					<AbsoluteLayout.Children>
@@ -69,34 +49,16 @@
 											<StackLayout Orientation="Horizontal" Spacing="0">
 												<ContentView Padding="3" WidthRequest="54">
 													<AbsoluteLayout>
-														<ActivityIndicator 
-														IsEnabled="{Binding IsLoading, Source={x:Reference AvatarImage}}" 
-														IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}}" 
-														IsRunning="{Binding IsLoading, Source={x:Reference AvatarImage}}" 
-														HeightRequest="54"
-														WidthRequest="54"
-														VerticalOptions="Center"
-														HorizontalOptions="Center"
-														AbsoluteLayout.LayoutFlags="All" 
-														AbsoluteLayout.LayoutBounds="0,0,1,1" />
-														<ic:CircleImage
-														x:Name="AvatarImage"
-							                            BorderColor="#547799"
-							                            BorderThickness="2"
-							                            HeightRequest="50"
-														WidthRequest="50"
-														VerticalOptions="Center"
-														HorizontalOptions="Center"
-							                            Source="{Binding SmallPhotoUrl}"
-							                            IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}"
-							                            AbsoluteLayout.LayoutFlags="All" 
-														AbsoluteLayout.LayoutBounds="0,0,1,1" />
+														<ActivityIndicator IsEnabled="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsRunning="{Binding IsLoading, Source={x:Reference AvatarImage}}" HeightRequest="54" WidthRequest="54" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" />
+														<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="2" HeightRequest="50" WidthRequest="50" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding SmallPhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="All"
+															AbsoluteLayout.LayoutBounds="0,0,1,1" />
 													</AbsoluteLayout>
 												</ContentView>
 												<ContentView Padding="10,0,0,0">
 													<StackLayout Spacing="0">
-														<Label Text="{Binding DisplayLastNameFirst}" HeightRequest="30" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-														<Label Text="{Binding Company}" HeightRequest="30" VerticalTextAlignment="Start" LineBreakMode="TailTruncation" TextColor="Silver" />
+														<Label Text="{Binding DisplayLastNameFirst}" HeightRequest="20" VerticalTextAlignment="End" LineBreakMode="TailTruncation" />
+														<Label Text="{Binding JobTitle}" HeightRequest="20" VerticalTextAlignment="End" FontSize="Micro" LineBreakMode="TailTruncation" TextColor="Silver" />
+														<Label Text="{Binding Company}" HeightRequest="20" VerticalTextAlignment="Start" FontSize="Micro" LineBreakMode="TailTruncation" />
 													</StackLayout>
 												</ContentView>
 											</StackLayout>
@@ -109,7 +71,6 @@
 					</AbsoluteLayout.Children>
 				</AbsoluteLayout>
 			</OnPlatform.Android>
-
 		</OnPlatform>
 	</ContentPage.Content>
 </ContentPage>

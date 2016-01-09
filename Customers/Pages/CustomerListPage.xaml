@@ -26,8 +26,8 @@
 										<ContentView Padding="10,0,0,0">
 											<StackLayout Spacing="0">
 												<Label Text="{Binding DisplayLastNameFirst}" HeightRequest="20" VerticalTextAlignment="End" LineBreakMode="TailTruncation" />
-												<Label Text="{Binding JobTitle}" HeightRequest="20" VerticalTextAlignment="End" FontSize="Micro" LineBreakMode="TailTruncation" TextColor="Silver" />
-												<Label Text="{Binding Company}" HeightRequest="20" VerticalTextAlignment="Start" FontSize="Micro" LineBreakMode="TailTruncation" />
+												<Label Text="{Binding Company}" HeightRequest="20" VerticalTextAlignment="End" FontSize="Micro" LineBreakMode="TailTruncation" />
+												<Label Text="{Binding JobTitle}" HeightRequest="20" VerticalTextAlignment="Start" FontSize="Micro" LineBreakMode="TailTruncation" TextColor="Silver" />
 											</StackLayout>
 										</ContentView>
 									</StackLayout>
@@ -55,8 +55,8 @@
 												<ContentView Padding="10,0,0,0">
 													<StackLayout Spacing="0">
 														<Label Text="{Binding DisplayLastNameFirst}" HeightRequest="20" VerticalTextAlignment="End" LineBreakMode="TailTruncation" />
-														<Label Text="{Binding JobTitle}" HeightRequest="20" VerticalTextAlignment="End" FontSize="Micro" LineBreakMode="TailTruncation" TextColor="Silver" />
-														<Label Text="{Binding Company}" HeightRequest="20" VerticalTextAlignment="Start" FontSize="Micro" LineBreakMode="TailTruncation" />
+														<Label Text="{Binding Company}" HeightRequest="20" VerticalTextAlignment="End" FontSize="Micro" LineBreakMode="TailTruncation" />
+														<Label Text="{Binding JobTitle}" HeightRequest="20" VerticalTextAlignment="Start" FontSize="Micro" LineBreakMode="TailTruncation" TextColor="Silver" />
 													</StackLayout>
 												</ContentView>
 											</StackLayout>

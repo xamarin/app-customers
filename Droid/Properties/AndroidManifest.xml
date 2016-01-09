@@ -9,4 +9,5 @@
 		<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyB53moJQfwT2sI3Vq9HKE0tFNmiagC9I2s" />
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 	</application>
+	<!-- Some icons from http://www.icons4android.com/ -->
 </manifest>

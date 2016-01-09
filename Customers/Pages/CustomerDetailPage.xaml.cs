@@ -30,7 +30,7 @@ namespace Customers
                 Type = PinType.Place, 
                 Position = ViewModel.Position, 
                 Label = ViewModel.Account.DisplayName, 
-                Address = ViewModel.Account.AddressString 
+                Address = ViewModel.Account.AddressString
             };
 
             Map.Pins.Add(pin);

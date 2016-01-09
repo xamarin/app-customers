@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using System.Linq;
+using Plugin.Messaging;
+using System.Collections.Generic;
 
 namespace Customers
 {
@@ -44,15 +46,15 @@ namespace Customers
             }
         }
 
-        Position _Position;
+        bool _MapIsBusy = true;
 
-        public Position Position
+        public bool MapIsBusy
         {
-            get { return _Position; }
+            get { return _MapIsBusy; }
             set
             {
-                _Position = value;
-                OnPropertyChanged("Position");
+                _MapIsBusy = value;
+                OnPropertyChanged("MapIsBusy");
             }
         }
 
@@ -82,13 +84,13 @@ namespace Customers
             {
                 // display an alert, letting the user know that we require a first and last name in order to save a new customer
                 await Page.DisplayAlert(
-                    title: "Invald name!", 
+                    title: "Invalid name!", 
                     message: "A customer must have both a first and last name.",
                     cancel: "OK");
             }
             else
             {
-                // send a message via MessaginCenter that we want the given customer to be saved
+                // send a message via MessagingCenter that we want the given customer to be saved
                 MessagingCenter.Send(this.Account, "SaveCustomer");
 
                 // perform a pop in order to navigate back to the customer list
@@ -159,26 +161,66 @@ namespace Customers
 
             if (confirmDelete)
             {
-                // send a message via MessaginCenter that we want the given customer to be deleted
+                // send a message via MessagingCenter that we want the given customer to be deleted
                 MessagingCenter.Send(this.Account, "DeleteCustomer");
 
-                // perform a pop in order to navigate back to the customer list
+                // Performs two pops, not one. We want to navigate back to the list, not the detail screen.
+                await Navigation.PopAsync(false);
+
                 await Navigation.PopAsync();
             }
 
             IsBusy = false;
         }
 
-        public async Task LoadPins()
+        Command _DialNumberCommand;
+
+        /// <summary>
+        /// Command to dial customer phone number
+        /// </summary>
+        public Command DialNumberCommand
         {
-            var positions = await _Geocoder.GetPositionsForAddressAsync(Account.AddressString);
-
-            var enumerablePositions = positions as Position[] ?? positions.ToArray();
-
-            if (positions != null && enumerablePositions.Any())
+            get
             {
-                Position = enumerablePositions.First();
+                return _DialNumberCommand ??
+                    (_DialNumberCommand = new Command(async () =>
+                        await ExecuteDialNumberCommand()));
             }
+        }
+
+        async Task ExecuteDialNumberCommand()
+        {
+            if (String.IsNullOrWhiteSpace(Account.Phone))
+                return;      
+
+            if (await Page.DisplayAlert(
+                title: $"Would you like do call {Account.DisplayName}?", 
+                message: "",
+                accept: "Call",
+                cancel: "Cancel"))
+            {
+                var phoneCallTask = MessagingPlugin.PhoneDialer;
+                if (phoneCallTask.CanMakePhoneCall)
+                    phoneCallTask.MakePhoneCall(SanitizePhoneNumber(Account.Phone));
+            }
+        }
+
+        string SanitizePhoneNumber(string phoneNumber)
+        {
+            return new String(phoneNumber.ToCharArray().Where(Char.IsDigit).ToArray());
+        }
+
+        public async Task<Position> GetPosition()
+        {
+            MapIsBusy = true;
+
+            Position position;
+
+            position = (await _Geocoder.GetPositionsForAddressAsync(Account.AddressString)).FirstOrDefault();
+
+            MapIsBusy = false;
+
+            return position;
         }
     }
 }

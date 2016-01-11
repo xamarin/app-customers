@@ -45,7 +45,6 @@
     <Compile Include="ViewModels\CustomerDetailViewModel.cs" />
     <Compile Include="Data\IDataSource.cs" />
     <Compile Include="Data\CustomerDataSource.cs" />
-    <Compile Include="Data\ILocalization.cs" />
     <Compile Include="Data\Customer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

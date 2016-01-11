@@ -25,8 +25,6 @@ namespace Customers
 
         Command _NewCustomerCommand;
 
-        bool _IsSeeded;
-
         /// <summary>
         /// Fetchs the accounts from the remote table into the local table.
         /// </summary>
@@ -117,8 +115,6 @@ namespace Customers
             IsBusy = true;
 
             await FetchCustomers();
-
-//            await FetchLocalAccounts();
 
             IsBusy = false;
         }

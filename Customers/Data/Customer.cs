@@ -7,13 +7,14 @@ namespace Customers
     {
         public Customer()
         {
-            FirstName = LastName = Company = Street = Unit = City = PostalCode = State = Country = Phone = Email = string.Empty;
+            Id = FirstName = LastName = Company = Department = Email = Phone = Street = Unit = City = PostalCode = State = Country = PhotoUrl = string.Empty;
         }
 
         public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Company { get; set; }
+        public string JobTitle { get; set; }
         public string Department { get; set;}
         public string Email { get; set; }
         public string Phone { get; set; }
@@ -23,9 +24,8 @@ namespace Customers
         public string PostalCode { get; set; }
         public string State { get; set; }
         public string Country { get; set; }
-        public string ImageUrl { get; set; }
         public string PhotoUrl { get; set; }
-        public string SmallPhotoUrl { get; set; }
+        public string SmallPhotoUrl { get { return PhotoUrl; }}
 
         [JsonIgnore]
         public string AddressString

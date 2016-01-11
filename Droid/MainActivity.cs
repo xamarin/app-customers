@@ -6,7 +6,7 @@ using Xamarin.Forms;
 
 namespace Customers.Droid
 {
-    [Activity(Label = "Customers.Droid", Icon = "@drawable/icon", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Icon = "@drawable/icon", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : FormsAppCompatActivity // inhertiting from FormsAppCompatActivity is imperative to taking advantage of Android AppCompat libraries
     {
         protected override void OnCreate(Bundle bundle)

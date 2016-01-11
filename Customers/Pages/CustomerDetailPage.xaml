@@ -34,16 +34,18 @@
 								</ContentView>
 								<ContentView Padding="0,0,0,10">
 									<AbsoluteLayout>
-										<StackLayout Spacing="0" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize">
-											<Label Text="{Binding Account.Street}" FontSize="Small" />
-											<Label Text="{Binding Account.CityStatePostal}" FontSize="Small" />
-										</StackLayout>
+										<ContentView Padding="0, 0, 10, 0" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize">
+											<StackLayout Spacing="0">
+												<Label Text="{Binding Account.Street}" FontSize="Small" />
+												<Label Text="{Binding Account.CityStatePostal}" FontSize="Micro" />
+											</StackLayout>
+										</ContentView>
 										<Image Source="directions" Aspect="AspectFit" HeightRequest="20" WidthRequest="20" AbsoluteLayout.LayoutFlags="PositionProportional,HeightProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,1">
 											<Image.GestureRecognizers>
 												<TapGestureRecognizer Command="{Binding GetDirectionsCommand}" />
 											</Image.GestureRecognizers>
 										</Image>
-									</AbsoluteLayout>
+									</AbsoluteLayout>	
 								</ContentView>
 								<ContentView>
 									<AbsoluteLayout>

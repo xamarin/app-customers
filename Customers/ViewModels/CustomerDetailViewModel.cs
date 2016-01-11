@@ -242,7 +242,9 @@ namespace Customers
 
             Position position;
 
-            position = (await _Geocoder.GetPositionsForAddressAsync(Account.AddressString)).FirstOrDefault();
+            var positions = (await _Geocoder.GetPositionsForAddressAsync(Account.AddressString)).ToList();
+
+            position = positions.FirstOrDefault();
 
             MapIsBusy = false;
 

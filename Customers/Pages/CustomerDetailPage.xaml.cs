@@ -30,8 +30,8 @@ namespace Customers
         {
             Map.IsVisible = false;
 
-            // set to a default non-real position
-            Position position = new Position(1000, 1000);
+            // set to a default posiion
+            Position position = new Position(0, 0);
 
             try
             {
@@ -42,8 +42,8 @@ namespace Customers
                 await DisplayGeocodingError();
             }
 
-            // if lat and lon are both 1000, then it's assumed that position acquisition failed
-            if (position.Latitude == 1000 && position.Longitude == 1000)
+            // if lat and lon are both 0, then it's assumed that position acquisition failed
+            if (position.Latitude == 0 && position.Longitude == 0)
             {
                 await DisplayGeocodingError();
             }

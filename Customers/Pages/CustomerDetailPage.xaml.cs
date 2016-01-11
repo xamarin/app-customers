@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using System.Threading.Tasks;
 
@@ -17,6 +14,8 @@ namespace Customers
         public CustomerDetailPage()
         {
             InitializeComponent();
+
+            SubscribeToCustomerLocationUpdatedMessages();
         }
 
         async protected override void OnAppearing()

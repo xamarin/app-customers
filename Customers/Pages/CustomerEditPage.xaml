@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Customers.CustomerEditPage" Title="{Binding Title}">
+	<ContentPage.ToolbarItems>
+		<ToolbarItem Icon="save" Command="{Binding SaveCustomerCommand}" />
+	</ContentPage.ToolbarItems>
+	<ContentPage.Content>
+		<TableView Intent="Settings" BackgroundColor="White">
+			<TableRoot>
+				<TableSection Title="Name">
+					<EntryCell Label="First" Text="{Binding Account.FirstName}" Keyboard="Text" />
+					<EntryCell Label="Last" Text="{Binding Account.LastName}" Keyboard="Text" />
+				</TableSection>
+				<TableSection Title="Employment">
+					<EntryCell Label="Company" Text="{Binding Account.Company}" Keyboard="Text" />
+					<EntryCell Label="Title" Text="{Binding Account.JobTitle}" Keyboard="Text" />
+				</TableSection>
+				<TableSection Title="Contact">
+					<EntryCell Label="Phone" Text="{Binding Account.Phone}" Keyboard="Telephone" />
+					<EntryCell Label="Email" Text="{Binding Account.Email}" Keyboard="Email" />
+				</TableSection>
+				<TableSection Title="Address">
+					<EntryCell Label="Street" Text="{Binding Account.Street}" Keyboard="Text" />
+					<EntryCell Label="City" Text="{Binding Account.City}" Keyboard="Text" />
+					<EntryCell Label="State" Text="{Binding Account.State}" Keyboard="Text" PropertyChanged="StateEntry_PropertyChanged" />
+					<EntryCell Label="ZIP" Text="{Binding Account.PostalCode}" Keyboard="Numeric" PropertyChanged="PostalCode_PropertyChanged" />
+					<ViewCell IsEnabled="{Binding IsExistingCustomer}">
+						<ContentView Padding="20, 0" IsEnabled="{Binding IsExistingCustomer}" IsVisible="{Binding IsExistingCustomer}">
+							<Button BackgroundColor="#fd6d6d" Text="{Binding Account.DisplayName, StringFormat='Delete {0}'}" TextColor="White" Command="{Binding DeleteCustomerCommand}" />
+						</ContentView>
+					</ViewCell>
+				</TableSection>
+			</TableRoot>
+		</TableView>
+	</ContentPage.Content>
+</ContentPage>

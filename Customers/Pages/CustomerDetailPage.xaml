@@ -1,36 +1,94 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Customers.CustomerDetailPage" Title="{Binding Title}">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Customers.CustomerDetailPage" Title="{Binding Account.DisplayName}" xmlns:local="clr-namespace:Customers" xmlns:ic="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions" xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps">
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<local:BooleanInverter x:Key="BooleanInverter" />
+		</ResourceDictionary>
+	</ContentPage.Resources>
 	<ContentPage.ToolbarItems>
-		<ToolbarItem Icon="save" Command="{Binding SaveCustomerCommand}" />
+		<ToolbarItem Text="Edit" Icon="edit" Command="{Binding EditCustomerCommand}" />
 	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
-		<TableView Intent="Settings" BackgroundColor="White">
-			<TableRoot>
-				<TableSection Title="Name">
-					<EntryCell Label="First" Text="{Binding Account.FirstName}" Keyboard="Text" />
-					<EntryCell Label="Last" Text="{Binding Account.LastName}" Keyboard="Text" />
-				</TableSection>
-				<TableSection Title="Employment">
-					<EntryCell Label="Company" Text="{Binding Account.Company}" Keyboard="Text" />
-					<EntryCell Label="Dept." Text="{Binding Account.Department}" Keyboard="Text" />
-				</TableSection>
-				<TableSection Title="Contact">
-					<EntryCell Label="Phone" Text="{Binding Account.Phone}" Keyboard="Telephone" />
-					<EntryCell Label="Email" Text="{Binding Account.Email}" Keyboard="Email" />
-				</TableSection>
-				<TableSection Title="Address">
-					<EntryCell Label="Street" Text="{Binding Account.Street}" Keyboard="Text" />
-					<EntryCell Label="Unit" Text="{Binding Account.Unit}" Keyboard="Text" />
-					<EntryCell Label="City" Text="{Binding Account.City}" Keyboard="Text" />
-					<EntryCell Label="State" Text="{Binding Account.State}" Keyboard="Text" PropertyChanged="StateEntry_PropertyChanged" />
-					<EntryCell Label="ZIP" Text="{Binding Account.PostalCode}" Keyboard="Numeric" PropertyChanged="PostalCode_PropertyChanged" />
-					<ViewCell IsEnabled="{Binding IsExistingCustomer}">
-						<ContentView Padding="20, 0" IsEnabled="{Binding IsExistingCustomer}" IsVisible="{Binding IsExistingCustomer}">
-							<Button BackgroundColor="#fd6d6d" Text="{Binding Account.DisplayName, StringFormat='Delete {0}'}" TextColor="White" Command="{Binding DeleteCustomerCommand}" />
+		<AbsoluteLayout>
+			<StackLayout Spacing="0" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+				<ContentView Padding="10,10,10,10">
+					<!-- The Grid column widths approximate the golden ratio -->
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="382*" />
+							<ColumnDefinition Width="618*" />
+						</Grid.ColumnDefinitions>
+						<AbsoluteLayout Grid.Row="0" Grid.Column="0">
+							<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="5" WidthRequest="120" HeightRequest="120" Source="{Binding Account.PhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize" />
+						</AbsoluteLayout>
+						<ContentView Padding="5, 0, 0, 0" Grid.Row="0" Grid.Column="1">
+							<StackLayout Spacing="0">
+								<ContentView Padding="0,0,0,10">
+									<StackLayout Spacing="0">
+										<Label Text="{Binding Account.Company}" />
+										<Label Text="{Binding Account.JobTitle}" FontSize="Small" TextColor="Silver" />
+									</StackLayout>
+								</ContentView>
+								<ContentView Padding="0,0,0,10" IsEnabled="{Binding HasAddress}" IsVisible="{Binding HasAddress}">
+									<AbsoluteLayout>
+										<ContentView Padding="0, 0, 10, 0" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize">
+											<StackLayout Spacing="0">
+												<Label Text="{Binding Account.Street}" FontSize="Small" />
+												<Label Text="{Binding Account.City}" FontSize="Micro" />
+												<Label Text="{Binding Account.StatePostal}" FontSize="Micro" /> 
+											</StackLayout>
+										</ContentView>
+										<Image Source="directions" Aspect="AspectFit" HeightRequest="26" WidthRequest="26" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,Autosize">
+											<Image.GestureRecognizers>
+												<TapGestureRecognizer Command="{Binding GetDirectionsCommand}" />
+											</Image.GestureRecognizers>
+										</Image>
+									</AbsoluteLayout>	
+								</ContentView>
+								<ContentView Padding="0,0,0,15" IsEnabled="{Binding HasPhoneNumber}" IsVisible="{Binding HasPhoneNumber}">
+									<AbsoluteLayout>
+										<Label Text="{Binding Account.Phone}" FontSize="Small" VerticalTextAlignment="Center" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
+										<StackLayout Orientation="Horizontal" Spacing="0" AbsoluteLayout.LayoutFlags="XProportional,HeightProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,1">
+											<Image Source="message" Aspect="AspectFit" HeightRequest="20" WidthRequest="20">
+												<Image.GestureRecognizers>
+													<TapGestureRecognizer Command="{Binding MessageNumberCommand}" NumberOfTapsRequired="1" />
+												</Image.GestureRecognizers>
+											</Image>
+											<ContentView Padding="10,0,0,0">
+												<Image Source="phone" Aspect="AspectFit" HeightRequest="20" WidthRequest="20">
+													<Image.GestureRecognizers>
+														<TapGestureRecognizer Command="{Binding DialNumberCommand}" NumberOfTapsRequired="1" />
+													</Image.GestureRecognizers>
+												</Image>
+											</ContentView>
+										</StackLayout>
+									</AbsoluteLayout>
+								</ContentView>
+								<ContentView IsEnabled="{Binding HasEmailAddress}" IsVisible="{Binding HasEmailAddress}">
+									<AbsoluteLayout>
+										<ContentView Padding="0,0,30,0">
+											<Label Text="{Binding Account.Email}" FontSize="Micro" VerticalTextAlignment="Center" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
+										</ContentView>
+										<Image Source="email" Aspect="AspectFit" HeightRequest="20" WidthRequest="20" AbsoluteLayout.LayoutFlags="XProportional,HeightProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,1">
+											<Image.GestureRecognizers>
+												<TapGestureRecognizer Command="{Binding EmailCommand}" NumberOfTapsRequired="1" />
+											</Image.GestureRecognizers>
+										</Image>
+									</AbsoluteLayout>
+								</ContentView>
+							</StackLayout>
 						</ContentView>
-					</ViewCell>
-				</TableSection>
-			</TableRoot>
-		</TableView>
+					</Grid>
+				</ContentView>
+				<ContentView HeightRequest="1" BackgroundColor="Silver" />
+				<AbsoluteLayout VerticalOptions="FillAndExpand">
+					<ActivityIndicator IsEnabled="{Binding MapIsBusy}" IsVisible="{Binding MapIsBusy}" IsRunning="{Binding MapIsBusy}" AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.2, AutoSize" />
+					<maps:Map x:Name="Map" IsVisible="false" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, 1.0, 1.0" />
+				</AbsoluteLayout>
+			</StackLayout>
+		</AbsoluteLayout>
 	</ContentPage.Content>
 </ContentPage>

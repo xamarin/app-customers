@@ -1,6 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System;
+using Plugin.Messaging;
+using System.Linq;
 
 namespace Customers
 {
@@ -15,7 +18,7 @@ namespace Customers
             SubscribeToDeleteCustomerMessages();
         }
 
-        IDataSource<Customer> DataSource;
+        readonly IDataSource<Customer> DataSource;
 
         ObservableCollection<Customer> _Accounts;
 
@@ -25,10 +28,6 @@ namespace Customers
 
         Command _NewCustomerCommand;
 
-        /// <summary>
-        /// Fetchs the accounts from the remote table into the local table.
-        /// </summary>
-        /// <returns>A Task.</returns>
         async Task FetchCustomers()
         {
             Accounts = new ObservableCollection<Customer>(await DataSource.GetItems(0, 1000));
@@ -83,7 +82,7 @@ namespace Customers
 
             IsBusy = true;
 
-            var page = new CustomerDetailPage();
+            var page = new CustomerEditPage();
 
             var viewModel = new CustomerDetailViewModel() { Navigation = this.Navigation, Page = page };
 
@@ -113,10 +112,49 @@ namespace Customers
                 return;
 
             IsBusy = true;
+            _CustomersRefreshCommand.ChangeCanExecute();
 
             await FetchCustomers();
 
             IsBusy = false;
+            _CustomersRefreshCommand.ChangeCanExecute();
+        }
+
+        Command _DialNumberCommand;
+
+        /// <summary>
+        /// Command to dial customer phone number
+        /// </summary>
+        public Command DialNumberCommand
+        {
+            get
+            {
+                return _DialNumberCommand ??
+                    (_DialNumberCommand = new Command(async (parameter) =>
+                        await ExecuteDialNumberCommand((string)parameter)));
+            }
+        }
+
+        async Task ExecuteDialNumberCommand(string customerId)
+        {
+            if (String.IsNullOrWhiteSpace(customerId))
+                return;
+
+            var customer = _Accounts.SingleOrDefault(c => c.Id == customerId);
+
+            if (customer == null)
+                return;
+
+            if (await Page.DisplayAlert(
+                title: $"Would you like to call {customer.DisplayName}?",
+                message: "",
+                accept: "Call",
+                cancel: "Cancel"))
+            {
+                var phoneCallTask = MessagingPlugin.PhoneDialer;
+                if (phoneCallTask.CanMakePhoneCall)
+                    phoneCallTask.MakePhoneCall(customer.Phone.SanitizePhoneNumber());
+            }
         }
 
         void SubscribeToSaveCustomerMessages()
@@ -125,6 +163,12 @@ namespace Customers
             MessagingCenter.Subscribe<Customer>(this, "SaveCustomer", async (customer) =>
                 {
                     IsBusy = true;
+
+                    if (string.IsNullOrWhiteSpace(customer.Id))
+                    {
+                        customer.Id = Guid.NewGuid().ToString();
+                        customer.PhotoUrl = "placeholderProfileImage";
+                    }
 
                     await DataSource.SaveItem(customer);
 

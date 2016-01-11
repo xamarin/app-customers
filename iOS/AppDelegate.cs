@@ -2,6 +2,8 @@
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
+using ImageCircle.Forms.Plugin.iOS;
+using Xamarin;
 
 namespace Customers.iOS
 {
@@ -12,9 +14,13 @@ namespace Customers.iOS
         {
             Forms.Init();
 
+            FormsMaps.Init();
+
             LoadApplication(new App());
 
             ConfigureTheming();
+
+            ImageCircleRenderer.Init();
 
             return base.FinishedLaunching(app, options);
         }

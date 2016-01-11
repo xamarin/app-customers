@@ -1,5 +1,6 @@
-﻿using System.ComponentModel;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
+using Xamarin.Forms.Maps;
+using System.Threading.Tasks;
 
 namespace Customers
 {
@@ -13,40 +14,70 @@ namespace Customers
         public CustomerDetailPage()
         {
             InitializeComponent();
+
+            SubscribeToCustomerLocationUpdatedMessages();
         }
 
-        void StateEntry_PropertyChanged (object sender, PropertyChangedEventArgs e)
+        async protected override void OnAppearing()
         {
-            if (e.PropertyName == "Text")
+            base.OnAppearing();
+
+            await SetupMap();
+        }
+
+        async Task SetupMap()
+        {
+            Map.IsVisible = false;
+
+            // set to a default posiion
+            Position position = new Position(0, 0);
+
+            try
             {
-                var entryCell = sender as EntryCell;
+                position = await ViewModel.GetPosition();
+            }
+            catch
+            {
+                await DisplayGeocodingError();
+            }
 
-                string val = entryCell.Text;
+            // if lat and lon are both 0, then it's assumed that position acquisition failed
+            if (position.Latitude == 0 && position.Longitude == 0)
+            {
+                await DisplayGeocodingError();
+            }
+            else
+            {
+                var pin = new Pin()
+                    { 
+                        Type = PinType.Place, 
+                        Position = position,
+                        Label = ViewModel.Account.DisplayName, 
+                        Address = ViewModel.Account.AddressString 
+                    };
 
-                if (val.Length > 2)
-                {
-                    val = val.Remove(val.Length - 1);
-                }
+                Map.Pins.Clear();
 
-                entryCell.Text = val.ToUpperInvariant();
+                Map.Pins.Add(pin);
+
+                Map.MoveToRegion(MapSpan.FromCenterAndRadius(pin.Position, Distance.FromMiles(10)));
+
+                Map.IsVisible = true;
             }
         }
 
-        void PostalCode_PropertyChanged (object sender, PropertyChangedEventArgs e)
+        async Task DisplayGeocodingError()
         {
-            if (e.PropertyName == "Text")
-            {
-                var entryCell = sender as EntryCell;
+            await DisplayAlert(
+                "Geocoding Error", 
+                "Something went wrong while trying to translate the street address to GPS coordinates.", 
+                "OK");
+        }
 
-                string val = entryCell.Text;
-
-                if (val.Length > 5)
-                {
-                    val = val.Remove(val.Length - 1);
-                    entryCell.Text = val;
-                }
-            }
-            
+        void SubscribeToCustomerLocationUpdatedMessages()
+        {
+            // update the map when receiving the CustomerLocationUpdated message
+            MessagingCenter.Subscribe<Customer>(this, "CustomerLocationUpdated", async (customer) => await SetupMap());
         }
     }
 }

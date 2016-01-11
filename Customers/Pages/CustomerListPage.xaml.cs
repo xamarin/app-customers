@@ -13,9 +13,15 @@ namespace Customers
         public CustomerListPage()
         {
             InitializeComponent();
+
+            // on Android, we use a floating action button, not 
+            if (Device.OS == TargetPlatform.Android)
+                ToolbarItems.Clear();
+
+            fab.Clicked = AndroidAddButtonClicked;
         }
 
-        void ItemTapped (object sender, ItemTappedEventArgs e)
+        async void ItemTapped (object sender, ItemTappedEventArgs e)
         {
             var page = new CustomerDetailPage();
 
@@ -24,14 +30,21 @@ namespace Customers
 
             page.BindingContext = viewModel;
 
-            Navigation.PushAsync(page);
+            await Navigation.PushAsync(page);
 
             ((ListView)sender).SelectedItem = null;
         }
 
-        void AndroidAddButtonClicked (object sender, EventArgs e)
+        async void AndroidAddButtonClicked (object sender, EventArgs e)
         {
-            Navigation.PushAsync(new CustomerDetailPage() { BindingContext = new CustomerDetailViewModel() });
+            var page = new CustomerEditPage();
+
+            // NOTE: you don't typically pass a Page (or view) reference to a viewmodel, but in this case we need access to it in order to potentially display an alert from within the viewmodel.
+            var viewModel = new CustomerDetailViewModel() { Navigation = this.Navigation, Page = page };
+
+            page.BindingContext = viewModel;
+
+            await Navigation.PushAsync(page);
         }
 
         protected override void OnAppearing()
@@ -39,10 +52,10 @@ namespace Customers
             base.OnAppearing();
 
             if (ViewModel.IsInitialized)
-            {
                 return;
-            }
+            
             ViewModel.LoadCustomersCommand.Execute(null);
+
             ViewModel.IsInitialized = true;
         }
     }

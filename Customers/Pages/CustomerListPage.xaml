@@ -1,22 +1,87 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Customers.CustomerListPage" xmlns:local="clr-namespace:Customers">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Customers.CustomerListPage" xmlns:local="clr-namespace:Customers" xmlns:ic="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions">
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<local:BooleanInverter x:Key="BooleanInverter" />
+		</ResourceDictionary>
+	</ContentPage.Resources>
 	<ContentPage.ToolbarItems>
 		<ToolbarItem Icon="add" Text="New" Command="{Binding NewCustomerCommand}" />
 	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
-		<ListView ItemsSource="{Binding Accounts}" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<ViewCell StyleId="disclosure">
-						<ContentView HeightRequest="60" Padding="10,0">
-							<StackLayout Spacing="0">
-								<Label Text="{Binding DisplayLastNameFirst}" LineBreakMode="TailTruncation" />
-								<Label Text="{Binding Company}" LineBreakMode="TailTruncation" TextColor="Silver" />
-							</StackLayout>
-						</ContentView>
-					</ViewCell>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
+		<OnPlatform x:TypeArguments="View">
+			<OnPlatform.iOS>
+				<ListView ItemsSource="{Binding Accounts}" CachingStrategy="RecycleElement" RowHeight="60" HasUnevenRows="false" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+					<ListView.ItemTemplate>
+						<DataTemplate>
+							<ViewCell StyleId="disclosure" Height="60">
+								<ContentView Padding="10,0">
+
+									<AbsoluteLayout>
+
+										<StackLayout Orientation="Horizontal" Spacing="0" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize">
+											<ContentView Padding="3" WidthRequest="54">
+												<AbsoluteLayout>
+													<ActivityIndicator BindingContext="{x:Reference AvatarImage}"  IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" HeightRequest="54" WidthRequest="54" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" />
+													<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="2" HeightRequest="50" WidthRequest="50" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding SmallPhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5,0.5,AutoSize,AutoSize" />
+												</AbsoluteLayout>
+											</ContentView>
+											<ContentView Padding="10,0,0,0">
+												<StackLayout Spacing="0">
+													<Label Text="{Binding DisplayLastNameFirst}" HeightRequest="20" VerticalTextAlignment="End" LineBreakMode="TailTruncation" />
+													<Label Text="{Binding Company}" HeightRequest="20" VerticalTextAlignment="End" FontSize="Micro" LineBreakMode="TailTruncation" />
+													<Label Text="{Binding JobTitle}" HeightRequest="20" VerticalTextAlignment="Start" FontSize="Micro" LineBreakMode="TailTruncation" TextColor="Silver" />
+												</StackLayout>
+											</ContentView>
+										</StackLayout>
+
+<!--										<Image Source="phone" Aspect="AspectFit" HeightRequest="20" WidthRequest="20" AbsoluteLayout.LayoutFlags="XProportional,HeightProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,1">
+											<Image.GestureRecognizers>
+												<TapGestureRecognizer Command="{Binding DialNumberCommand}" CommandParameter="{Binding Id}" NumberOfTapsRequired="1" />
+											</Image.GestureRecognizers>
+										</Image>-->
+
+									</AbsoluteLayout>
+
+
+								</ContentView>
+							</ViewCell>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+			</OnPlatform.iOS>
+			<OnPlatform.Android>
+				<AbsoluteLayout x:Name="absLayout">
+					<AbsoluteLayout.Children>
+						<ListView ItemsSource="{Binding Accounts}" CachingStrategy="RecycleElement" RowHeight="60" HasUnevenRows="false" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+							<ListView.ItemTemplate>
+								<DataTemplate>
+									<ViewCell StyleId="disclosure" Height="60">
+										<ContentView Padding="10,0">
+											<StackLayout Orientation="Horizontal" Spacing="0">
+												<ContentView Padding="3" WidthRequest="54">
+													<AbsoluteLayout>
+														<ActivityIndicator IsEnabled="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsRunning="{Binding IsLoading, Source={x:Reference AvatarImage}}" HeightRequest="54" WidthRequest="54" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0.5,0.5,1,1" />
+														<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="2" HeightRequest="50" WidthRequest="50" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding SmallPhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
+													</AbsoluteLayout>
+												</ContentView>
+												<ContentView Padding="10,0,0,0">
+													<StackLayout Spacing="0">
+														<Label Text="{Binding DisplayLastNameFirst}" HeightRequest="20" VerticalTextAlignment="End" LineBreakMode="TailTruncation" />
+														<Label Text="{Binding Company}" HeightRequest="20" VerticalTextAlignment="End" FontSize="Micro" LineBreakMode="TailTruncation" />
+														<Label Text="{Binding JobTitle}" HeightRequest="20" VerticalTextAlignment="Start" FontSize="Micro" LineBreakMode="TailTruncation" TextColor="Silver" />
+													</StackLayout>
+												</ContentView>
+											</StackLayout>
+										</ContentView>
+									</ViewCell>
+								</DataTemplate>
+							</ListView.ItemTemplate>
+						</ListView>
+						<local:FloatingActionButtonView x:Name="fab" ImageName="fab_add" ColorNormal="#547799" ColorPressed="#172839" ColorRipple="#2C3E50" AbsoluteLayout.LayoutBounds="1.0, 1.0, AutoSize, AutoSize" AbsoluteLayout.LayoutFlags="PositionProportional" />
+					</AbsoluteLayout.Children>
+				</AbsoluteLayout>
+			</OnPlatform.Android>
+		</OnPlatform>
 	</ContentPage.Content>
 </ContentPage>

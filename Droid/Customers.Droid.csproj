@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -27,6 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
     <ConsolePause>false</ConsolePause>
+    <JavaMaximumHeapSize>2G</JavaMaximumHeapSize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -100,11 +101,49 @@
     <Reference Include="PCLStorage.Abstractions">
       <HintPath>..\packages\PCLStorage.1.0.2\lib\monoandroid\PCLStorage.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.1\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="ImageCircle.Forms.Plugin.Android">
+      <HintPath>..\packages\Xam.Plugins.Forms.ImageCircle.1.3.0\lib\MonoAndroid10\ImageCircle.Forms.Plugin.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="ImageCircle.Forms.Plugin.Abstractions">
+      <HintPath>..\packages\Xam.Plugins.Forms.ImageCircle.1.3.0\lib\MonoAndroid10\ImageCircle.Forms.Plugin.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Faker.Portable">
-      <HintPath>..\packages\Faker.Net.Portable.2.1.0.63\lib\portable-net4+sl5+wp8+win8+wpa81+netcore45+MonoAndroid+Xamarin.iOS1\Faker.Portable.dll</HintPath>
+      <HintPath>..\Faker.Portable.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.GooglePlayServices.Base">
+      <HintPath>..\packages\Xamarin.GooglePlayServices.Base.26.0.0.0\lib\MonoAndroid41\Xamarin.GooglePlayServices.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.GooglePlayServices.Maps">
+      <HintPath>..\packages\Xamarin.GooglePlayServices.Maps.26.0.0.0\lib\MonoAndroid41\Xamarin.GooglePlayServices.Maps.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Maps.Android">
+      <HintPath>..\packages\Xamarin.Forms.Maps.2.0.0.6490\lib\MonoAndroid10\Xamarin.Forms.Maps.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Maps">
+      <HintPath>..\packages\Xamarin.Forms.Maps.2.0.0.6490\lib\MonoAndroid10\Xamarin.Forms.Maps.dll</HintPath>
+    </Reference>
+    <Reference Include="Lotz.Xam.Messaging.Abstractions">
+      <HintPath>..\packages\Xam.Plugins.Messaging.3.0.0\lib\MonoAndroid10\Lotz.Xam.Messaging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Lotz.Xam.Messaging">
+      <HintPath>..\packages\Xam.Plugins.Messaging.3.0.0\lib\MonoAndroid10\Lotz.Xam.Messaging.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v7.RecyclerView">
+      <HintPath>..\packages\Xamarin.Android.Support.v7.RecyclerView.23.0.1.3\lib\MonoAndroid403\Xamarin.Android.Support.v7.RecyclerView.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Refractored.FloatingActionButton">
+      <HintPath>..\packages\Refractored.FloatingActionButton.1.4.0\lib\MonoAndroid10\Refractored.FloatingActionButton.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.ExternalMaps">
+      <HintPath>..\packages\Xam.Plugin.ExternalMaps.2.0.0\lib\MonoAndroid10\Plugin.ExternalMaps.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.ExternalMaps.Abstractions">
+      <HintPath>..\packages\Xam.Plugin.ExternalMaps.2.0.0\lib\MonoAndroid10\Plugin.ExternalMaps.Abstractions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +156,8 @@
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Localization.cs" />
+    <Compile Include="Renderers\FloatingActionButtonViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -128,6 +169,7 @@
     <Folder Include="Resources\layout\" />
     <Folder Include="Resources\values\" />
     <Folder Include="Resources\values-v21\" />
+    <Folder Include="Renderers\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon.png" />
@@ -146,6 +188,57 @@
     <AndroidResource Include="Resources\drawable-mdpi\save.png" />
     <AndroidResource Include="Resources\drawable-hdpi\save.png" />
     <AndroidResource Include="Resources\drawable\save.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\fab_add.png" />
+    <AndroidResource Include="Resources\drawable\fab_add.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\fab_add.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\fab_add.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\fab_add.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\fab_add.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\edit.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\phone.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\save.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\placeholderProfileImage.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\edit.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\phone.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\placeholderProfileImage.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\edit.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\phone.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\placeholderProfileImage.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\edit.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\phone.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\placeholderProfileImage.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\edit.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\phone.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\placeholderProfileImage.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\placeholderProfileImage.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\directions.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\directions.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\directions.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\directions.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\directions.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\directions.png" />
+    <AndroidResource Include="Resources\drawable\directions.png" />
+    <AndroidResource Include="Resources\drawable\phone.png" />
+    <AndroidResource Include="Resources\drawable\placeholderProfileImage.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\edit.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\email.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\message.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\phone.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\email.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\message.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\email.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\message.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\email.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\message.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\email.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\fab_add.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\message.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\email.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\message.png" />
+    <AndroidResource Include="Resources\drawable\edit.png" />
+    <AndroidResource Include="Resources\drawable\email.png" />
+    <AndroidResource Include="Resources\drawable\message.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.2.0.0.6490\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.0.0.6490\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />

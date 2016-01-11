@@ -199,9 +199,14 @@
     <BundleResource Include="Resources\directions%403x.png" />
     <BundleResource Include="Resources\edit%402x.png" />
     <BundleResource Include="Resources\edit%403x.png" />
+    <BundleResource Include="Resources\email.png" />
+    <BundleResource Include="Resources\email%402x.png" />
+    <BundleResource Include="Resources\email%403x.png" />
+    <BundleResource Include="Resources\message.png" />
+    <BundleResource Include="Resources\message%402x.png" />
+    <BundleResource Include="Resources\message%403x.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\delete.png" />
     <AndroidResource Include="Resources\edit.png" />
     <AndroidResource Include="Resources\phone.png" />
     <AndroidResource Include="Resources\placeholderProfileImage.png" />

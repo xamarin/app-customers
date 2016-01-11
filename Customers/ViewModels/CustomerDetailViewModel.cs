@@ -35,6 +35,12 @@ namespace Customers
 
         public bool IsExistingCustomer { get { return !_IsNewCustomer; } }
 
+        public bool HasEmailAddress { get { return Account != null && !String.IsNullOrWhiteSpace(Account.Email); }}
+
+        public bool HasPhoneNumber { get { return Account != null && !String.IsNullOrWhiteSpace(Account.Phone); } }
+
+        public bool HasAddress { get { return Account != null && !String.IsNullOrWhiteSpace(Account.AddressString); } }
+
         public string Title { get { return _IsNewCustomer ? "New Customer" : _Account.DisplayLastNameFirst; } }
 
         Customer _Account;
@@ -205,6 +211,70 @@ namespace Customers
                 var phoneCallTask = MessagingPlugin.PhoneDialer;
                 if (phoneCallTask.CanMakePhoneCall)
                     phoneCallTask.MakePhoneCall(Account.Phone.SanitizePhoneNumber());
+            }
+        }
+
+        Command _MessageNumberCommand;
+
+        /// <summary>
+        /// Command to message customer phone number
+        /// </summary>
+        public Command MessageNumberCommand
+        {
+            get
+            {
+                return _MessageNumberCommand ??
+                    (_MessageNumberCommand = new Command(async () =>
+                        await ExecuteMessageNumberCommand()));
+            }
+        }
+
+        async Task ExecuteMessageNumberCommand()
+        {
+            if (String.IsNullOrWhiteSpace(Account.Phone))
+                return;      
+
+            if (await Page.DisplayAlert(
+                title: $"Would you like to message {Account.DisplayName}?",
+                message: "",
+                accept: "Message",
+                cancel: "Cancel"))
+            {
+                var messageTask = MessagingPlugin.SmsMessenger;
+                if (messageTask.CanSendSms)
+                    messageTask.SendSms(Account.Phone.SanitizePhoneNumber());
+            }
+        }
+
+        Command _EmailCommand;
+
+        /// <summary>
+        /// Command to email customer
+        /// </summary>
+        public Command EmailCommand
+        {
+            get
+            {
+                return _EmailCommand ??
+                    (_EmailCommand = new Command(async () =>
+                        await ExecuteEmailCommandCommand()));
+            }
+        }
+
+        async Task ExecuteEmailCommandCommand()
+        {
+            if (String.IsNullOrWhiteSpace(Account.Email))
+                return;
+
+            if (await Page.DisplayAlert(
+                title: $"Would you like to email {Account.DisplayName}?",
+                message: "",
+                accept: "Email",
+                cancel: "Cancel"))
+            {
+                var emailTask = MessagingPlugin.EmailMessenger;
+                if (emailTask.CanSendEmail)
+                    emailTask.SendEmail(Account.Email);
             }
         }
 

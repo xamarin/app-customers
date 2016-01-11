@@ -11,7 +11,7 @@
 	<ContentPage.Content>
 		<AbsoluteLayout>
 			<StackLayout Spacing="0" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
-				<ContentView Padding="10">
+				<ContentView Padding="10,10,10,10">
 					<!-- The Grid column widths approximate the golden ratio -->
 					<Grid>
 						<Grid.RowDefinitions>
@@ -32,27 +32,49 @@
 										<Label Text="{Binding Account.JobTitle}" FontSize="Small" TextColor="Silver" />
 									</StackLayout>
 								</ContentView>
-								<ContentView Padding="0,0,0,10">
+								<ContentView Padding="0,0,0,10" IsEnabled="{Binding HasAddress}" IsVisible="{Binding HasAddress}">
 									<AbsoluteLayout>
 										<ContentView Padding="0, 0, 10, 0" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize">
 											<StackLayout Spacing="0">
 												<Label Text="{Binding Account.Street}" FontSize="Small" />
-												<Label Text="{Binding Account.CityStatePostal}" FontSize="Micro" />
+												<Label Text="{Binding Account.City}" FontSize="Micro" />
+												<Label Text="{Binding Account.StatePostal}" FontSize="Micro" /> 
 											</StackLayout>
 										</ContentView>
-										<Image Source="directions" Aspect="AspectFit" HeightRequest="20" WidthRequest="20" AbsoluteLayout.LayoutFlags="PositionProportional,HeightProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,1">
+										<Image Source="directions" Aspect="AspectFit" HeightRequest="26" WidthRequest="26" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,Autosize">
 											<Image.GestureRecognizers>
 												<TapGestureRecognizer Command="{Binding GetDirectionsCommand}" />
 											</Image.GestureRecognizers>
 										</Image>
 									</AbsoluteLayout>	
 								</ContentView>
-								<ContentView>
+								<ContentView Padding="0,0,0,15" IsEnabled="{Binding HasPhoneNumber}" IsVisible="{Binding HasPhoneNumber}">
 									<AbsoluteLayout>
-										<Label Text="{Binding Account.Phone}" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
-										<Image Source="phone" Aspect="AspectFit" HeightRequest="20" WidthRequest="20" AbsoluteLayout.LayoutFlags="XProportional,HeightProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,1">
+										<Label Text="{Binding Account.Phone}" FontSize="Small" VerticalTextAlignment="Center" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
+										<StackLayout Orientation="Horizontal" Spacing="0" AbsoluteLayout.LayoutFlags="XProportional,HeightProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,1">
+											<Image Source="message" Aspect="AspectFit" HeightRequest="20" WidthRequest="20">
+												<Image.GestureRecognizers>
+													<TapGestureRecognizer Command="{Binding MessageNumberCommand}" NumberOfTapsRequired="1" />
+												</Image.GestureRecognizers>
+											</Image>
+											<ContentView Padding="10,0,0,0">
+												<Image Source="phone" Aspect="AspectFit" HeightRequest="20" WidthRequest="20">
+													<Image.GestureRecognizers>
+														<TapGestureRecognizer Command="{Binding DialNumberCommand}" NumberOfTapsRequired="1" />
+													</Image.GestureRecognizers>
+												</Image>
+											</ContentView>
+										</StackLayout>
+									</AbsoluteLayout>
+								</ContentView>
+								<ContentView IsEnabled="{Binding HasEmailAddress}" IsVisible="{Binding HasEmailAddress}">
+									<AbsoluteLayout>
+										<ContentView Padding="0,0,30,0">
+											<Label Text="{Binding Account.Email}" FontSize="Micro" VerticalTextAlignment="Center" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
+										</ContentView>
+										<Image Source="email" Aspect="AspectFit" HeightRequest="20" WidthRequest="20" AbsoluteLayout.LayoutFlags="XProportional,HeightProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,1">
 											<Image.GestureRecognizers>
-												<TapGestureRecognizer Command="{Binding DialNumberCommand}" NumberOfTapsRequired="1" />
+												<TapGestureRecognizer Command="{Binding EmailCommand}" NumberOfTapsRequired="1" />
 											</Image.GestureRecognizers>
 										</Image>
 									</AbsoluteLayout>

@@ -15,7 +15,7 @@
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>Customers.Droid</AssemblyName>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
-    <TargetFrameworkVersion>v5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -194,24 +194,19 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\fab_add.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\fab_add.png" />
     <AndroidResource Include="Resources\drawable-mdpi\fab_add.png" />
-    <AndroidResource Include="Resources\drawable-ldpi\delete.png" />
     <AndroidResource Include="Resources\drawable-ldpi\edit.png" />
     <AndroidResource Include="Resources\drawable-ldpi\phone.png" />
     <AndroidResource Include="Resources\drawable-ldpi\save.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\placeholderProfileImage.png" />
-    <AndroidResource Include="Resources\drawable-xxhdpi\delete.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\edit.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\phone.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\placeholderProfileImage.png" />
-    <AndroidResource Include="Resources\drawable-xhdpi\delete.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\edit.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\phone.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\placeholderProfileImage.png" />
-    <AndroidResource Include="Resources\drawable-mdpi\delete.png" />
     <AndroidResource Include="Resources\drawable-mdpi\edit.png" />
     <AndroidResource Include="Resources\drawable-mdpi\phone.png" />
     <AndroidResource Include="Resources\drawable-mdpi\placeholderProfileImage.png" />
-    <AndroidResource Include="Resources\drawable-hdpi\delete.png" />
     <AndroidResource Include="Resources\drawable-hdpi\edit.png" />
     <AndroidResource Include="Resources\drawable-hdpi\phone.png" />
     <AndroidResource Include="Resources\drawable-hdpi\placeholderProfileImage.png" />
@@ -225,6 +220,25 @@
     <AndroidResource Include="Resources\drawable\directions.png" />
     <AndroidResource Include="Resources\drawable\phone.png" />
     <AndroidResource Include="Resources\drawable\placeholderProfileImage.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\edit.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\email.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\message.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\phone.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\email.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\message.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\email.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\message.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\email.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\message.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\email.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\fab_add.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\message.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\email.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\message.png" />
+    <AndroidResource Include="Resources\drawable\edit.png" />
+    <AndroidResource Include="Resources\drawable\email.png" />
+    <AndroidResource Include="Resources\drawable\message.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.2.0.0.6490\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.0.0.6490\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />

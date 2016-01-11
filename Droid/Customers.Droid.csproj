@@ -139,6 +139,12 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Plugin.ExternalMaps">
+      <HintPath>..\packages\Xam.Plugin.ExternalMaps.2.0.0\lib\MonoAndroid10\Plugin.ExternalMaps.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.ExternalMaps.Abstractions">
+      <HintPath>..\packages\Xam.Plugin.ExternalMaps.2.0.0\lib\MonoAndroid10\Plugin.ExternalMaps.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Customers\Customers.csproj">

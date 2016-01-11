@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using System;
+using Plugin.Messaging;
+using System.Linq;
 
 namespace Customers
 {
@@ -116,6 +118,43 @@ namespace Customers
 
             IsBusy = false;
             _CustomersRefreshCommand.ChangeCanExecute();
+        }
+
+        Command _DialNumberCommand;
+
+        /// <summary>
+        /// Command to dial customer phone number
+        /// </summary>
+        public Command DialNumberCommand
+        {
+            get
+            {
+                return _DialNumberCommand ??
+                    (_DialNumberCommand = new Command(async (parameter) =>
+                        await ExecuteDialNumberCommand((string)parameter)));
+            }
+        }
+
+        async Task ExecuteDialNumberCommand(string customerId)
+        {
+            if (String.IsNullOrWhiteSpace(customerId))
+                return;
+
+            var customer = _Accounts.SingleOrDefault(c => c.Id == customerId);
+
+            if (customer == null)
+                return;
+
+            if (await Page.DisplayAlert(
+                title: $"Would you like to call {customer.DisplayName}?",
+                message: "",
+                accept: "Call",
+                cancel: "Cancel"))
+            {
+                var phoneCallTask = MessagingPlugin.PhoneDialer;
+                if (phoneCallTask.CanMakePhoneCall)
+                    phoneCallTask.MakePhoneCall(customer.Phone.SanitizePhoneNumber());
+            }
         }
 
         void SubscribeToSaveCustomerMessages()

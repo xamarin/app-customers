@@ -25,20 +25,63 @@
 							<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="5" WidthRequest="120" HeightRequest="120" Source="{Binding Account.PhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize" />
 						</AbsoluteLayout>
 						<ContentView Padding="5, 0, 0, 0" Grid.Row="0" Grid.Column="1">
-							<AbsoluteLayout>
+
+							<StackLayout Spacing="0">
+
+								<ContentView Padding="0,0,0,10">
+									<StackLayout Spacing="0">
+										<Label Text="{Binding Account.Company}" />
+										<Label Text="{Binding Account.JobTitle}" FontSize="Small" TextColor="Silver" />
+									</StackLayout>
+								</ContentView>
+
+								<ContentView Padding="0,0,0,10">
+									<AbsoluteLayout>
+										<StackLayout Spacing="0" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize">
+											<Label Text="{Binding Account.Street}" FontSize="Small" />
+											<Label Text="{Binding Account.CityStatePostal}" FontSize="Small" />
+										</StackLayout>
+										<Image Source="directions" Aspect="AspectFit" HeightRequest="20" WidthRequest="20" AbsoluteLayout.LayoutFlags="PositionProportional,HeightProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,1">
+											<Image.GestureRecognizers>
+												<TapGestureRecognizer Command="{Binding GetDirectionsCommand}" />
+											</Image.GestureRecognizers>
+										</Image>
+									</AbsoluteLayout>
+								</ContentView>
+
+								<ContentView>
+									<AbsoluteLayout>
+										<Label Text="{Binding Account.Phone}" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
+										<Image Source="phone" Aspect="AspectFit" HeightRequest="20" WidthRequest="20" AbsoluteLayout.LayoutFlags="XProportional,HeightProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,1">
+											<Image.GestureRecognizers>
+												<TapGestureRecognizer Command="{Binding DialNumberCommand}" NumberOfTapsRequired="1" />
+											</Image.GestureRecognizers>
+										</Image>
+									</AbsoluteLayout>
+								</ContentView>
+
+							</StackLayout>
+							
+
+<!--							<AbsoluteLayout BackgroundColor="Aqua">
 								<StackLayout Spacing="0" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize">
-									<Label Text="{Binding Account.Company}" />
-									<Label Text="{Binding Account.JobTitle}" TextColor="Silver" />
+									<ContentView Padding="0,0,0,10">
+										
+									</ContentView>
+									<ContentView Padding="0,0,0,10">
+										<AbsoluteLayout BackgroundColor="Green" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,1,1,AutoSize">
+
+									</AbsoluteLayout>
+									</ContentView>
+									<ContentView>
+										
+									</ContentView>
+
+									<AbsoluteLayout BackgroundColor="Lime" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,1,1,AutoSize">
+										
+									</AbsoluteLayout>
 								</StackLayout>
-								<AbsoluteLayout AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,1,1,AutoSize">
-									<Label Text="{Binding Account.Phone}" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
-									<Image Source="phone" Aspect="AspectFit" HeightRequest="20" WidthRequest="20" AbsoluteLayout.LayoutFlags="XProportional,HeightProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,1">
-										<Image.GestureRecognizers>
-											<TapGestureRecognizer Command="{Binding DialNumberCommand}" />
-										</Image.GestureRecognizers>
-									</Image>
-								</AbsoluteLayout>
-							</AbsoluteLayout>
+							</AbsoluteLayout>-->
 						</ContentView>
 					</Grid>
 				</ContentView>

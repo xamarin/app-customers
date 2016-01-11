@@ -4,7 +4,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using System.Linq;
 using Plugin.Messaging;
-using System.Collections.Generic;
+using Plugin.ExternalMaps;
+using Plugin.ExternalMaps.Abstractions;
 
 namespace Customers
 {
@@ -28,11 +29,13 @@ namespace Customers
                 _IsNewCustomer = false;
                 Account = account;
             }
+
+            SubscribeToSaveCustomerMessages();
         }
 
         public bool IsExistingCustomer { get { return !_IsNewCustomer; } }
 
-        public string Title { get { return _IsNewCustomer ? "New Customer" : _Account.DisplayLastNameFirst; }  }
+        public string Title { get { return _IsNewCustomer ? "New Customer" : _Account.DisplayLastNameFirst; } }
 
         Customer _Account;
 
@@ -68,7 +71,7 @@ namespace Customers
             get
             {
                 return _SaveCustomerCommand ??
-                    (_SaveCustomerCommand = new Command(async () =>
+                (_SaveCustomerCommand = new Command(async () =>
                         await ExecuteSaveCustomerCommand()));
             }
         }
@@ -110,7 +113,7 @@ namespace Customers
             get
             {
                 return _EditCustomerCommand ??
-                    (_EditCustomerCommand = new Command(async () =>
+                (_EditCustomerCommand = new Command(async () =>
                         await ExecuteEditCustomerCommand()));
             }
         }
@@ -139,7 +142,7 @@ namespace Customers
             get
             {
                 return _DeleteCustomerCommand ??
-                    (_DeleteCustomerCommand = new Command(async () =>
+                (_DeleteCustomerCommand = new Command(async () =>
                         await ExecuteDeleteCustomerCommand()));
             }
         }
@@ -183,7 +186,7 @@ namespace Customers
             get
             {
                 return _DialNumberCommand ??
-                    (_DialNumberCommand = new Command(async () =>
+                (_DialNumberCommand = new Command(async () =>
                         await ExecuteDialNumberCommand()));
             }
         }
@@ -194,20 +197,43 @@ namespace Customers
                 return;      
 
             if (await Page.DisplayAlert(
-                title: $"Would you like do call {Account.DisplayName}?", 
-                message: "",
-                accept: "Call",
-                cancel: "Cancel"))
+                    title: $"Would you like to call {Account.DisplayName}?",
+                    message: "",
+                    accept: "Call",
+                    cancel: "Cancel"))
             {
                 var phoneCallTask = MessagingPlugin.PhoneDialer;
                 if (phoneCallTask.CanMakePhoneCall)
-                    phoneCallTask.MakePhoneCall(SanitizePhoneNumber(Account.Phone));
+                    phoneCallTask.MakePhoneCall(Account.Phone.SanitizePhoneNumber());
             }
         }
 
-        string SanitizePhoneNumber(string phoneNumber)
+        Command _GetDirectionsCommand;
+
+        public Command GetDirectionsCommand
         {
-            return new String(phoneNumber.ToCharArray().Where(Char.IsDigit).ToArray());
+            get
+            {
+                return _GetDirectionsCommand ??
+                (_GetDirectionsCommand = new Command(async() => 
+                        await ExecuteGetDirectionsCommand()));
+            }
+        }
+
+        async Task ExecuteGetDirectionsCommand()
+        {
+            if (await Page.DisplayAlert(
+                    "Get Directions?", 
+                    "Getting directions will take you out of this app. Continue to get directions?", 
+                    "Yes", 
+                    "Cancel"))
+            {
+                var position = await GetPosition();
+
+                var pin = new Pin() { Position = position };
+
+                CrossExternalMaps.Current.NavigateTo(pin.Label, pin.Position.Latitude, pin.Position.Longitude, NavigationType.Driving);
+            }
         }
 
         public async Task<Position> GetPosition()
@@ -221,6 +247,21 @@ namespace Customers
             MapIsBusy = false;
 
             return position;
+        }
+
+        void SubscribeToSaveCustomerMessages()
+        {
+            // This subscribes to the "SaveCustomer" message
+            MessagingCenter.Subscribe<Customer>(this, "SaveCustomer", async (customer) =>
+                {
+                    Account = customer;
+
+                    // address has been updated, so we should update the map
+                    if (Account.AddressString != customer.AddressString)
+                    {
+                        MessagingCenter.Send(this, "CustomerLocationUpdated");
+                    }
+                });
         }
     }
 }

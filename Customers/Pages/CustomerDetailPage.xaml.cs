@@ -28,6 +28,8 @@ namespace Customers
 
         async Task SetupMap()
         {
+            Map.IsVisible = false;
+
             // set to a default non-real position
             Position position = new Position(1000, 1000);
 
@@ -55,6 +57,8 @@ namespace Customers
                         Address = ViewModel.Account.AddressString 
                     };
 
+                Map.Pins.Clear();
+
                 Map.Pins.Add(pin);
 
                 Map.MoveToRegion(MapSpan.FromCenterAndRadius(pin.Position, Distance.FromMiles(20)));
@@ -69,6 +73,12 @@ namespace Customers
                 "Geocoding Error", 
                 "Something went wrong while trying to translate the street address to GPS coordinates.", 
                 "OK");
+        }
+
+        void SubscribeToCustomerLocationUpdatedMessages()
+        {
+            // update the map when receiving the CustomerLocationUpdated message
+            MessagingCenter.Subscribe<Customer>(this, "CustomerLocationUpdated", async (customer) => await SetupMap());
         }
     }
 }

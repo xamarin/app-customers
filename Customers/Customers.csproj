@@ -52,6 +52,7 @@
     <Compile Include="Pages\CustomerDetailPage.xaml.cs">
       <DependentUpon>CustomerDetailPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\StringExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.2.0.0.6490\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.0.0.6490\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
@@ -105,6 +106,12 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\portable-net45+wp80+win8+wpa81+dnxcore50\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Plugin.ExternalMaps">
+      <HintPath>..\packages\Xam.Plugin.ExternalMaps.2.0.0\lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10+UAP10\Plugin.ExternalMaps.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.ExternalMaps.Abstractions">
+      <HintPath>..\packages\Xam.Plugin.ExternalMaps.2.0.0\lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10+UAP10\Plugin.ExternalMaps.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -128,5 +135,6 @@
     <Folder Include="Pages\" />
     <Folder Include="Data\" />
     <Folder Include="Converters\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 </Project>

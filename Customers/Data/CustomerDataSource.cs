@@ -134,6 +134,8 @@ namespace Customers
                 var index = _Customers.IndexOf(existingCustomer);
 
                 _Customers[index] = item;
+
+                await WriteFile(_RootFolder, _FileName, JsonConvert.SerializeObject(_Customers));
             }
             else
             {
@@ -222,14 +224,6 @@ namespace Customers
                 .Where(c => c.Item1 != 0)
                 .OrderByDescending(e => e.Item1)
                 .Select(c => c.Item2);
-        }
-    }
-
-    public static class StringExtensions
-    {
-        public static string ToTitleCase(this string input)
-        {
-            return DependencyService.Get<ILocalization>().ToTitleCase(input);
         }
     }
 }

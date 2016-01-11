@@ -150,6 +150,12 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Plugin.ExternalMaps">
+      <HintPath>..\packages\Xam.Plugin.ExternalMaps.2.0.0\lib\Xamarin.iOS10\Plugin.ExternalMaps.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.ExternalMaps.Abstractions">
+      <HintPath>..\packages\Xam.Plugin.ExternalMaps.2.0.0\lib\Xamarin.iOS10\Plugin.ExternalMaps.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Customers\Customers.csproj">
@@ -187,6 +193,11 @@
     <BundleResource Include="Resources\save.png" />
     <BundleResource Include="Resources\save%402x.png" />
     <BundleResource Include="Resources\save%403x.png" />
+    <BundleResource Include="Resources\phone%402x.png" />
+    <BundleResource Include="Resources\phone%403x.png" />
+    <BundleResource Include="Resources\directions.png" />
+    <BundleResource Include="Resources\directions%402x.png" />
+    <BundleResource Include="Resources\directions%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\delete.png" />

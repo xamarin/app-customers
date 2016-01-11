@@ -168,7 +168,7 @@ namespace Customers
                 MessagingCenter.Send(this.Account, "DeleteCustomer");
 
                 // Performs two pops, not one. We want to navigate back to the list, not the detail screen.
-                await Navigation.PopAsync(false);
+                await Navigation.PopAsync(false); // passing false here to avoid two animations
 
                 await Navigation.PopAsync();
             }

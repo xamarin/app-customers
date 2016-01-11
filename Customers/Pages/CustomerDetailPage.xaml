@@ -6,7 +6,7 @@
 		</ResourceDictionary>
 	</ContentPage.Resources>
 	<ContentPage.ToolbarItems>
-		<ToolbarItem Text="Edit" Command="{Binding EditCustomerCommand}" />
+		<ToolbarItem Text="Edit" Icon="edit" Command="{Binding EditCustomerCommand}" />
 	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
 		<AbsoluteLayout>

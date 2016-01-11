@@ -61,7 +61,7 @@ namespace Customers
 
                 Map.Pins.Add(pin);
 
-                Map.MoveToRegion(MapSpan.FromCenterAndRadius(pin.Position, Distance.FromMiles(20)));
+                Map.MoveToRegion(MapSpan.FromCenterAndRadius(pin.Position, Distance.FromMiles(10)));
 
                 Map.IsVisible = true;
             }

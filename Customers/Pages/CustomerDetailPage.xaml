@@ -25,16 +25,13 @@
 							<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="5" WidthRequest="120" HeightRequest="120" Source="{Binding Account.PhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize" />
 						</AbsoluteLayout>
 						<ContentView Padding="5, 0, 0, 0" Grid.Row="0" Grid.Column="1">
-
 							<StackLayout Spacing="0">
-
 								<ContentView Padding="0,0,0,10">
 									<StackLayout Spacing="0">
 										<Label Text="{Binding Account.Company}" />
 										<Label Text="{Binding Account.JobTitle}" FontSize="Small" TextColor="Silver" />
 									</StackLayout>
 								</ContentView>
-
 								<ContentView Padding="0,0,0,10">
 									<AbsoluteLayout>
 										<StackLayout Spacing="0" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize">
@@ -48,7 +45,6 @@
 										</Image>
 									</AbsoluteLayout>
 								</ContentView>
-
 								<ContentView>
 									<AbsoluteLayout>
 										<Label Text="{Binding Account.Phone}" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
@@ -59,36 +55,14 @@
 										</Image>
 									</AbsoluteLayout>
 								</ContentView>
-
 							</StackLayout>
-							
-
-<!--							<AbsoluteLayout BackgroundColor="Aqua">
-								<StackLayout Spacing="0" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize">
-									<ContentView Padding="0,0,0,10">
-										
-									</ContentView>
-									<ContentView Padding="0,0,0,10">
-										<AbsoluteLayout BackgroundColor="Green" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,1,1,AutoSize">
-
-									</AbsoluteLayout>
-									</ContentView>
-									<ContentView>
-										
-									</ContentView>
-
-									<AbsoluteLayout BackgroundColor="Lime" AbsoluteLayout.LayoutFlags="PositionProportional,WidthProportional" AbsoluteLayout.LayoutBounds="0,1,1,AutoSize">
-										
-									</AbsoluteLayout>
-								</StackLayout>
-							</AbsoluteLayout>-->
 						</ContentView>
 					</Grid>
 				</ContentView>
 				<ContentView HeightRequest="1" BackgroundColor="Silver" />
 				<AbsoluteLayout VerticalOptions="FillAndExpand">
 					<ActivityIndicator IsEnabled="{Binding MapIsBusy}" IsVisible="{Binding MapIsBusy}" IsRunning="{Binding MapIsBusy}" AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.2, AutoSize" />
-					<maps:Map x:Name="Map" IsVisible="false" HasScrollEnabled="false" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, 1.0, 1.0" />
+					<maps:Map x:Name="Map" IsVisible="false" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, 1.0, 1.0" />
 				</AbsoluteLayout>
 			</StackLayout>
 		</AbsoluteLayout>

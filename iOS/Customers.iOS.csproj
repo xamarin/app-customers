@@ -43,6 +43,9 @@
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <CodesignProvision>cee08c73-84bf-4108-9b67-c4442313ed4d</CodesignProvision>
     <MtouchI18n>other</MtouchI18n>
+    <BuildIpa>true</BuildIpa>
+    <IpaPackageName>
+    </IpaPackageName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -78,6 +81,7 @@
     <IpaPackageName>
     </IpaPackageName>
     <MtouchI18n>other</MtouchI18n>
+    <BuildIpa>true</BuildIpa>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

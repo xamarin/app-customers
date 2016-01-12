@@ -11,12 +11,17 @@ namespace Customers
     {
         public CustomerListViewModel()
         {
+            _CapabilityService = DependencyService.Get<ICapabilityService>();
+
             DataSource = new CustomerDataSource();
 
             SubscribeToSaveCustomerMessages();
 
             SubscribeToDeleteCustomerMessages();
         }
+
+        // this is just a utility service that we're using in this demo app to mitigate some limitations of the iOS simulator
+        ICapabilityService _CapabilityService;
 
         readonly IDataSource<Customer> DataSource;
 
@@ -145,15 +150,98 @@ namespace Customers
             if (customer == null)
                 return;
 
-            if (await Page.DisplayAlert(
-                title: $"Would you like to call {customer.DisplayName}?",
-                message: "",
-                accept: "Call",
-                cancel: "Cancel"))
+            if (_CapabilityService.CanMakeCalls)
             {
                 var phoneCallTask = MessagingPlugin.PhoneDialer;
                 if (phoneCallTask.CanMakePhoneCall)
                     phoneCallTask.MakePhoneCall(customer.Phone.SanitizePhoneNumber());
+            }
+            else
+            {
+                await Page.DisplayAlert(
+                    title: "Simulator Not Supported", 
+                    message: "Phone calls are not supported in the iOS simulator.",
+                    cancel: "OK");
+            }
+        }
+
+        Command _MessageNumberCommand;
+
+        /// <summary>
+        /// Command to message customer phone number
+        /// </summary>
+        public Command MessageNumberCommand
+        {
+            get
+            {
+                return _MessageNumberCommand ??
+                    (_MessageNumberCommand = new Command(async (parameter) =>
+                        await ExecuteMessageNumberCommand((string)parameter)));
+            }
+        }
+
+        async Task ExecuteMessageNumberCommand(string customerId)
+        {
+            if (String.IsNullOrWhiteSpace(customerId))
+                return;
+
+            var customer = _Accounts.SingleOrDefault(c => c.Id == customerId);
+
+            if (customer == null)
+                return;     
+
+            if (_CapabilityService.CanSendMessages)
+            {
+                var messageTask = MessagingPlugin.SmsMessenger;
+                if (messageTask.CanSendSms)
+                    messageTask.SendSms(customer.Phone.SanitizePhoneNumber());
+            }
+            else
+            {
+                await Page.DisplayAlert(
+                    title: "Simulator Not Supported", 
+                    message: "Messaging is not supported in the iOS simulator.",
+                    cancel: "OK");
+            }
+        }
+
+        Command _EmailCommand;
+
+        /// <summary>
+        /// Command to email customer
+        /// </summary>
+        public Command EmailCommand
+        {
+            get
+            {
+                return _EmailCommand ??
+                    (_EmailCommand = new Command(async (parameter) =>
+                        await ExecuteEmailCommandCommand((string)parameter)));
+            }
+        }
+
+        async Task ExecuteEmailCommandCommand(string customerId)
+        {
+            if (String.IsNullOrWhiteSpace(customerId))
+                return;
+
+            var customer = _Accounts.SingleOrDefault(c => c.Id == customerId);
+
+            if (customer == null)
+                return;
+
+            if (_CapabilityService.CanSendEmail)
+            {
+                var emailTask = MessagingPlugin.EmailMessenger;
+                if (emailTask.CanSendEmail)
+                    emailTask.SendEmail(customer.Email);
+            }
+            else
+            {
+                await Page.DisplayAlert(
+                    title: "Simulator Not Supported", 
+                    message: "Email composition is not supported in the iOS simulator.",
+                    cancel: "OK");
             }
         }
 

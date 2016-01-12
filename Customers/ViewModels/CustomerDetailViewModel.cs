@@ -13,10 +13,15 @@ namespace Customers
     {
         bool _IsNewCustomer;
 
+        // this is just a utility service that we're using in this demo app to mitigate some limitations of the iOS simulator
+        ICapabilityService _CapabilityService;
+
         readonly Geocoder _Geocoder;
 
         public CustomerDetailViewModel(Customer account = null)
         {
+            _CapabilityService = DependencyService.Get<ICapabilityService>();
+
             _Geocoder = new Geocoder();
 
             if (account == null)
@@ -200,17 +205,20 @@ namespace Customers
         async Task ExecuteDialNumberCommand()
         {
             if (String.IsNullOrWhiteSpace(Account.Phone))
-                return;      
+                return;
 
-            if (await Page.DisplayAlert(
-                    title: $"Would you like to call {Account.DisplayName}?",
-                    message: "",
-                    accept: "Call",
-                    cancel: "Cancel"))
+            if (_CapabilityService.CanMakeCalls)
             {
                 var phoneCallTask = MessagingPlugin.PhoneDialer;
                 if (phoneCallTask.CanMakePhoneCall)
                     phoneCallTask.MakePhoneCall(Account.Phone.SanitizePhoneNumber());
+            }
+            else
+            {
+                await Page.DisplayAlert(
+                    title: "Simulator Not Supported", 
+                    message: "Phone calls are not supported in the iOS simulator.",
+                    cancel: "OK");
             }
         }
 
@@ -232,17 +240,20 @@ namespace Customers
         async Task ExecuteMessageNumberCommand()
         {
             if (String.IsNullOrWhiteSpace(Account.Phone))
-                return;      
+                return;
 
-            if (await Page.DisplayAlert(
-                title: $"Would you like to message {Account.DisplayName}?",
-                message: "",
-                accept: "Message",
-                cancel: "Cancel"))
+            if (_CapabilityService.CanSendMessages)
             {
                 var messageTask = MessagingPlugin.SmsMessenger;
                 if (messageTask.CanSendSms)
                     messageTask.SendSms(Account.Phone.SanitizePhoneNumber());
+            }
+            else
+            {
+                await Page.DisplayAlert(
+                    title: "Simulator Not Supported", 
+                    message: "Messaging is not supported in the iOS simulator.",
+                    cancel: "OK");
             }
         }
 
@@ -266,15 +277,18 @@ namespace Customers
             if (String.IsNullOrWhiteSpace(Account.Email))
                 return;
 
-            if (await Page.DisplayAlert(
-                title: $"Would you like to email {Account.DisplayName}?",
-                message: "",
-                accept: "Email",
-                cancel: "Cancel"))
+            if (_CapabilityService.CanSendEmail)
             {
                 var emailTask = MessagingPlugin.EmailMessenger;
                 if (emailTask.CanSendEmail)
                     emailTask.SendEmail(Account.Email);
+            }
+            else
+            {
+                await Page.DisplayAlert(
+                    title: "Simulator Not Supported", 
+                    message: "Email composition is not supported in the iOS simulator.",
+                    cancel: "OK");
             }
         }
 
@@ -292,18 +306,11 @@ namespace Customers
 
         async Task ExecuteGetDirectionsCommand()
         {
-            if (await Page.DisplayAlert(
-                    "Get Directions?", 
-                    "Getting directions will take you out of this app. Continue to get directions?", 
-                    "Yes", 
-                    "Cancel"))
-            {
-                var position = await GetPosition();
+            var position = await GetPosition();
 
-                var pin = new Pin() { Position = position };
+            var pin = new Pin() { Position = position };
 
-                CrossExternalMaps.Current.NavigateTo(pin.Label, pin.Position.Latitude, pin.Position.Longitude, NavigationType.Driving);
-            }
+            CrossExternalMaps.Current.NavigateTo(pin.Label, pin.Position.Latitude, pin.Position.Longitude, NavigationType.Driving);
         }
 
         public async Task<Position> GetPosition()
@@ -324,7 +331,7 @@ namespace Customers
         void SubscribeToSaveCustomerMessages()
         {
             // This subscribes to the "SaveCustomer" message
-            MessagingCenter.Subscribe<Customer>(this, "SaveCustomer", async (customer) =>
+            MessagingCenter.Subscribe<Customer>(this, "SaveCustomer", (customer) =>
                 {
                     Account = customer;
 

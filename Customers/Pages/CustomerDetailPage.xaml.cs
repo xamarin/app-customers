@@ -30,7 +30,7 @@ namespace Customers
             Map.IsVisible = false;
 
             // set to a default posiion
-            Position position = new Position(0, 0);
+            var position = new Position(0, 0);
 
             try
             {

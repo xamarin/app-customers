@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Customers.CustomerListPage" xmlns:local="clr-namespace:Customers" xmlns:ic="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Customers.CustomerListPage" xmlns:local="clr-namespace:Customers" xmlns:ic="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions" x:Name="customerListPage">
 	<ContentPage.Resources>
 		<ResourceDictionary>
 			<local:BooleanInverter x:Key="BooleanInverter" />
@@ -15,15 +15,19 @@
 					<ListView.ItemTemplate>
 						<DataTemplate>
 							<ViewCell StyleId="disclosure" Height="60">
+								<ViewCell.ContextActions>
+									<MenuItem Text="Email" Command="{Binding Source={x:Reference customerListPage}, Path=BindingContext.EmailCommand}" CommandParameter="{Binding Id}" />
+									<MenuItem Text="Text" Command="{Binding Source={x:Reference customerListPage}, Path=BindingContext.MessageNumberCommand}" CommandParameter="{Binding Id}" />
+									<MenuItem Text="Call" Command="{Binding Source={x:Reference customerListPage}, Path=BindingContext.DialNumberCommand}" CommandParameter="{Binding Id}" />
+								</ViewCell.ContextActions>
 								<ContentView Padding="10,0">
-
 									<AbsoluteLayout>
-
 										<StackLayout Orientation="Horizontal" Spacing="0" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize">
 											<ContentView Padding="3" WidthRequest="54">
 												<AbsoluteLayout>
-													<ActivityIndicator BindingContext="{x:Reference AvatarImage}"  IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" HeightRequest="54" WidthRequest="54" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" />
-													<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="2" HeightRequest="50" WidthRequest="50" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding SmallPhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5,0.5,AutoSize,AutoSize" />
+													<ActivityIndicator BindingContext="{x:Reference AvatarImage}" IsEnabled="{Binding IsLoading}" IsVisible="{Binding IsLoading}" IsRunning="{Binding IsLoading}" HeightRequest="54" WidthRequest="54" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" />
+													<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="2" HeightRequest="50" WidthRequest="50" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding SmallPhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="PositionProportional"
+														AbsoluteLayout.LayoutBounds="0.5,0.5,AutoSize,AutoSize" />
 												</AbsoluteLayout>
 											</ContentView>
 											<ContentView Padding="10,0,0,0">
@@ -34,20 +38,13 @@
 												</StackLayout>
 											</ContentView>
 										</StackLayout>
-
-<!--										<Image Source="phone" Aspect="AspectFit" HeightRequest="20" WidthRequest="20" AbsoluteLayout.LayoutFlags="XProportional,HeightProportional" AbsoluteLayout.LayoutBounds="1,0,AutoSize,1">
-											<Image.GestureRecognizers>
-												<TapGestureRecognizer Command="{Binding DialNumberCommand}" CommandParameter="{Binding Id}" NumberOfTapsRequired="1" />
-											</Image.GestureRecognizers>
-										</Image>-->
-
 									</AbsoluteLayout>
-
-
 								</ContentView>
 							</ViewCell>
 						</DataTemplate>
 					</ListView.ItemTemplate>
+					<ListView.ContextActions>
+					</ListView.ContextActions>
 				</ListView>
 			</OnPlatform.iOS>
 			<OnPlatform.Android>
@@ -57,12 +54,18 @@
 							<ListView.ItemTemplate>
 								<DataTemplate>
 									<ViewCell StyleId="disclosure" Height="60">
+										<ViewCell.ContextActions>
+										<MenuItem Text="Email" Command="{Binding Source={x:Reference customerListPage}, Path=BindingContext.EmailCommand}" CommandParameter="{Binding Id}" />
+										<MenuItem Text="Text" Command="{Binding Source={x:Reference customerListPage}, Path=BindingContext.MessageNumberCommand}" CommandParameter="{Binding Id}" />
+										<MenuItem Text="Call" Command="{Binding Source={x:Reference customerListPage}, Path=BindingContext.DialNumberCommand}" CommandParameter="{Binding Id}" />
+									</ViewCell.ContextActions>
 										<ContentView Padding="10,0">
 											<StackLayout Orientation="Horizontal" Spacing="0">
 												<ContentView Padding="3" WidthRequest="54">
 													<AbsoluteLayout>
 														<ActivityIndicator IsEnabled="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}}" IsRunning="{Binding IsLoading, Source={x:Reference AvatarImage}}" HeightRequest="54" WidthRequest="54" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0.5,0.5,1,1" />
-														<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="2" HeightRequest="50" WidthRequest="50" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding SmallPhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
+														<ic:CircleImage x:Name="AvatarImage" BorderColor="#547799" BorderThickness="2" HeightRequest="50" WidthRequest="50" VerticalOptions="Center" HorizontalOptions="Center" Source="{Binding SmallPhotoUrl}" IsVisible="{Binding IsLoading, Source={x:Reference AvatarImage}, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="PositionProportional"
+															AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
 													</AbsoluteLayout>
 												</ContentView>
 												<ContentView Padding="10,0,0,0">

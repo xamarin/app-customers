@@ -317,15 +317,20 @@ namespace Customers
         {
             MapIsBusy = true;
 
-            Position position;
+            Position p;
 
-            var positions = (await _Geocoder.GetPositionsForAddressAsync(Account.AddressString)).ToList();
+            p = (await _Geocoder.GetPositionsForAddressAsync(Account.AddressString)).FirstOrDefault();
 
-            position = positions.FirstOrDefault();
+            // The Android geocoder (the underlying implementation in Android itself) fails with some addresses unless they're rounded to the hundreds.
+            // So, this deals with that edge case.
+            if (p.Latitude == 0 && p.Longitude == 0 && AddressBeginsWithNumber(Account.AddressString))
+            {
+                var roundedAddress = GetAddressWithRoundedStreetNumber(Account.AddressString);
 
-            MapIsBusy = false;
+                p = (await _Geocoder.GetPositionsForAddressAsync(roundedAddress)).FirstOrDefault();
+            }
 
-            return position;
+            return p;
         }
 
         void SubscribeToSaveCustomerMessages()
@@ -341,6 +346,46 @@ namespace Customers
                         MessagingCenter.Send(this, "CustomerLocationUpdated");
                     }
                 });
+        }
+
+        static bool AddressBeginsWithNumber(string address)
+        {
+            return !String.IsNullOrWhiteSpace(address) && Char.IsDigit(address.ToCharArray().First());
+        }
+            
+        static string GetAddressWithRoundedStreetNumber(string address)
+        {
+            var endingIndex = GetEndingIndexOfNumericPortionOfAddress(address);
+
+            if (endingIndex == 0)
+                return address;
+
+            int originalNumber = 0;
+            int roundedNumber = 0;
+
+            Int32.TryParse(address.Substring(0, endingIndex + 1), out originalNumber);
+
+            if (originalNumber == 0)
+                return address;
+
+            roundedNumber = originalNumber.RoundToLowestHundreds();
+
+            return address.Replace(originalNumber.ToString(), roundedNumber.ToString());
+        }
+
+        static int GetEndingIndexOfNumericPortionOfAddress(string address)
+        {
+            int endingIndex = 0;
+
+            for (int i = 0; i < address.Length; i++)
+            {
+                if (Char.IsDigit(address[i]))
+                    endingIndex = i;
+                else
+                    break;
+            }
+
+            return endingIndex;
         }
     }
 }

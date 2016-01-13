@@ -27,30 +27,18 @@ namespace Customers
         public string PhotoUrl { get; set; }
         public string SmallPhotoUrl { get { return PhotoUrl; }}
 
-        string _AddressString;
         [JsonIgnore]
         public string AddressString
         {
             get
             {
-                if (String.IsNullOrWhiteSpace(_AddressString))
-                {
-                    var s = string.Format(
-                                "{0}{1} {2} {3} {4}",
-                                Street,
-                                !string.IsNullOrWhiteSpace(Unit) ? " " + Unit + "," : string.Empty + ",",
-                                !string.IsNullOrWhiteSpace(City) ? City + "," : string.Empty,
-                                State,
-                                PostalCode);
-
-                    _AddressString = s;
-                }
-
-                return _AddressString;
-            }
-            set 
-            {
-                _AddressString = value;
+                return string.Format(
+                    "{0}{1} {2} {3} {4}",
+                    Street,
+                    !string.IsNullOrWhiteSpace(Unit) ? " " + Unit + "," : string.Empty + ",",
+                    !string.IsNullOrWhiteSpace(City) ? City + "," : string.Empty,
+                    State,
+                    PostalCode);
             }
         }
 

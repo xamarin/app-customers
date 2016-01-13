@@ -42,6 +42,8 @@ namespace Customers
                 Account = account;
             }
 
+            _AddressString = Account.AddressString;
+
             SubscribeToSaveCustomerMessages();
 
             SubscribeToCustomerLocationUpdatedMessages();
@@ -53,11 +55,11 @@ namespace Customers
 
         public bool HasPhoneNumber { get { return Account != null && !String.IsNullOrWhiteSpace(Account.Phone); } }
 
-        public bool HasAddress { get { 
-                return Account != null && !String.IsNullOrWhiteSpace(Account.AddressString); 
-            } }
+        public bool HasAddress { get { return Account != null && !String.IsNullOrWhiteSpace(Account.AddressString); } }
 
         public string Title { get { return _IsNewCustomer ? "New Customer" : _Account.DisplayLastNameFirst; } }
+
+        private string _AddressString;
 
         Customer _Account;
 
@@ -113,6 +115,14 @@ namespace Customers
                     message: "A customer must have both a first and last name.",
                     cancel: "OK");
             }
+            else if (!RequiredAddressFieldCombinationIsFilled)
+            {
+                // display an alert, letting the user know that we require a first and last name in order to save a new customer
+                await Page.DisplayAlert(
+                    title: "Invalid address!", 
+                    message: "You must enter either a street, city, and state combination, or a postal code.",
+                    cancel: "OK");
+            }
             else
             {
                 // send a message via MessagingCenter that we want the given customer to be saved
@@ -123,6 +133,23 @@ namespace Customers
             }
 
             IsBusy = false;
+        }
+
+        bool RequiredAddressFieldCombinationIsFilled
+        {
+            get 
+            {
+                if (!Account.Street.IsNullOrWhiteSpace() && (!Account.City.IsNullOrWhiteSpace() && !Account.State.IsNullOrWhiteSpace()))
+                {
+                    return true;
+                }
+                else if (!Account.PostalCode.IsNullOrWhiteSpace() && (Account.Street.IsNullOrWhiteSpace() || Account.City.IsNullOrWhiteSpace() || Account.State.IsNullOrWhiteSpace()))
+                {
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         Command _EditCustomerCommand;
@@ -328,26 +355,33 @@ namespace Customers
         {
             _Map.IsVisible = false;
 
-            // set to a default posiion
-            var position = new Position(0, 0);
+            if (HasAddress)
+            {
 
-            try
-            {
-                position = await GetPosition();
-            }
-            catch
-            {
-                await DisplayGeocodingError();
-            }
+                // set to a default posiion
+                var position = new Position(0, 0);
 
-            // if lat and lon are both 0, then it's assumed that position acquisition failed
-            if (position.Latitude == 0 && position.Longitude == 0)
-            {
-                await DisplayGeocodingError();
-            }
-            else
-            {
-                var pin = new Pin()
+                try
+                {
+                    position = await GetPosition();
+                }
+                catch
+                {
+                    await DisplayGeocodingError();
+
+                    return;
+                }
+
+                // if lat and lon are both 0, then it's assumed that position acquisition failed
+                if (position.Latitude == 0 && position.Longitude == 0)
+                {
+                    await DisplayGeocodingError();
+
+                    return;
+                }
+                else
+                {
+                    var pin = new Pin()
                     { 
                         Type = PinType.Place, 
                         Position = position,
@@ -355,13 +389,14 @@ namespace Customers
                         Address = Account.AddressString 
                     };
 
-                _Map.Pins.Clear();
+                    _Map.Pins.Clear();
 
-                _Map.Pins.Add(pin);
+                    _Map.Pins.Add(pin);
 
-                _Map.MoveToRegion(MapSpan.FromCenterAndRadius(pin.Position, Distance.FromMiles(10)));
+                    _Map.MoveToRegion(MapSpan.FromCenterAndRadius(pin.Position, Distance.FromMiles(10)));
 
-                _Map.IsVisible = true;
+                    _Map.IsVisible = true;
+                }
             }
         }
 
@@ -369,13 +404,15 @@ namespace Customers
         {
             await Page.DisplayAlert(
                 "Geocoding Error", 
-                "Something went wrong while trying to translate the street address to GPS coordinates.", 
+                "Please make sure the address is valid.",
                 "OK");
+
+            MapIsBusy = false;
         }
 
         public async Task<Position> GetPosition()
         {
-            MapIsBusy = true;
+            MapIsBusy = true && HasAddress;
 
             Position p;
 
@@ -400,10 +437,14 @@ namespace Customers
                 {
                     Account = customer;
 
+                    OnPropertyChanged("Account");
+
                     // address has been updated, so we should update the map
-                    if (Account.AddressString != customer.AddressString)
+                    if (Account.AddressString != _AddressString)
                     {
                         MessagingCenter.Send(this, "CustomerLocationUpdated");
+
+                        _AddressString = Account.AddressString;
                     }
                 });
         }
@@ -411,7 +452,12 @@ namespace Customers
         void SubscribeToCustomerLocationUpdatedMessages()
         {
             // update the map when receiving the CustomerLocationUpdated message
-            MessagingCenter.Subscribe<Customer>(this, "CustomerLocationUpdated", async (customer) => await SetupMap());
+            MessagingCenter.Subscribe<CustomerDetailViewModel>(this, "CustomerLocationUpdated", async (sender) =>
+                {
+                    OnPropertyChanged("HasAddress");
+
+                    await SetupMap();
+                });
         }
 
         static bool AddressBeginsWithNumber(string address)

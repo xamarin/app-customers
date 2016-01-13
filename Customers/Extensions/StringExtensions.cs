@@ -16,6 +16,11 @@ namespace Customers
         {
             return DependencyService.Get<ILocalization>().ToTitleCase(input);
         }
+
+        public static bool IsNullOrWhiteSpace(this string value) 
+        {
+            return string.IsNullOrWhiteSpace(value);
+        }
     }
 }
 

@@ -89,8 +89,16 @@
 				</ContentView>
 				<ContentView HeightRequest="1" BackgroundColor="Silver" />
 				<AbsoluteLayout VerticalOptions="FillAndExpand">
-					<ActivityIndicator IsEnabled="{Binding MapIsBusy}" IsVisible="{Binding MapIsBusy}" IsRunning="{Binding MapIsBusy}" AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.2, AutoSize" />
-					<maps:Map x:Name="_Map" IsVisible="false" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, 1.0, 1.0" />
+					<ContentView Padding="50" VerticalOptions="Center" IsVisible="{Binding HasAddress, Converter={StaticResource BooleanInverter}}" IsEnabled="{Binding HasAddress, Converter={StaticResource BooleanInverter}}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, 1.0, 1.0">
+						<StackLayout Spacing="20">
+							<Label Text="No map is available because this person does not have an address." VerticalTextAlignment="Center" />	
+							<Label Text="Enter an address on the edit screeen to see this person's location on a map." VerticalTextAlignment="Center" />	
+						</StackLayout>
+					</ContentView>
+					<AbsoluteLayout IsEnabled="{Binding HasAddress}" IsVisible="{Binding HasAddress}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, 1.0, 1.0">
+						<ActivityIndicator IsVisible="{Binding MapIsBusy}" IsRunning="{Binding MapIsBusy}" AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.2, AutoSize" />
+						<maps:Map x:Name="_Map" IsVisible="false" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, 1.0, 1.0" />
+					</AbsoluteLayout>
 				</AbsoluteLayout>
 			</StackLayout>
 		</AbsoluteLayout>

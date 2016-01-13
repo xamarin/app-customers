@@ -15,6 +15,8 @@ namespace Customers
             InitializeComponent();
         }
 
+
+
         void StateEntry_PropertyChanged (object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Text")

@@ -11,7 +11,7 @@
 	<ContentPage.Content>
 		<OnPlatform x:TypeArguments="View">
 			<OnPlatform.iOS>
-				<ListView ItemsSource="{Binding Accounts}" CachingStrategy="RecycleElement" RowHeight="60" HasUnevenRows="false" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+				<ListView ItemsSource="{Binding Accounts}" CachingStrategy="RecycleElement" RowHeight="60" HasUnevenRows="false" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding LoadCustomersCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
 					<ListView.ItemTemplate>
 						<DataTemplate>
 							<ViewCell StyleId="disclosure" Height="60">
@@ -50,7 +50,7 @@
 			<OnPlatform.Android>
 				<AbsoluteLayout x:Name="absLayout">
 					<AbsoluteLayout.Children>
-						<ListView ItemsSource="{Binding Accounts}" CachingStrategy="RecycleElement" RowHeight="60" HasUnevenRows="false" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding CustomersRefreshCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+						<ListView ItemsSource="{Binding Accounts}" CachingStrategy="RecycleElement" RowHeight="60" HasUnevenRows="false" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding LoadCustomersCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
 							<ListView.ItemTemplate>
 								<DataTemplate>
 									<ViewCell StyleId="disclosure" Height="60">

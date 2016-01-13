@@ -10,8 +10,6 @@ namespace Customers
     /// </summary>
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
-        public bool IsInitialized { get; set; }
-
         bool _IsBusy;
         /// <summary>
         /// Gets or sets the "IsBusy" property

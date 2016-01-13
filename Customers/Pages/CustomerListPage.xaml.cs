@@ -51,12 +51,10 @@ namespace Customers
         {
             base.OnAppearing();
 
-            if (ViewModel.IsInitialized)
+            if (!ViewModel.NeedsRefresh)
                 return;
             
             ViewModel.LoadCustomersCommand.Execute(null);
-
-            ViewModel.IsInitialized = true;
         }
     }
 }

@@ -139,7 +139,11 @@ namespace Customers
         {
             get 
             {
-                if (!Account.Street.IsNullOrWhiteSpace() && (!Account.City.IsNullOrWhiteSpace() && !Account.State.IsNullOrWhiteSpace()))
+                if (Account.AddressString.IsNullOrWhiteSpace())
+                {
+                    return true;
+                }
+                else if (!Account.Street.IsNullOrWhiteSpace() && (!Account.City.IsNullOrWhiteSpace() && !Account.State.IsNullOrWhiteSpace()))
                 {
                     return true;
                 }

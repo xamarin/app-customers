@@ -18,6 +18,10 @@ namespace Customers
             SubscribeToSaveCustomerMessages();
 
             SubscribeToDeleteCustomerMessages();
+
+            _NeedsRefresh = true;
+
+            Accounts = new ObservableCollection<Customer>();
         }
 
         // this is just a utility service that we're using in this demo app to mitigate some limitations of the iOS simulator
@@ -29,9 +33,15 @@ namespace Customers
 
         Command _LoadCustomersCommand;
 
-        Command _CustomersRefreshCommand;
-
         Command _NewCustomerCommand;
+
+        bool _NeedsRefresh;
+        public bool NeedsRefresh { get { return _NeedsRefresh; } }
+
+        async Task Refresh()
+        {
+            await FetchCustomers();
+        }
 
         async Task FetchCustomers()
         {
@@ -63,6 +73,7 @@ namespace Customers
 
             await FetchCustomers();
 
+            _NeedsRefresh = false;
             IsBusy = false;
             LoadCustomersCommand.ChangeCanExecute(); 
         }
@@ -98,32 +109,32 @@ namespace Customers
             IsBusy = false;
         }
 
-        /// <summary>
-        /// Command to fetch emote customers
-        /// </summary>
-        public Command CustomersRefreshCommand
-        {
-            get
-            {
-                return _CustomersRefreshCommand ??
-                (_CustomersRefreshCommand = new Command(async () =>
-                        await ExecuteCustomersRefreshCommand()));
-            }
-        }
-
-        async Task ExecuteCustomersRefreshCommand()
-        {
-            if (IsBusy)
-                return;
-
-            IsBusy = true;
-            _CustomersRefreshCommand.ChangeCanExecute();
-
-            await FetchCustomers();
-
-            IsBusy = false;
-            _CustomersRefreshCommand.ChangeCanExecute();
-        }
+//        /// <summary>
+//        /// Command to fetch emote customers
+//        /// </summary>
+//        public Command CustomersRefreshCommand
+//        {
+//            get
+//            {
+//                return _CustomersRefreshCommand ??
+//                (_CustomersRefreshCommand = new Command(async () =>
+//                        await ExecuteCustomersRefreshCommand()));
+//            }
+//        }
+//
+//        async Task ExecuteCustomersRefreshCommand()
+//        {
+//            if (IsBusy)
+//                return;
+//
+//            IsBusy = true;
+//            _CustomersRefreshCommand.ChangeCanExecute();
+//
+//            await FetchCustomers();
+//
+//            IsBusy = false;
+//            _CustomersRefreshCommand.ChangeCanExecute();
+//        }
 
         Command _DialNumberCommand;
 
@@ -260,7 +271,7 @@ namespace Customers
 
                     await DataSource.SaveItem(customer);
 
-                    await FetchCustomers();
+                    _NeedsRefresh = true;
 
                     IsBusy = false;
                 });
@@ -275,7 +286,7 @@ namespace Customers
 
                     await DataSource.DeleteItem(customer.Id);
 
-                    await FetchCustomers();
+                    _NeedsRefresh = true;
 
                     IsBusy = false;
                 });

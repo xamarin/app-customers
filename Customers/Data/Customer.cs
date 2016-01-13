@@ -35,8 +35,8 @@ namespace Customers
                 return string.Format(
                     "{0}{1} {2} {3} {4}",
                     Street,
-                    !string.IsNullOrWhiteSpace(Unit) ? " " + Unit + "," : string.Empty + ",",
-                    !string.IsNullOrWhiteSpace(City) ? City + "," : string.Empty,
+                    !string.IsNullOrWhiteSpace(Unit) ? " " + Unit + "," : !string.IsNullOrWhiteSpace(Street) ? "," : "",
+                    !string.IsNullOrWhiteSpace(City) ? City + "," : "",
                     State,
                     PostalCode);
             }

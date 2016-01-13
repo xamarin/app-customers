@@ -18,16 +18,23 @@ namespace Customers
 
         readonly Geocoder _Geocoder;
 
-        public CustomerDetailViewModel(Customer account = null)
+        Map _Map;
+
+        public CustomerDetailViewModel(Customer account = null, Map map = null)
         {
             _CapabilityService = DependencyService.Get<ICapabilityService>();
 
             _Geocoder = new Geocoder();
 
+            _Map = map;
+
             if (account == null)
             {
                 _IsNewCustomer = true;
-                Account = new Customer();
+                Account = new Customer()
+                {
+                    PhotoUrl = "placeholderProfileImage"
+                };
             }
             else
             {
@@ -36,15 +43,19 @@ namespace Customers
             }
 
             SubscribeToSaveCustomerMessages();
+
+            SubscribeToCustomerLocationUpdatedMessages();
         }
 
         public bool IsExistingCustomer { get { return !_IsNewCustomer; } }
 
-        public bool HasEmailAddress { get { return Account != null && !String.IsNullOrWhiteSpace(Account.Email); }}
+        public bool HasEmailAddress { get { return Account != null && !String.IsNullOrWhiteSpace(Account.Email); } }
 
         public bool HasPhoneNumber { get { return Account != null && !String.IsNullOrWhiteSpace(Account.Phone); } }
 
-        public bool HasAddress { get { return Account != null && !String.IsNullOrWhiteSpace(Account.AddressString); } }
+        public bool HasAddress { get { 
+                return Account != null && !String.IsNullOrWhiteSpace(Account.AddressString); 
+            } }
 
         public string Title { get { return _IsNewCustomer ? "New Customer" : _Account.DisplayLastNameFirst; } }
 
@@ -232,7 +243,7 @@ namespace Customers
             get
             {
                 return _MessageNumberCommand ??
-                    (_MessageNumberCommand = new Command(async () =>
+                (_MessageNumberCommand = new Command(async () =>
                         await ExecuteMessageNumberCommand()));
             }
         }
@@ -267,7 +278,7 @@ namespace Customers
             get
             {
                 return _EmailCommand ??
-                    (_EmailCommand = new Command(async () =>
+                (_EmailCommand = new Command(async () =>
                         await ExecuteEmailCommandCommand()));
             }
         }
@@ -313,6 +324,55 @@ namespace Customers
             CrossExternalMaps.Current.NavigateTo(pin.Label, pin.Position.Latitude, pin.Position.Longitude, NavigationType.Driving);
         }
 
+        public async Task SetupMap()
+        {
+            _Map.IsVisible = false;
+
+            // set to a default posiion
+            var position = new Position(0, 0);
+
+            try
+            {
+                position = await GetPosition();
+            }
+            catch
+            {
+                await DisplayGeocodingError();
+            }
+
+            // if lat and lon are both 0, then it's assumed that position acquisition failed
+            if (position.Latitude == 0 && position.Longitude == 0)
+            {
+                await DisplayGeocodingError();
+            }
+            else
+            {
+                var pin = new Pin()
+                    { 
+                        Type = PinType.Place, 
+                        Position = position,
+                        Label = Account.DisplayName, 
+                        Address = Account.AddressString 
+                    };
+
+                _Map.Pins.Clear();
+
+                _Map.Pins.Add(pin);
+
+                _Map.MoveToRegion(MapSpan.FromCenterAndRadius(pin.Position, Distance.FromMiles(10)));
+
+                _Map.IsVisible = true;
+            }
+        }
+
+        async Task DisplayGeocodingError()
+        {
+            await Page.DisplayAlert(
+                "Geocoding Error", 
+                "Something went wrong while trying to translate the street address to GPS coordinates.", 
+                "OK");
+        }
+
         public async Task<Position> GetPosition()
         {
             MapIsBusy = true;
@@ -348,11 +408,17 @@ namespace Customers
                 });
         }
 
+        void SubscribeToCustomerLocationUpdatedMessages()
+        {
+            // update the map when receiving the CustomerLocationUpdated message
+            MessagingCenter.Subscribe<Customer>(this, "CustomerLocationUpdated", async (customer) => await SetupMap());
+        }
+
         static bool AddressBeginsWithNumber(string address)
         {
             return !String.IsNullOrWhiteSpace(address) && Char.IsDigit(address.ToCharArray().First());
         }
-            
+
         static string GetAddressWithRoundedStreetNumber(string address)
         {
             var endingIndex = GetEndingIndexOfNumericPortionOfAddress(address);

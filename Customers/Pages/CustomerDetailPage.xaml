@@ -50,7 +50,7 @@
 										</AbsoluteLayout>
 									</StackLayout>
 								</ContentView>
-								<ContentView HeightRequest="1" BackgroundColor="Silver" />
+								<ContentView HeightRequest="1" BackgroundColor="Silver" IsEnabled="{Binding HasAddress}" IsVisible="{Binding HasAddress}" />
 								<ContentView IsEnabled="{Binding HasPhoneNumber}" IsVisible="{Binding HasPhoneNumber}">
 									<AbsoluteLayout>
 										<Label Text="{Binding Account.Phone}" FontSize="Small" HeightRequest="20" VerticalTextAlignment="Center" AbsoluteLayout.LayoutFlags="XProportional" AbsoluteLayout.LayoutBounds="0,0,AutoSize,AutoSize" />
@@ -70,7 +70,7 @@
 										</StackLayout>
 									</AbsoluteLayout>
 								</ContentView>
-								<ContentView HeightRequest="1" BackgroundColor="Silver" />
+								<ContentView HeightRequest="1" BackgroundColor="Silver" IsEnabled="{Binding HasPhoneNumber}" IsVisible="{Binding HasPhoneNumber}" />
 								<ContentView IsEnabled="{Binding HasEmailAddress}" IsVisible="{Binding HasEmailAddress}">
 									<AbsoluteLayout>
 										<ContentView Padding="0">
@@ -90,7 +90,7 @@
 				<ContentView HeightRequest="1" BackgroundColor="Silver" />
 				<AbsoluteLayout VerticalOptions="FillAndExpand">
 					<ActivityIndicator IsEnabled="{Binding MapIsBusy}" IsVisible="{Binding MapIsBusy}" IsRunning="{Binding MapIsBusy}" AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional" AbsoluteLayout.LayoutBounds="0.5, 0.5, 0.2, AutoSize" />
-					<maps:Map x:Name="Map" IsVisible="false" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, 1.0, 1.0" />
+					<maps:Map x:Name="_Map" IsVisible="false" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0, 0, 1.0, 1.0" />
 				</AbsoluteLayout>
 			</StackLayout>
 		</AbsoluteLayout>

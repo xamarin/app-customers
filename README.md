@@ -1,5 +1,5 @@
 # app-customers
-A simple Xamarin.Forms demo app with three screens:
+A simple Xamarin.Forms demo app with three primary screens:
 
 * a list screen
 * a read-only detail screen

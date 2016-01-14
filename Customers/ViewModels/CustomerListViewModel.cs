@@ -96,33 +96,6 @@ namespace Customers
             IsBusy = false;
         }
 
-//        /// <summary>
-//        /// Command to fetch emote customers
-//        /// </summary>
-//        public Command CustomersRefreshCommand
-//        {
-//            get
-//            {
-//                return _CustomersRefreshCommand ??
-//                (_CustomersRefreshCommand = new Command(async () =>
-//                        await ExecuteCustomersRefreshCommand()));
-//            }
-//        }
-//
-//        async Task ExecuteCustomersRefreshCommand()
-//        {
-//            if (IsBusy)
-//                return;
-//
-//            IsBusy = true;
-//            _CustomersRefreshCommand.ChangeCanExecute();
-//
-//            await FetchCustomers();
-//
-//            IsBusy = false;
-//            _CustomersRefreshCommand.ChangeCanExecute();
-//        }
-
         Command _DialNumberCommand;
 
         /// <summary>

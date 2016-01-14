@@ -48,7 +48,7 @@ namespace Customers
         /// Generally, you don't want a ViewModel to be aware of it's associated View (Page),
         /// But since the DisplayAlert() method is only available on Page, we're holding onto 
         /// a reference to Page so that we can use DisplayAlert() from within ViewModels. An 
-        /// alternative pattern would be use MessagingCenter to send messges from the ViewModel 
+        /// alternative pattern would be use MessagingCenter to send messages from the ViewModel 
         /// to the Page in order to have Page call DisplayAlert() as needed.
         /// </summary>
         /// <value>The page which referencces this ViewModel.</value>

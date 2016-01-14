@@ -77,6 +77,7 @@ namespace Customers.UITests
             app.Screenshot("Verified map is set to current address");
             app.Tap(x => x.Marked("edit"));
             app.Screenshot("Tapped on 'edit' button");
+            app.ScrollDownTo(x => x.Marked("Street").Sibling());
             app.Tap(x => x.Marked("Street").Sibling());
             app.ClearText(x => x.Marked("Street").Sibling());
             app.EnterText("394 Pacific Ave");

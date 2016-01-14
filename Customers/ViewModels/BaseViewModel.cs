@@ -10,6 +10,12 @@ namespace Customers
     /// </summary>
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// A property for indicating to viewmodel processes whether or not 
+        /// the viewmodel should be refreshed. Only intended to be set by 
+        /// derived viewmodels, but can be read publicly.
+        /// </summary>
+        /// <value><c>true</c> if needs refresh; otherwise, <c>false</c>.</value>
         public bool NeedsRefresh
         {
             get;
@@ -20,7 +26,7 @@ namespace Customers
         /// <summary>
         /// Gets or sets the "IsBusy" property
         /// </summary>
-        /// <value>The isbusy property.</value>
+        /// <value>The IsBusy property.</value>
         public const string IsBusyPropertyName = "IsBusy";
 
         public bool IsBusy
@@ -30,7 +36,11 @@ namespace Customers
         }
 
         INavigation _Navigation;
-
+        /// <summary>
+        /// A reference to INavigation, typically assigned from the Navigation property on a Page. 
+        /// Allows use of INavigation from within viewmodels, which can be quite handy.
+        /// </summary>
+        /// <value>The navigation.</value>
         public INavigation Navigation
         {
             get { return _Navigation; }
@@ -43,6 +53,15 @@ namespace Customers
 
         Page _Page;
 
+        /// <summary>
+        /// A reference to the page that this ViewModel belongs to. 
+        /// Generally, you don't want a ViewModel to be aware of it's associated View (Page),
+        /// But since the DisplayAlert() method is only available on Page, we're holding onto 
+        /// a reference to Page so that we can use DisplayAlert() from within ViewModels. An 
+        /// alternative pattern would be use MessagingCenter to send messages from the ViewModel 
+        /// to the Page in order to have Page call DisplayAlert() as needed.
+        /// </summary>
+        /// <value>The page which referencces this ViewModel.</value>
         public Page Page
         {
             get { return _Page; }

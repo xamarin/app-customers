@@ -216,6 +216,9 @@ namespace Customers
             }
         }
 
+        /// <summary>
+        /// Subscribes to "SaveCustomer" messages from MessagingCenter.
+        /// </summary>
         void SubscribeToSaveCustomerMessages()
         {
             // This subscribes to the "SaveCustomer" message, and then inserts or updates the customer accordingly
@@ -237,6 +240,9 @@ namespace Customers
                 });
         }
 
+        /// <summary>
+        /// Subscribes to "DeleteCustomer" messages from MessagingCenter.
+        /// </summary>
         void SubscribeToDeleteCustomerMessages()
         {
             // This subscribes to the "DeleteCustomer" message, and then deletes the customer accordingly

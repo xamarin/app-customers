@@ -7,25 +7,25 @@
 		<TableView Intent="Settings" BackgroundColor="White">
 			<TableRoot>
 				<TableSection Title="Name">
-					<EntryCell Label="First" Text="{Binding Account.FirstName}" Keyboard="Text" />
-					<EntryCell Label="Last" Text="{Binding Account.LastName}" Keyboard="Text" />
+					<EntryCell Label="First" Text="{Binding Customer.FirstName}" Keyboard="Text" />
+					<EntryCell Label="Last" Text="{Binding Customer.LastName}" Keyboard="Text" />
 				</TableSection>
 				<TableSection Title="Employment">
-					<EntryCell Label="Company" Text="{Binding Account.Company}" Keyboard="Text" />
-					<EntryCell Label="Title" Text="{Binding Account.JobTitle}" Keyboard="Text" />
+					<EntryCell Label="Company" Text="{Binding Customer.Company}" Keyboard="Text" />
+					<EntryCell Label="Title" Text="{Binding Customer.JobTitle}" Keyboard="Text" />
 				</TableSection>
 				<TableSection Title="Contact">
-					<EntryCell Label="Phone" Text="{Binding Account.Phone}" Keyboard="Telephone" />
-					<EntryCell Label="Email" Text="{Binding Account.Email}" Keyboard="Email" />
+					<EntryCell Label="Phone" Text="{Binding Customer.Phone}" Keyboard="Telephone" />
+					<EntryCell Label="Email" Text="{Binding Customer.Email}" Keyboard="Email" />
 				</TableSection>
 				<TableSection Title="Address">
-					<EntryCell Label="Street" Text="{Binding Account.Street}" Keyboard="Text" />
-					<EntryCell Label="City" Text="{Binding Account.City}" Keyboard="Text" />
-					<EntryCell Label="State" Text="{Binding Account.State}" Keyboard="Text" PropertyChanged="StateEntry_PropertyChanged" />
-					<EntryCell Label="ZIP" Text="{Binding Account.PostalCode}" Keyboard="Numeric" PropertyChanged="PostalCode_PropertyChanged" />
+					<EntryCell Label="Street" Text="{Binding Customer.Street}" Keyboard="Text" />
+					<EntryCell Label="City" Text="{Binding Customer.City}" Keyboard="Text" />
+					<EntryCell Label="State" Text="{Binding Customer.State}" Keyboard="Text" PropertyChanged="StateEntry_PropertyChanged" />
+					<EntryCell Label="ZIP" Text="{Binding Customer.PostalCode}" Keyboard="Numeric" PropertyChanged="PostalCode_PropertyChanged" />
 					<ViewCell IsEnabled="{Binding IsExistingCustomer}">
 						<ContentView Padding="20, 0" IsEnabled="{Binding IsExistingCustomer}" IsVisible="{Binding IsExistingCustomer}">
-							<Button BackgroundColor="#fd6d6d" Text="{Binding Account.DisplayName, StringFormat='Delete {0}'}" TextColor="White" Command="{Binding DeleteCustomerCommand}" />
+							<Button BackgroundColor="#fd6d6d" Text="{Binding Customer.DisplayName, StringFormat='Delete {0}'}" TextColor="White" Command="{Binding DeleteCustomerCommand}" />
 						</ContentView>
 					</ViewCell>
 				</TableSection>

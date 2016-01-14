@@ -20,7 +20,7 @@ namespace Customers
 
         Map _Map;
 
-        public CustomerDetailViewModel(Customer account = null, Map map = null)
+        public CustomerDetailViewModel(Customer customer = null, Map map = null)
         {
             _CapabilityService = DependencyService.Get<ICapabilityService>();
 
@@ -28,10 +28,10 @@ namespace Customers
 
             _Map = map;
 
-            if (account == null)
+            if (customer == null)
             {
                 _IsNewCustomer = true;
-                Account = new Customer()
+                Customer = new Customer()
                 {
                     PhotoUrl = "placeholderProfileImage"
                 };
@@ -39,10 +39,10 @@ namespace Customers
             else
             {
                 _IsNewCustomer = false;
-                Account = account;
+                Customer = customer;
             }
 
-            _AddressString = Account.AddressString;
+            _AddressString = Customer.AddressString;
 
             SubscribeToSaveCustomerMessages();
 
@@ -51,25 +51,25 @@ namespace Customers
 
         public bool IsExistingCustomer { get { return !_IsNewCustomer; } }
 
-        public bool HasEmailAddress { get { return Account != null && !String.IsNullOrWhiteSpace(Account.Email); } }
+        public bool HasEmailAddress { get { return Customer != null && !String.IsNullOrWhiteSpace(Customer.Email); } }
 
-        public bool HasPhoneNumber { get { return Account != null && !String.IsNullOrWhiteSpace(Account.Phone); } }
+        public bool HasPhoneNumber { get { return Customer != null && !String.IsNullOrWhiteSpace(Customer.Phone); } }
 
-        public bool HasAddress { get { return Account != null && !String.IsNullOrWhiteSpace(Account.AddressString); } }
+        public bool HasAddress { get { return Customer != null && !String.IsNullOrWhiteSpace(Customer.AddressString); } }
 
-        public string Title { get { return _IsNewCustomer ? "New Customer" : _Account.DisplayLastNameFirst; } }
+        public string Title { get { return _IsNewCustomer ? "New Customer" : _Customer.DisplayLastNameFirst; } }
 
         private string _AddressString;
 
-        Customer _Account;
+        Customer _Customer;
 
-        public Customer Account
+        public Customer Customer
         {
-            get { return _Account; }
+            get { return _Customer; }
             set
             {
-                _Account = value;
-                OnPropertyChanged("Account");
+                _Customer = value;
+                OnPropertyChanged("Customer");
             }
         }
 
@@ -107,7 +107,7 @@ namespace Customers
 
             IsBusy = true;
 
-            if (String.IsNullOrWhiteSpace(Account.LastName) || String.IsNullOrWhiteSpace(Account.FirstName))
+            if (String.IsNullOrWhiteSpace(Customer.LastName) || String.IsNullOrWhiteSpace(Customer.FirstName))
             {
                 // display an alert, letting the user know that we require a first and last name in order to save a new customer
                 await Page.DisplayAlert(
@@ -126,7 +126,7 @@ namespace Customers
             else
             {
                 // send a message via MessagingCenter that we want the given customer to be saved
-                MessagingCenter.Send(this.Account, "SaveCustomer");
+                MessagingCenter.Send(this.Customer, "SaveCustomer");
 
                 // perform a pop in order to navigate back to the customer list
                 await Navigation.PopAsync();
@@ -139,15 +139,15 @@ namespace Customers
         {
             get 
             {
-                if (Account.AddressString.IsNullOrWhiteSpace())
+                if (Customer.AddressString.IsNullOrWhiteSpace())
                 {
                     return true;
                 }
-                else if (!Account.Street.IsNullOrWhiteSpace() && (!Account.City.IsNullOrWhiteSpace() && !Account.State.IsNullOrWhiteSpace()))
+                else if (!Customer.Street.IsNullOrWhiteSpace() && (!Customer.City.IsNullOrWhiteSpace() && !Customer.State.IsNullOrWhiteSpace()))
                 {
                     return true;
                 }
-                else if (!Account.PostalCode.IsNullOrWhiteSpace() && (Account.Street.IsNullOrWhiteSpace() || Account.City.IsNullOrWhiteSpace() || Account.State.IsNullOrWhiteSpace()))
+                else if (!Customer.PostalCode.IsNullOrWhiteSpace() && (Customer.Street.IsNullOrWhiteSpace() || Customer.City.IsNullOrWhiteSpace() || Customer.State.IsNullOrWhiteSpace()))
                 {
                     return true;
                 }
@@ -210,7 +210,7 @@ namespace Customers
             // display an alert and get the result of the user's decision
             var confirmDelete = 
                 await Page.DisplayAlert(
-                    title: String.Format("Delete {0}?", Account.DisplayName), 
+                    title: String.Format("Delete {0}?", Customer.DisplayName), 
                     message: null, 
                     accept: "Delete", 
                     cancel: "Cancel");
@@ -218,7 +218,7 @@ namespace Customers
             if (confirmDelete)
             {
                 // send a message via MessagingCenter that we want the given customer to be deleted
-                MessagingCenter.Send(this.Account, "DeleteCustomer");
+                MessagingCenter.Send(this.Customer, "DeleteCustomer");
 
                 // Performs two pops, not one. We want to navigate back to the list, not the detail screen.
                 await Navigation.PopAsync(false); // passing false here to avoid two animations
@@ -246,14 +246,14 @@ namespace Customers
 
         async Task ExecuteDialNumberCommand()
         {
-            if (String.IsNullOrWhiteSpace(Account.Phone))
+            if (String.IsNullOrWhiteSpace(Customer.Phone))
                 return;
 
             if (_CapabilityService.CanMakeCalls)
             {
                 var phoneCallTask = MessagingPlugin.PhoneDialer;
                 if (phoneCallTask.CanMakePhoneCall)
-                    phoneCallTask.MakePhoneCall(Account.Phone.SanitizePhoneNumber());
+                    phoneCallTask.MakePhoneCall(Customer.Phone.SanitizePhoneNumber());
             }
             else
             {
@@ -281,14 +281,14 @@ namespace Customers
 
         async Task ExecuteMessageNumberCommand()
         {
-            if (String.IsNullOrWhiteSpace(Account.Phone))
+            if (String.IsNullOrWhiteSpace(Customer.Phone))
                 return;
 
             if (_CapabilityService.CanSendMessages)
             {
                 var messageTask = MessagingPlugin.SmsMessenger;
                 if (messageTask.CanSendSms)
-                    messageTask.SendSms(Account.Phone.SanitizePhoneNumber());
+                    messageTask.SendSms(Customer.Phone.SanitizePhoneNumber());
             }
             else
             {
@@ -316,14 +316,14 @@ namespace Customers
 
         async Task ExecuteEmailCommandCommand()
         {
-            if (String.IsNullOrWhiteSpace(Account.Email))
+            if (String.IsNullOrWhiteSpace(Customer.Email))
                 return;
 
             if (_CapabilityService.CanSendEmail)
             {
                 var emailTask = MessagingPlugin.EmailMessenger;
                 if (emailTask.CanSendEmail)
-                    emailTask.SendEmail(Account.Email);
+                    emailTask.SendEmail(Customer.Email);
             }
             else
             {
@@ -389,8 +389,8 @@ namespace Customers
                     { 
                         Type = PinType.Place, 
                         Position = position,
-                        Label = Account.DisplayName, 
-                        Address = Account.AddressString 
+                        Label = Customer.DisplayName, 
+                        Address = Customer.AddressString 
                     };
 
                     _Map.Pins.Clear();
@@ -420,13 +420,13 @@ namespace Customers
 
             Position p;
 
-            p = (await _Geocoder.GetPositionsForAddressAsync(Account.AddressString)).FirstOrDefault();
+            p = (await _Geocoder.GetPositionsForAddressAsync(Customer.AddressString)).FirstOrDefault();
 
             // The Android geocoder (the underlying implementation in Android itself) fails with some addresses unless they're rounded to the hundreds.
             // So, this deals with that edge case.
-            if (p.Latitude == 0 && p.Longitude == 0 && AddressBeginsWithNumber(Account.AddressString))
+            if (p.Latitude == 0 && p.Longitude == 0 && AddressBeginsWithNumber(Customer.AddressString))
             {
-                var roundedAddress = GetAddressWithRoundedStreetNumber(Account.AddressString);
+                var roundedAddress = GetAddressWithRoundedStreetNumber(Customer.AddressString);
 
                 p = (await _Geocoder.GetPositionsForAddressAsync(roundedAddress)).FirstOrDefault();
             }
@@ -439,16 +439,14 @@ namespace Customers
             // This subscribes to the "SaveCustomer" message
             MessagingCenter.Subscribe<Customer>(this, "SaveCustomer", (customer) =>
                 {
-                    Account = customer;
-
-                    OnPropertyChanged("Account");
+                    Customer = customer;
 
                     // address has been updated, so we should update the map
-                    if (Account.AddressString != _AddressString)
+                    if (Customer.AddressString != _AddressString)
                     {
                         MessagingCenter.Send(this, "CustomerLocationUpdated");
 
-                        _AddressString = Account.AddressString;
+                        _AddressString = Customer.AddressString;
                     }
                 });
         }

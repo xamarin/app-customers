@@ -19,9 +19,9 @@ namespace Customers
 
             SubscribeToDeleteCustomerMessages();
 
-            _NeedsRefresh = true;
+            NeedsRefresh = true;
 
-            Accounts = new ObservableCollection<Customer>();
+            Customers = new ObservableCollection<Customer>();
         }
 
         // this is just a utility service that we're using in this demo app to mitigate some limitations of the iOS simulator
@@ -29,37 +29,24 @@ namespace Customers
 
         readonly IDataSource<Customer> DataSource;
 
-        ObservableCollection<Customer> _Accounts;
+        ObservableCollection<Customer> _Customers;
 
         Command _LoadCustomersCommand;
 
         Command _NewCustomerCommand;
 
-        bool _NeedsRefresh;
-        public bool NeedsRefresh { get { return _NeedsRefresh; } }
-
-        async Task Refresh()
+        public ObservableCollection<Customer> Customers
         {
-            await FetchCustomers();
-        }
-
-        async Task FetchCustomers()
-        {
-            Accounts = new ObservableCollection<Customer>(await DataSource.GetItems(0, 1000));
-        }
-
-        public ObservableCollection<Customer> Accounts
-        {
-            get { return _Accounts; }
+            get { return _Customers; }
             set
             {
-                _Accounts = value;
-                OnPropertyChanged("Accounts");
+                _Customers = value;
+                OnPropertyChanged("Customers");
             }
         }
 
         /// <summary>
-        /// Command to load accounts
+        /// Command to load customers
         /// </summary>
         public Command LoadCustomersCommand
         {
@@ -71,9 +58,9 @@ namespace Customers
             IsBusy = true;
             LoadCustomersCommand.ChangeCanExecute();
 
-            await FetchCustomers();
+            Customers = new ObservableCollection<Customer>(await DataSource.GetItems(0, 1000));
 
-            _NeedsRefresh = false;
+            NeedsRefresh = false;
             IsBusy = false;
             LoadCustomersCommand.ChangeCanExecute(); 
         }
@@ -156,7 +143,7 @@ namespace Customers
             if (String.IsNullOrWhiteSpace(customerId))
                 return;
 
-            var customer = _Accounts.SingleOrDefault(c => c.Id == customerId);
+            var customer = _Customers.SingleOrDefault(c => c.Id == customerId);
 
             if (customer == null)
                 return;
@@ -196,7 +183,7 @@ namespace Customers
             if (String.IsNullOrWhiteSpace(customerId))
                 return;
 
-            var customer = _Accounts.SingleOrDefault(c => c.Id == customerId);
+            var customer = _Customers.SingleOrDefault(c => c.Id == customerId);
 
             if (customer == null)
                 return;     
@@ -236,7 +223,7 @@ namespace Customers
             if (String.IsNullOrWhiteSpace(customerId))
                 return;
 
-            var customer = _Accounts.SingleOrDefault(c => c.Id == customerId);
+            var customer = _Customers.SingleOrDefault(c => c.Id == customerId);
 
             if (customer == null)
                 return;
@@ -271,7 +258,7 @@ namespace Customers
 
                     await DataSource.SaveItem(customer);
 
-                    _NeedsRefresh = true;
+                    NeedsRefresh = true;
 
                     IsBusy = false;
                 });
@@ -286,7 +273,7 @@ namespace Customers
 
                     await DataSource.DeleteItem(customer.Id);
 
-                    _NeedsRefresh = true;
+                    NeedsRefresh = true;
 
                     IsBusy = false;
                 });

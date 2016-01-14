@@ -24,9 +24,6 @@ Insert it in `~/Droid/Properties/AndroidManifest.xml`:
       ...
     </application>
 
-## Screenshots
-<img src="https://raw.githubusercontent.com/jsauvexamarin/app-customers/master/Screenshots/Customers_ListPage.png" width="600" />
-<img src="https://raw.githubusercontent.com/jsauvexamarin/app-customers/master/Screenshots/Customers_DetailPage.png" width="600" />
-<img src="https://raw.githubusercontent.com/jsauvexamarin/app-customers/master/Screenshots/Customers_EditPage.png" width="600" />
-<img src="https://raw.githubusercontent.com/jsauvexamarin/app-customers/master/Screenshots/Customers_GetDirections.png" width="600" />
+## Screens
+<img src="https://raw.githubusercontent.com/xamarin/app-customers/master/Screenshots/Customers_Screens.jpg" />
 

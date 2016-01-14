@@ -1,4 +1,6 @@
 # app-customers
+<img src="https://raw.githubusercontent.com/xamarin/app-customers/master/Screenshots/Customers_Screens.jpg" />
+
 A simple Xamarin.Forms demo app with three primary screens:
 
 * a list screen
@@ -25,5 +27,8 @@ Insert it in `~/Droid/Properties/AndroidManifest.xml`:
     </application>
 
 ## Screens
-<img src="https://raw.githubusercontent.com/xamarin/app-customers/master/Screenshots/Customers_Screens.jpg" />
+<img src="https://raw.githubusercontent.com/xamarin/app-customers/master/Screenshots/Customers_ListPage.png" width="600" />
+<img src="https://raw.githubusercontent.com/xamarin/app-customers/master/Screenshots/Customers_DetailPage.png" width="600" />
+<img src="https://raw.githubusercontent.com/xamarin/app-customers/master/Screenshots/Customers_EditPage.png" width="600" />
+<img src="https://raw.githubusercontent.com/xamarin/app-customers/master/Screenshots/Customers_GetDirections.png" width="600" />
 

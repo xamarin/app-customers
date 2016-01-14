@@ -22,6 +22,10 @@ namespace Customers.iOS
 
             ImageCircleRenderer.Init();
 
+            #if ENABLE_TEST_CLOUD
+            Xamarin.Calabash.Start();
+            #endif
+
             return base.FinishedLaunching(app, options);
         }
 

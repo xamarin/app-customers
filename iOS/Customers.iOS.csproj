@@ -157,6 +157,9 @@
     <Reference Include="Plugin.ExternalMaps.Abstractions">
       <HintPath>..\packages\Xam.Plugin.ExternalMaps.2.0.0\lib\Xamarin.iOS10\Plugin.ExternalMaps.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Calabash">
+      <HintPath>..\packages\Xamarin.TestCloud.Agent.0.17.0\lib\Xamarin.iOS10\Calabash.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Customers\Customers.csproj">

@@ -434,6 +434,9 @@ namespace Customers
             return p;
         }
 
+        /// <summary>
+        /// Subscribes to "SaveCustomer" messages from MessagingCenter.
+        /// </summary>
         void SubscribeToSaveCustomerMessages()
         {
             // This subscribes to the "SaveCustomer" message
@@ -451,6 +454,9 @@ namespace Customers
                 });
         }
 
+        /// <summary>
+        /// Subscribes to "CustomerLocationUpdated" messages from MessagingCenter.
+        /// </summary>
         void SubscribeToCustomerLocationUpdatedMessages()
         {
             // update the map when receiving the CustomerLocationUpdated message

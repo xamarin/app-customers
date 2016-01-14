@@ -33,11 +33,11 @@ namespace Customers.UITests
             app.Screenshot("Tapped on 'edit' button");
             app.Tap(x => x.Marked("First").Sibling());
             app.ClearText(x => x.Marked("First").Sibling());
-            app.EnterText(x => x.Marked("First").Sibling(), "Edited");
+            app.EnterText("Edited");
             app.Screenshot("Entered 'Edited' into First Name Field");
             app.Tap(x => x.Marked("Last").Sibling());
             app.ClearText(x => x.Marked("Last").Sibling());
-            app.EnterText(x => x.Marked("Last").Sibling(), "Name");
+            app.EnterText("Name");
             app.Screenshot("Entered 'Name' into Last Name Field");
             app.Tap(x => x.Id("save"));
             app.Screenshot("Saved contact");
@@ -54,11 +54,11 @@ namespace Customers.UITests
             app.Screenshot("Tapped on 'edit' button");
             app.Tap(x => x.Marked("First").Sibling());
             app.ClearText(x => x.Marked("First").Sibling());
-            app.EnterText(x => x.Marked("First").Sibling(), "New Name");
+            app.EnterText("New Name");
             app.Screenshot("Entered 'New Name' into First Name Field");
             app.Tap(x => x.Marked("Last").Sibling());
             app.ClearText(x => x.Marked("Last").Sibling());
-            app.EnterText(x => x.Marked("Last").Sibling(), "In List");
+            app.EnterText("In List");
             app.Screenshot("Entered 'In List' into Last Name Field");
             app.Tap(x => x.Id("save"));
             app.Screenshot("Saved contact");
@@ -79,23 +79,23 @@ namespace Customers.UITests
             app.Screenshot("Tapped on 'edit' button");
             app.Tap(x => x.Marked("Street").Sibling());
             app.ClearText(x => x.Marked("Street").Sibling());
-            app.EnterText(x => x.Marked("Street").Sibling(), "394 Pacific Ave");
+            app.EnterText("394 Pacific Ave");
             app.Screenshot("Entered '394 Pacific Ave' into Street Field");
             app.PressEnter();
             app.ScrollDownTo("City");
             app.Tap(x => x.Marked("City").Sibling());
             app.ClearText(x => x.Marked("City").Sibling());
-            app.EnterText(x => x.Marked("City").Sibling(), "San Francisco");
+            app.EnterText("San Francisco");
             app.Screenshot("Entered 'San Francisco' into City Field");
             app.PressEnter();
             app.Tap(x => x.Marked("State").Sibling());
             app.ClearText(x => x.Marked("State").Sibling());
-            app.EnterText(x => x.Marked("State").Sibling(), "CA");
+            app.EnterText("CA");
             app.Screenshot("Entered 'CA' into State Field");
             app.PressEnter();
             app.Tap(x => x.Marked("ZIP").Sibling());
             app.ClearText(x => x.Marked("ZIP").Sibling());
-            app.EnterText(x => x.Marked("ZIP").Sibling(), "94111");
+            app.EnterText("94111");
             app.Screenshot("Entered '94111' into ZIP Field");
             app.Tap(x => x.Id("save"));
             app.Screenshot("Saved contact");
@@ -109,43 +109,43 @@ namespace Customers.UITests
             app.Tap(x => x.Marked("add"));
             app.Screenshot("Tapped on 'add' button");
             app.Tap(x => x.Marked("First").Sibling());
-            app.EnterText(x => x.Marked("First").Sibling(), "NEW");
+            app.EnterText("NEW");
             app.Screenshot("Entered 'NEW' into First Name Field");
             app.PressEnter();
             app.Tap(x => x.Marked("Last").Sibling());
-            app.EnterText(x => x.Marked("Last").Sibling(), "CONTACT");
+            app.EnterText("CONTACT");
             app.Screenshot("Entered 'CONTACT' into Last Name Field");
             app.PressEnter();
             app.Tap(x => x.Marked("Company").Sibling());
-            app.EnterText(x => x.Marked("Company").Sibling(), "Xamarin");
+            app.EnterText("Xamarin");
             app.Screenshot("Entered 'Xamarin' into Company Field");
             app.PressEnter();
             app.Tap(x => x.Marked("Title").Sibling());
-            app.EnterText(x => x.Marked("Title").Sibling(), "Test Cloud");
+            app.EnterText("Test Cloud");
             app.Screenshot("Entered 'Test Cloud' into Title Field");
             app.PressEnter();
             app.Tap(x => x.Marked("Phone").Sibling());
-            app.EnterText(x => x.Marked("Phone").Sibling(), "1234567890");
+            app.EnterText("1234567890");
             app.Screenshot("Entered '1234567890' into Phone Field");
             app.DismissKeyboard();
             app.Tap(x => x.Marked("Email").Sibling());
-            app.EnterText(x => x.Marked("Email").Sibling(), "hello@xamarin.com");
+            app.EnterText("hello@xamarin.com");
             app.Screenshot("Entered 'hello@xamarin.com' into Email Field");
             app.PressEnter();
             app.Tap(x => x.Marked("Street").Sibling());
-            app.EnterText(x => x.Marked("Street").Sibling(), "394 Pacific Ave");
+            app.EnterText("394 Pacific Ave");
             app.Screenshot("Entered '394 Pacific Ave' into Street Field");
             app.PressEnter();
             app.Tap(x => x.Marked("City").Sibling());
-            app.EnterText(x => x.Marked("City").Sibling(), "San Francisco");
+            app.EnterText("San Francisco");
             app.Screenshot("Entered 'San Francisco' into City Field");
             app.PressEnter();
             app.Tap(x => x.Marked("State").Sibling());
-            app.EnterText(x => x.Marked("State").Sibling(), "CA");
+            app.EnterText("CA");
             app.Screenshot("Entered 'CA' into State Field");
             app.PressEnter();
             app.Tap(x => x.Marked("ZIP").Sibling());
-            app.EnterText(x => x.Marked("ZIP").Sibling(), "94111");
+            app.EnterText("94111");
             app.Screenshot("Entered '94111' into City Field");
             app.DismissKeyboard();
             app.Tap(x => x.Id("save"));
@@ -158,7 +158,7 @@ namespace Customers.UITests
         [TestCase("phone")]
         [TestCase("email")]
         [TestCase("directions")]
-        public void VerifyCustomerExternalLinks (string link)
+        public void VerifyExternalLink (string link)
         {
             app.Tap(x => x.Marked("Bell, Floyd"));
             app.Screenshot("Selected contact with name: 'Bell, Floyd'");

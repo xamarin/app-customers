@@ -4,6 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using Xamarin.UITest;
 using Xamarin.UITest.Queries;
+using System.Collections.Generic;
 
 namespace Customers.UITests
 {
@@ -24,10 +25,165 @@ namespace Customers.UITests
             app = AppInitializer.StartApp(platform);
         }
 
+
         [Test]
-        public void AppLaunches()
+        public void EditCustomer ()
         {
-            app.Screenshot("First screen.");
+            app.Tap(x => x.Marked("Armstead, Evan"));
+            app.Screenshot("Selected contact with name: 'Armstead, Evan'");
+            app.Tap(x => x.Marked("Edit"));
+            app.Screenshot("Tapped on 'edit' button");
+            app.Tap(x => x.Marked("First").Sibling());
+            app.ClearText(x => x.Marked("First").Sibling());
+            app.EnterText(x => x.Marked("First").Sibling(), "Edited");
+            app.Screenshot("Entered 'Edited' into First Name Field");
+            app.Tap(x => x.Marked("Last").Sibling());
+            app.ClearText(x => x.Marked("Last").Sibling());
+            app.EnterText(x => x.Marked("Last").Sibling(), "Name");
+            app.Screenshot("Entered 'Name' into Last Name Field");
+            app.Tap(x => x.Class("ActionMenuItemView"));
+            app.Screenshot("Saved contact");
+            app.WaitForElement(x => x.Text("Edited Name"));
+            app.Screenshot("Verified contacts name changed to: 'Edited Name'");
+        }
+
+        [Test]
+        public void EditCustomerInList ()
+        {
+            app.Tap(x => x.Marked("Cardell, Jesus"));
+            app.Screenshot("Selected contact with name: 'Cardell, Jesus'");
+            app.Tap(x => x.Marked("Edit"));
+            app.Screenshot("Tapped on 'Edit' button");
+            app.Tap(x => x.Marked("First").Sibling());
+            app.ClearText(x => x.Marked("First").Sibling());
+            app.EnterText(x => x.Marked("First").Sibling(), "New Name");
+            app.Screenshot("Entered 'New Name' into First Name Field");
+            app.Tap(x => x.Marked("Last").Sibling());
+            app.ClearText(x => x.Marked("Last").Sibling());
+            app.EnterText(x => x.Marked("Last").Sibling(), "In List");
+            app.Screenshot("Entered 'In List' into Last Name Field");
+            app.Tap(x => x.Class("ActionMenuItemView"));
+            app.Screenshot("Saved contact");
+            app.Tap(x => x.Class("android.widget.ImageButton"));
+            app.Screenshot("Tapped on 'back' button");
+            app.ScrollDownTo(x => x.Marked("In List, New Name"));
+            app.Screenshot("Verified edited name appears in list");
+        }
+
+        [Test]
+        public void UpdateCustomerAddress ()
+        {
+            app.Tap(x => x.Marked("Boone, John"));
+            app.Screenshot("Selected contact with name: 'Boone, John'");
+            app.WaitForElement("Google Map");
+            app.Screenshot("Verified map is set to current address");
+            app.Tap(x => x.Marked("Edit"));
+            app.Screenshot("Tapped on 'Edit' button");
+            app.Tap(x => x.Marked("Street").Sibling());
+            app.ClearText(x => x.Marked("Street").Sibling());
+            app.EnterText(x => x.Marked("Street").Sibling(), "394 Pacific Ave");
+            app.Screenshot("Entered '394 Pacific Ave' into Street Field");
+            app.PressEnter();
+            app.ScrollDownTo("City");
+            app.Tap(x => x.Marked("City").Sibling());
+            app.ClearText(x => x.Marked("City").Sibling());
+            app.EnterText(x => x.Marked("City").Sibling(), "San Francisco");
+            app.Screenshot("Entered 'San Francisco' into City Field");
+            app.PressEnter();
+            app.Tap(x => x.Marked("State").Sibling());
+            app.ClearText(x => x.Marked("State").Sibling());
+            app.EnterText(x => x.Marked("State").Sibling(), "CA");
+            app.Screenshot("Entered 'CA' into State Field");
+            app.PressEnter();
+            app.Tap(x => x.Marked("ZIP").Sibling());
+            app.ClearText(x => x.Marked("ZIP").Sibling());
+            app.EnterText(x => x.Marked("ZIP").Sibling(), "94111");
+            app.Screenshot("Entered '94111' into ZIP Field");
+            app.DismissKeyboard();
+            app.Tap(x => x.Class("ActionMenuItemView"));
+            app.Screenshot("Saved contact");
+            app.WaitForElement("Google Map");
+            app.Screenshot("Verified map is set to new address");
+        }
+
+        [Test]
+        public void AddNewCustomer ()
+        {
+            app.Tap(x => x.Class("FloatingActionButton"));
+            app.Screenshot("Tapped on 'add' button");
+            app.Tap(x => x.Marked("First").Sibling());
+            app.EnterText(x => x.Marked("First").Sibling(), "NEW");
+            app.Screenshot("Entered 'NEW' into First Name Field");
+            app.DismissKeyboard();
+            app.ScrollDownTo(x => x.Marked("Last").Sibling());
+            app.Tap(x => x.Marked("Last").Sibling());
+            app.EnterText(x => x.Marked("Last").Sibling(), "CONTACT");
+            app.Screenshot("Entered 'CONTACT' into Last Name Field");
+            app.DismissKeyboard();
+            app.ScrollDownTo(x => x.Marked("Company").Sibling());
+            app.Tap(x => x.Marked("Company").Sibling());
+            app.EnterText(x => x.Marked("Company").Sibling(), "Xamarin");
+            app.Screenshot("Entered 'Xamarin' into Company Field");
+            app.DismissKeyboard();
+            app.ScrollDownTo(x => x.Marked("Title").Sibling());
+            app.Tap(x => x.Marked("Title").Sibling());
+            app.EnterText(x => x.Marked("Title").Sibling(), "Test Cloud");
+            app.Screenshot("Entered 'Test Cloud' into Title Field");
+            app.DismissKeyboard();
+            app.ScrollDownTo(x => x.Marked("Phone").Sibling());
+            app.Tap(x => x.Marked("Phone").Sibling());
+            app.EnterText(x => x.Marked("Phone").Sibling(), "1234567890");
+            app.Screenshot("Entered '1234567890' into Phone Field");
+            app.DismissKeyboard();
+            app.ScrollDownTo(x => x.Marked("Email").Sibling());
+            app.Tap(x => x.Marked("Email").Sibling());
+            app.EnterText(x => x.Marked("Email").Sibling(), "hello@xamarin.com");
+            app.Screenshot("Entered 'hello@xamarin.com' into Email Field");
+            app.DismissKeyboard();
+            app.ScrollDownTo(x => x.Marked("Street").Sibling());
+            app.Tap(x => x.Marked("Street").Sibling());
+            app.EnterText(x => x.Marked("Street").Sibling(), "394 Pacific Ave");
+            app.Screenshot("Entered '394 Pacific Ave' into Street Field");
+            app.DismissKeyboard();
+            app.ScrollDownTo(x => x.Marked("City").Sibling());
+            app.Tap(x => x.Marked("City").Sibling());
+            app.EnterText(x => x.Marked("City").Sibling(), "San Francisco");
+            app.Screenshot("Entered 'San Francisco' into City Field");
+            app.DismissKeyboard();
+            app.ScrollDownTo(x => x.Marked("State").Sibling());
+            app.Tap(x => x.Marked("State").Sibling());
+            app.EnterText(x => x.Marked("State").Sibling(), "CA");
+            app.Screenshot("Entered 'CA' into State Field");
+            app.DismissKeyboard();
+            app.ScrollDownTo(x => x.Marked("ZIP").Sibling());
+            app.Tap(x => x.Marked("ZIP").Sibling());
+            app.EnterText(x => x.Marked("ZIP").Sibling(), "94111");
+            app.Screenshot("Entered '94111' into City Field");
+            app.DismissKeyboard();
+            app.Tap(x => x.Class("ActionMenuItemView"));
+            app.Screenshot("Saved contact");
+            app.WaitForElement("NEW CONTACT", timeout:TimeSpan.FromSeconds(10));
+            app.Screenshot("Verified on NEW CONTACT's Details Page");
+        }
+
+        [TestCase("message")]
+        [TestCase("phone")]
+        [TestCase("email")]
+        [TestCase("directions")]
+        public void VerifyCustomerExternalLinks (string link)
+        {
+            Dictionary<string, int> LinkIndexes = new Dictionary<string, int>();
+            LinkIndexes.Add("message", 2);
+            LinkIndexes.Add("phone", 3);
+            LinkIndexes.Add("email", 4);
+            LinkIndexes.Add("directions", 1);
+
+            app.Tap(x => x.Marked("Bell, Floyd"));
+            app.Screenshot("Selected contact with name: 'Bell, Floyd'");
+
+            app.Tap(x => x.Class("FormsImageView").Index(LinkIndexes[link]));
+            System.Threading.Thread.Sleep(5000);
+            app.Screenshot(String.Format("Verify {0} opened", link));
         }
     }
 }

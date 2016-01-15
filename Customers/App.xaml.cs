@@ -30,7 +30,7 @@ namespace Customers
                 {
                     var task = Application.Current?.MainPage?.DisplayAlert(info.Title, info.Question, info.Positive, info.Negative);
                     if (task != null && await task)
-                        info.SuccessAction.Invoke();
+                        info?.SuccessAction?.Invoke();
                 });
 
             MessagingService.Current.Subscribe(MessageKeys.PopAsync, async (service) =>

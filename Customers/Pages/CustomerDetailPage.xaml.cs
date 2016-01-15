@@ -2,6 +2,8 @@
 using Xamarin.Forms.Maps;
 using System.Threading.Tasks;
 using FormsToolkit;
+using Xamarin;
+using System;
 
 namespace Customers
 {
@@ -46,11 +48,13 @@ namespace Customers
             {
                 position = await ViewModel.GetPosition();
             }
-            catch
+            catch (Exception ex)
             {
                 MessagingService.Current.SendMessage(MessageKeys.DisplayGeocodingError);
 
                 ViewModel.IsBusy = false;
+
+                Insights.Report(ex, Insights.Severity.Error);
 
                 return;
             }

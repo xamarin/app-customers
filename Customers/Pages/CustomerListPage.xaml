@@ -10,8 +10,9 @@
 	</ContentPage.ToolbarItems>
 	<ContentPage.Content>
 		<OnPlatform x:TypeArguments="View">
+
 			<OnPlatform.iOS>
-				<ListView ItemsSource="{Binding Customers}" CachingStrategy="RecycleElement" RowHeight="60" HasUnevenRows="false" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding LoadCustomersCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+				<ListView ItemsSource="{Binding Customers}" CachingStrategy="RecycleElement" RowHeight="60" HasUnevenRows="false" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding RefreshCustomersCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}">
 					<ListView.ItemTemplate>
 						<DataTemplate>
 							<ViewCell StyleId="disclosure" Height="60">
@@ -47,10 +48,11 @@
 					</ListView.ContextActions>
 				</ListView>
 			</OnPlatform.iOS>
+
 			<OnPlatform.Android>
-				<AbsoluteLayout x:Name="absLayout">
+				<AbsoluteLayout>
 					<AbsoluteLayout.Children>
-						<ListView ItemsSource="{Binding Customers}" CachingStrategy="RecycleElement" RowHeight="60" HasUnevenRows="false" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding LoadCustomersCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+						<ListView ItemsSource="{Binding Customers}" CachingStrategy="RecycleElement" RowHeight="60" HasUnevenRows="false" ItemTapped="ItemTapped" IsPullToRefreshEnabled="true" RefreshCommand="{Binding RefreshCustomersCommand}" IsRefreshing="{Binding IsBusy, Mode=OneWay}" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
 							<ListView.ItemTemplate>
 								<DataTemplate>
 									<ViewCell StyleId="disclosure" Height="60">

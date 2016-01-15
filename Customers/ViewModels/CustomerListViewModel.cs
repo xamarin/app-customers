@@ -4,6 +4,8 @@ using Xamarin.Forms;
 using System;
 using Plugin.Messaging;
 using System.Linq;
+using MvvmHelpers;
+using FormsToolkit;
 
 namespace Customers
 {
@@ -18,10 +20,6 @@ namespace Customers
             SubscribeToSaveCustomerMessages();
 
             SubscribeToDeleteCustomerMessages();
-
-            NeedsRefresh = true;
-
-            Customers = new ObservableCollection<Customer>();
         }
 
         // this is just a utility service that we're using in this demo app to mitigate some limitations of the iOS simulator
@@ -32,6 +30,8 @@ namespace Customers
         ObservableCollection<Customer> _Customers;
 
         Command _LoadCustomersCommand;
+
+        Command _RefreshCustomersCommand;
 
         Command _NewCustomerCommand;
 
@@ -55,14 +55,39 @@ namespace Customers
 
         async Task ExecuteLoadCustomersCommand()
         {
+            if (Customers == null)
+            {
+                LoadCustomersCommand.ChangeCanExecute();
+
+                await FetchCustomers();
+
+                LoadCustomersCommand.ChangeCanExecute();
+            }
+        }
+
+        public Command RefreshCustomersCommand
+        {
+            get { 
+                return _RefreshCustomersCommand ?? (_RefreshCustomersCommand = new Command(async () => await ExecuteRefreshCustomersCommandCommand())); 
+            }
+        }
+
+        async Task ExecuteRefreshCustomersCommandCommand()
+        {
+            RefreshCustomersCommand.ChangeCanExecute();
+
+            await FetchCustomers();
+
+            RefreshCustomersCommand.ChangeCanExecute();
+        }
+
+        async Task FetchCustomers()
+        {
             IsBusy = true;
-            LoadCustomersCommand.ChangeCanExecute();
 
             Customers = new ObservableCollection<Customer>(await DataSource.GetItems(0, 1000));
 
-            NeedsRefresh = false;
             IsBusy = false;
-            LoadCustomersCommand.ChangeCanExecute(); 
         }
 
         /// <summary>
@@ -73,27 +98,14 @@ namespace Customers
             get
             {
                 return _NewCustomerCommand ??
-                (_NewCustomerCommand = new Command(async () =>
-                        await ExecuteNewCustomerCommand()));
+                (_NewCustomerCommand = new Command(ExecuteNewCustomerCommand));
             }
         }
 
-        async Task ExecuteNewCustomerCommand()
+        void ExecuteNewCustomerCommand()
         {
-            if (IsBusy)
-                return;
-
-            IsBusy = true;
-
-            var page = new CustomerEditPage();
-
-            var viewModel = new CustomerDetailViewModel() { Navigation = this.Navigation, Page = page };
-
-            page.BindingContext = viewModel;
-
-            await Navigation.PushAsync(page);
-
-            IsBusy = false;
+            // send message to navigate to edit page (new customer)
+            MessagingService.Current.SendMessage(MessageKeys.NavigateToEditPage, new CustomerDetailViewModel(new Customer()));
         }
 
         Command _DialNumberCommand;
@@ -106,12 +118,12 @@ namespace Customers
             get
             {
                 return _DialNumberCommand ??
-                    (_DialNumberCommand = new Command(async (parameter) =>
-                        await ExecuteDialNumberCommand((string)parameter)));
+                (_DialNumberCommand = new Command((parameter) =>
+                        ExecuteDialNumberCommand((string)parameter)));
             }
         }
 
-        async Task ExecuteDialNumberCommand(string customerId)
+        void ExecuteDialNumberCommand(string customerId)
         {
             if (String.IsNullOrWhiteSpace(customerId))
                 return;
@@ -129,10 +141,12 @@ namespace Customers
             }
             else
             {
-                await Page.DisplayAlert(
-                    title: "Simulator Not Supported", 
-                    message: "Phone calls are not supported in the iOS simulator.",
-                    cancel: "OK");
+                MessagingService.Current.SendMessage<MessagingServiceAlert>(MessageKeys.DisplayAlert, new MessagingServiceAlert()
+                    { 
+                        Title = "Simulator Not Supported",
+                        Message = "Phone calls are not supported in the iOS simulator.",
+                        Cancel = "OK"
+                    });
             }
         }
 
@@ -146,12 +160,12 @@ namespace Customers
             get
             {
                 return _MessageNumberCommand ??
-                    (_MessageNumberCommand = new Command(async (parameter) =>
-                        await ExecuteMessageNumberCommand((string)parameter)));
+                (_MessageNumberCommand = new Command((parameter) =>
+                        ExecuteMessageNumberCommand((string)parameter)));
             }
         }
 
-        async Task ExecuteMessageNumberCommand(string customerId)
+        void ExecuteMessageNumberCommand(string customerId)
         {
             if (String.IsNullOrWhiteSpace(customerId))
                 return;
@@ -169,10 +183,12 @@ namespace Customers
             }
             else
             {
-                await Page.DisplayAlert(
-                    title: "Simulator Not Supported", 
-                    message: "Messaging is not supported in the iOS simulator.",
-                    cancel: "OK");
+                MessagingService.Current.SendMessage<MessagingServiceAlert>(MessageKeys.DisplayAlert, new MessagingServiceAlert()
+                    { 
+                        Title = "Simulator Not Supported",
+                        Message = "Messaging is not supported in the iOS simulator.",
+                        Cancel = "OK"
+                    });
             }
         }
 
@@ -186,12 +202,12 @@ namespace Customers
             get
             {
                 return _EmailCommand ??
-                    (_EmailCommand = new Command(async (parameter) =>
-                        await ExecuteEmailCommandCommand((string)parameter)));
+                (_EmailCommand = new Command((parameter) =>
+                        ExecuteEmailCommandCommand((string)parameter)));
             }
         }
 
-        async Task ExecuteEmailCommandCommand(string customerId)
+        void ExecuteEmailCommandCommand(string customerId)
         {
             if (String.IsNullOrWhiteSpace(customerId))
                 return;
@@ -209,50 +225,46 @@ namespace Customers
             }
             else
             {
-                await Page.DisplayAlert(
-                    title: "Simulator Not Supported", 
-                    message: "Email composition is not supported in the iOS simulator.",
-                    cancel: "OK");
+                MessagingService.Current.SendMessage<MessagingServiceAlert>(MessageKeys.DisplayAlert, new MessagingServiceAlert()
+                    { 
+                        Title = "Simulator Not Supported",
+                        Message = "Email composition is not supported in the iOS simulator.",
+                        Cancel = "OK"
+                    });
             }
         }
 
         /// <summary>
-        /// Subscribes to "SaveCustomer" messages from MessagingCenter.
+        /// Subscribes to "SaveCustomer" messages
         /// </summary>
         void SubscribeToSaveCustomerMessages()
         {
             // This subscribes to the "SaveCustomer" message, and then inserts or updates the customer accordingly
-            MessagingCenter.Subscribe<Customer>(this, "SaveCustomer", async (customer) =>
+            MessagingService.Current.Subscribe<Customer>(MessageKeys.SaveCustomer, async (service, customer) =>
                 {
                     IsBusy = true;
 
-                    if (string.IsNullOrWhiteSpace(customer.Id))
-                    {
-                        customer.Id = Guid.NewGuid().ToString();
-                        customer.PhotoUrl = "placeholderProfileImage";
-                    }
-
                     await DataSource.SaveItem(customer);
 
-                    NeedsRefresh = true;
+                    await FetchCustomers();
 
                     IsBusy = false;
                 });
         }
 
         /// <summary>
-        /// Subscribes to "DeleteCustomer" messages from MessagingCenter.
+        /// Subscribes to "DeleteCustomer" messages
         /// </summary>
         void SubscribeToDeleteCustomerMessages()
         {
             // This subscribes to the "DeleteCustomer" message, and then deletes the customer accordingly
-            MessagingCenter.Subscribe<Customer>(this, "DeleteCustomer", async (customer) =>
+            MessagingService.Current.Subscribe<Customer>(MessageKeys.DeleteCustomer, async (service, customer) =>
                 {
                     IsBusy = true;
 
                     await DataSource.DeleteItem(customer.Id);
 
-                    NeedsRefresh = true;
+                    await FetchCustomers();
 
                     IsBusy = false;
                 });

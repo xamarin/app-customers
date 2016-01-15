@@ -1,4 +1,5 @@
 ﻿using System;
+using FormsToolkit;
 using Xamarin.Forms;
 
 namespace Customers
@@ -21,40 +22,51 @@ namespace Customers
             fab.Clicked = AndroidAddButtonClicked;
         }
 
-        async void ItemTapped (object sender, ItemTappedEventArgs e)
+        void ItemTapped (object sender, ItemTappedEventArgs e)
         {
-            var page = new CustomerDetailPage();
-
-            // NOTE: you don't typically pass a Page (or view) reference to a viewmodel, but in this case we need access to it in order to potentially display an alert from within the viewmodel.
-            var viewModel = new CustomerDetailViewModel((Customer)e.Item, page.Map) { Navigation = this.Navigation, Page = page };
-
-            page.BindingContext = viewModel;
-
-            await Navigation.PushAsync(page);
+            // send message to navigate to detail page
+            MessagingService.Current.SendMessage<CustomerDetailViewModel>(MessageKeys.NavigateToDetailPage, new CustomerDetailViewModel((Customer)e.Item));
 
             ((ListView)sender).SelectedItem = null;
         }
 
-        async void AndroidAddButtonClicked (object sender, EventArgs e)
+        void AndroidAddButtonClicked (object sender, EventArgs e)
         {
-            var page = new CustomerEditPage();
-
-            // NOTE: you don't typically pass a Page (or view) reference to a viewmodel, but in this case we need access to it in order to potentially display an alert from within the viewmodel.
-            var viewModel = new CustomerDetailViewModel() { Navigation = this.Navigation, Page = page };
-
-            page.BindingContext = viewModel;
-
-            await Navigation.PushAsync(page);
+            // send message to navigate to edit page (new customer)
+            MessagingService.Current.SendMessage(MessageKeys.NavigateToEditPage);
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
 
-            if (!ViewModel.NeedsRefresh)
-                return;
-            
             ViewModel.LoadCustomersCommand.Execute(null);
+
+            // subscribe to messages to navigate to detail page
+            MessagingService.Current.Subscribe<CustomerDetailViewModel>(MessageKeys.NavigateToDetailPage, async (service, viewmodel) =>
+                await Navigation.PushAsync(new CustomerDetailPage() { BindingContext = viewmodel }));
+
+            // subscribe to messages to navigate to edit page (new customer)
+            MessagingService.Current.Subscribe(MessageKeys.NavigateToEditPage, async (service) =>
+                await Navigation.PushAsync(new CustomerEditPage() { BindingContext = new CustomerDetailViewModel(new Customer()) }));
+
+            // subscribe to messages to navigate to edit page (existing customer)
+            MessagingService.Current.Subscribe<CustomerDetailViewModel>(MessageKeys.NavigateToEditPage, async (service, viewmodel) =>
+                await Navigation.PushAsync(new CustomerEditPage() { BindingContext = viewmodel }));
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            // unsubscribe from messages to navigate to detail page
+            MessagingService.Current.Unsubscribe<CustomerDetailViewModel>(MessageKeys.NavigateToDetailPage);
+
+            // unsubscribe from messages to navigate to edit page (new customer)
+            MessagingService.Current.Unsubscribe(MessageKeys.NavigateToEditPage);
+
+            // unsubscribe from messages to navigate to edit page (existing customer)
+            MessagingService.Current.Unsubscribe<CustomerDetailViewModel>(MessageKeys.NavigateToEditPage);
         }
     }
 }

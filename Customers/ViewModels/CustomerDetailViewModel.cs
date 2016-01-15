@@ -6,6 +6,8 @@ using System.Linq;
 using Plugin.Messaging;
 using Plugin.ExternalMaps;
 using Plugin.ExternalMaps.Abstractions;
+using MvvmHelpers;
+using FormsToolkit;
 
 namespace Customers
 {
@@ -18,29 +20,24 @@ namespace Customers
 
         readonly Geocoder _Geocoder;
 
-        Map _Map;
-
-        public CustomerDetailViewModel(Customer customer = null, Map map = null)
+        public CustomerDetailViewModel(Customer customer = null)
         {
             _CapabilityService = DependencyService.Get<ICapabilityService>();
 
             _Geocoder = new Geocoder();
 
-            _Map = map;
-
             if (customer == null)
             {
                 _IsNewCustomer = true;
-                Customer = new Customer()
-                {
-                    PhotoUrl = "placeholderProfileImage"
-                };
+                Customer = new Customer();
             }
             else
             {
                 _IsNewCustomer = false;
                 Customer = customer;
             }
+
+            Title = _IsNewCustomer ? "New Customer" : _Customer.DisplayLastNameFirst;
 
             _AddressString = Customer.AddressString;
 
@@ -57,8 +54,6 @@ namespace Customers
 
         public bool HasAddress { get { return Customer != null && !String.IsNullOrWhiteSpace(Customer.AddressString); } }
 
-        public string Title { get { return _IsNewCustomer ? "New Customer" : _Customer.DisplayLastNameFirst; } }
-
         private string _AddressString;
 
         Customer _Customer;
@@ -73,18 +68,6 @@ namespace Customers
             }
         }
 
-        bool _MapIsBusy = true;
-
-        public bool MapIsBusy
-        {
-            get { return _MapIsBusy; }
-            set
-            {
-                _MapIsBusy = value;
-                OnPropertyChanged("MapIsBusy");
-            }
-        }
-
         Command _SaveCustomerCommand;
 
         /// <summary>
@@ -95,49 +78,43 @@ namespace Customers
             get
             {
                 return _SaveCustomerCommand ??
-                (_SaveCustomerCommand = new Command(async () =>
-                        await ExecuteSaveCustomerCommand()));
+                (_SaveCustomerCommand = new Command(ExecuteSaveCustomerCommand));
             }
         }
 
-        async Task ExecuteSaveCustomerCommand()
+        void ExecuteSaveCustomerCommand()
         {
-            if (IsBusy)
-                return;
-
-            IsBusy = true;
-
             if (String.IsNullOrWhiteSpace(Customer.LastName) || String.IsNullOrWhiteSpace(Customer.FirstName))
             {
-                // display an alert, letting the user know that we require a first and last name in order to save a new customer
-                await Page.DisplayAlert(
-                    title: "Invalid name!", 
-                    message: "A customer must have both a first and last name.",
-                    cancel: "OK");
+                MessagingService.Current.SendMessage<MessagingServiceAlert>(MessageKeys.DisplayAlert, new MessagingServiceAlert()
+                    {
+                        Title = "Invalid name!", 
+                        Message = "A customer must have both a first and last name.",
+                        Cancel = "OK"
+                    });
             }
             else if (!RequiredAddressFieldCombinationIsFilled)
             {
-                // display an alert, letting the user know that we require a first and last name in order to save a new customer
-                await Page.DisplayAlert(
-                    title: "Invalid address!", 
-                    message: "You must enter either a street, city, and state combination, or a postal code.",
-                    cancel: "OK");
+                MessagingService.Current.SendMessage<MessagingServiceAlert>(MessageKeys.DisplayAlert, new MessagingServiceAlert()
+                    {
+                        Title = "Invalid address!", 
+                        Message = "You must enter either a street, city, and state combination, or a postal code.",
+                        Cancel = "OK"
+                    });
             }
             else
             {
-                // send a message via MessagingCenter that we want the given customer to be saved
-                MessagingCenter.Send(this.Customer, "SaveCustomer");
+                // send a message that we want the given customer to be saved
+                MessagingService.Current.SendMessage<Customer>(MessageKeys.SaveCustomer, this.Customer);
 
                 // perform a pop in order to navigate back to the customer list
-                await Navigation.PopAsync();
+                MessagingService.Current.SendMessage(MessageKeys.PopAsync);
             }
-
-            IsBusy = false;
         }
 
         bool RequiredAddressFieldCombinationIsFilled
         {
-            get 
+            get
             {
                 if (Customer.AddressString.IsNullOrWhiteSpace())
                 {
@@ -166,22 +143,13 @@ namespace Customers
             get
             {
                 return _EditCustomerCommand ??
-                (_EditCustomerCommand = new Command(async () =>
-                        await ExecuteEditCustomerCommand()));
+                (_EditCustomerCommand = new Command(ExecuteEditCustomerCommand));
             }
         }
 
-        async Task ExecuteEditCustomerCommand()
+        void ExecuteEditCustomerCommand()
         {
-            var editPage = new CustomerEditPage();
-
-            var viewmodel = this;
-
-            viewmodel.Page = editPage;
-
-            editPage.BindingContext = viewmodel;
-
-            await Navigation.PushAsync(editPage);
+            MessagingService.Current.SendMessage<CustomerDetailViewModel>(MessageKeys.NavigateToEditPage, this);
         }
 
 
@@ -195,38 +163,28 @@ namespace Customers
             get
             {
                 return _DeleteCustomerCommand ??
-                (_DeleteCustomerCommand = new Command(async () =>
-                        await ExecuteDeleteCustomerCommand()));
+                (_DeleteCustomerCommand = new Command(ExecuteDeleteCustomerCommand));
             }
         }
 
-        async Task ExecuteDeleteCustomerCommand()
+        void ExecuteDeleteCustomerCommand()
         {
-            if (IsBusy)
-                return;
+            MessagingService.Current.SendMessage<MessagingServiceQuestionWithAction>(MessageKeys.DisplayQuestion, new MessagingServiceQuestionWithAction()
+                {
+                    Title = String.Format("Delete {0}?", Customer.DisplayName),
+                    Question = null,
+                    Positive = "Delete",
+                    Negative = "Cancel",
+                    SuccessAction = new Action(() =>
+                        {
+                            // send a message that we want the given customer to be deleted
+                            MessagingService.Current.SendMessage<Customer>(MessageKeys.DeleteCustomer, this.Customer);
 
-            IsBusy = true;
+                            MessagingService.Current.SendMessage(MessageKeys.PopAsync);
 
-            // display an alert and get the result of the user's decision
-            var confirmDelete = 
-                await Page.DisplayAlert(
-                    title: String.Format("Delete {0}?", Customer.DisplayName), 
-                    message: null, 
-                    accept: "Delete", 
-                    cancel: "Cancel");
-
-            if (confirmDelete)
-            {
-                // send a message via MessagingCenter that we want the given customer to be deleted
-                MessagingCenter.Send(this.Customer, "DeleteCustomer");
-
-                // Performs two pops, not one. We want to navigate back to the list, not the detail screen.
-                await Navigation.PopAsync(false); // passing false here to avoid two animations
-
-                await Navigation.PopAsync();
-            }
-
-            IsBusy = false;
+                            MessagingService.Current.SendMessage(MessageKeys.PopAsync);
+                        })
+                });
         }
 
         Command _DialNumberCommand;
@@ -239,12 +197,11 @@ namespace Customers
             get
             {
                 return _DialNumberCommand ??
-                (_DialNumberCommand = new Command(async () =>
-                        await ExecuteDialNumberCommand()));
+                (_DialNumberCommand = new Command(ExecuteDialNumberCommand));
             }
         }
 
-        async Task ExecuteDialNumberCommand()
+        void ExecuteDialNumberCommand()
         {
             if (String.IsNullOrWhiteSpace(Customer.Phone))
                 return;
@@ -257,10 +214,12 @@ namespace Customers
             }
             else
             {
-                await Page.DisplayAlert(
-                    title: "Simulator Not Supported", 
-                    message: "Phone calls are not supported in the iOS simulator.",
-                    cancel: "OK");
+                MessagingService.Current.SendMessage<MessagingServiceAlert>(MessageKeys.DisplayAlert, new MessagingServiceAlert()
+                    {
+                        Title = "Simulator Not Supported", 
+                        Message = "Phone calls are not supported in the iOS simulator.",
+                        Cancel = "OK"
+                    });
             }
         }
 
@@ -274,12 +233,11 @@ namespace Customers
             get
             {
                 return _MessageNumberCommand ??
-                (_MessageNumberCommand = new Command(async () =>
-                        await ExecuteMessageNumberCommand()));
+                (_MessageNumberCommand = new Command(ExecuteMessageNumberCommand));
             }
         }
 
-        async Task ExecuteMessageNumberCommand()
+        void ExecuteMessageNumberCommand()
         {
             if (String.IsNullOrWhiteSpace(Customer.Phone))
                 return;
@@ -292,10 +250,12 @@ namespace Customers
             }
             else
             {
-                await Page.DisplayAlert(
-                    title: "Simulator Not Supported", 
-                    message: "Messaging is not supported in the iOS simulator.",
-                    cancel: "OK");
+                MessagingService.Current.SendMessage<MessagingServiceAlert>(MessageKeys.DisplayAlert, new MessagingServiceAlert()
+                    {
+                        Title = "Simulator Not Supported", 
+                        Message = "Messaging is not supported in the iOS simulator.",
+                        Cancel = "OK"
+                    });
             }
         }
 
@@ -309,12 +269,11 @@ namespace Customers
             get
             {
                 return _EmailCommand ??
-                (_EmailCommand = new Command(async () =>
-                        await ExecuteEmailCommandCommand()));
+                (_EmailCommand = new Command(ExecuteEmailCommandCommand));
             }
         }
 
-        async Task ExecuteEmailCommandCommand()
+        void ExecuteEmailCommandCommand()
         {
             if (String.IsNullOrWhiteSpace(Customer.Email))
                 return;
@@ -327,10 +286,12 @@ namespace Customers
             }
             else
             {
-                await Page.DisplayAlert(
-                    title: "Simulator Not Supported", 
-                    message: "Email composition is not supported in the iOS simulator.",
-                    cancel: "OK");
+                MessagingService.Current.SendMessage<MessagingServiceAlert>(MessageKeys.DisplayAlert, new MessagingServiceAlert()
+                    {
+                        Title = "Simulator Not Supported", 
+                        Message = "Email composition is not supported in the iOS simulator.",
+                        Cancel = "OK"
+                    });
             }
         }
 
@@ -355,68 +316,32 @@ namespace Customers
             CrossExternalMaps.Current.NavigateTo(pin.Label, pin.Position.Latitude, pin.Position.Longitude, NavigationType.Driving);
         }
 
-        public async Task SetupMap()
+        public void SetupMap()
         {
-            _Map.IsVisible = false;
-
             if (HasAddress)
             {
-
-                // set to a default posiion
-                var position = new Position(0, 0);
-
-                try
-                {
-                    position = await GetPosition();
-                }
-                catch
-                {
-                    await DisplayGeocodingError();
-
-                    return;
-                }
-
-                // if lat and lon are both 0, then it's assumed that position acquisition failed
-                if (position.Latitude == 0 && position.Longitude == 0)
-                {
-                    await DisplayGeocodingError();
-
-                    return;
-                }
-                else
-                {
-                    var pin = new Pin()
-                    { 
-                        Type = PinType.Place, 
-                        Position = position,
-                        Label = Customer.DisplayName, 
-                        Address = Customer.AddressString 
-                    };
-
-                    _Map.Pins.Clear();
-
-                    _Map.Pins.Add(pin);
-
-                    _Map.MoveToRegion(MapSpan.FromCenterAndRadius(pin.Position, Distance.FromMiles(10)));
-
-                    _Map.IsVisible = true;
-                }
+                MessagingService.Current.SendMessage(MessageKeys.SetupMap);
             }
         }
 
-        async Task DisplayGeocodingError()
+        void DisplayGeocodingError()
         {
-            await Page.DisplayAlert(
-                "Geocoding Error", 
-                "Please make sure the address is valid.",
-                "OK");
+            MessagingService.Current.SendMessage<MessagingServiceAlert>(MessageKeys.DisplayAlert, new MessagingServiceAlert()
+                {
+                    Title = "Geocoding Error", 
+                    Message = "Please make sure the address is valid.",
+                    Cancel = "OK"
+                });
 
-            MapIsBusy = false;
+            IsBusy = false;
         }
 
         public async Task<Position> GetPosition()
         {
-            MapIsBusy = true && HasAddress;
+            if (!HasAddress)
+                return new Position(0, 0);
+
+            IsBusy = true;
 
             Position p;
 
@@ -431,23 +356,25 @@ namespace Customers
                 p = (await _Geocoder.GetPositionsForAddressAsync(roundedAddress)).FirstOrDefault();
             }
 
+            IsBusy = false;
+
             return p;
         }
 
         /// <summary>
-        /// Subscribes to "SaveCustomer" messages from MessagingCenter.
+        /// Subscribes to "SaveCustomer" messages
         /// </summary>
         void SubscribeToSaveCustomerMessages()
         {
             // This subscribes to the "SaveCustomer" message
-            MessagingCenter.Subscribe<Customer>(this, "SaveCustomer", (customer) =>
+            MessagingService.Current.Subscribe<Customer>(MessageKeys.SaveCustomer, (service, customer) =>
                 {
                     Customer = customer;
 
                     // address has been updated, so we should update the map
                     if (Customer.AddressString != _AddressString)
                     {
-                        MessagingCenter.Send(this, "CustomerLocationUpdated");
+                        MessagingService.Current.SendMessage<Customer>(MessageKeys.CustomerLocationUpdated, this.Customer);
 
                         _AddressString = Customer.AddressString;
                     }
@@ -455,16 +382,16 @@ namespace Customers
         }
 
         /// <summary>
-        /// Subscribes to "CustomerLocationUpdated" messages from MessagingCenter.
+        /// Subscribes to "CustomerLocationUpdated" messages
         /// </summary>
         void SubscribeToCustomerLocationUpdatedMessages()
         {
             // update the map when receiving the CustomerLocationUpdated message
-            MessagingCenter.Subscribe<CustomerDetailViewModel>(this, "CustomerLocationUpdated", async (sender) =>
+            MessagingService.Current.Subscribe<Customer>(MessageKeys.CustomerLocationUpdated, (service, customer) =>
                 {
                     OnPropertyChanged("HasAddress");
 
-                    await SetupMap();
+                    SetupMap();
                 });
         }
 

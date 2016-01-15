@@ -23,6 +23,7 @@ namespace Customers
         {
             base.OnAppearing();
 
+            // subscribe to NavigateToEditPage messages
             MessagingService.Current.Subscribe<CustomerDetailViewModel>(MessageKeys.NavigateToEditPage, async (service, viewmodel) =>
                 await Navigation.PushAsync(new CustomerEditPage() { BindingContext = ViewModel }));
 
@@ -33,6 +34,7 @@ namespace Customers
         {
             base.OnDisappearing();
 
+            // unsubscribe from NavigateToEditPage messages
             MessagingService.Current.Unsubscribe<CustomerDetailViewModel>(MessageKeys.NavigateToEditPage);
         }
 
@@ -41,7 +43,7 @@ namespace Customers
             ViewModel.IsBusy = true;
             Map.IsVisible = false;
 
-            // set to a default posiion
+            // set to a default position
             Position position;
 
             try
@@ -54,6 +56,7 @@ namespace Customers
 
                 ViewModel.IsBusy = false;
 
+                // TODO: Show insights
                 Insights.Report(ex, Insights.Severity.Error);
 
                 return;

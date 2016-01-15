@@ -15,7 +15,7 @@ namespace Customers
         {
             InitializeComponent();
 
-            // on Android, we use a floating action button, not 
+            // on Android, we use a floating action button
             if (Device.OS == TargetPlatform.Android)
                 ToolbarItems.Clear();
 

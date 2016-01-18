@@ -9,7 +9,7 @@ namespace Customers
         public Customer()
         {
             Id = Guid.NewGuid().ToString();
-            PhotoUrl = "placeholderProfileImage.png";
+            PhotoUrl = "placeholderProfileImage";
         }
 
         public string Id { get; set; }

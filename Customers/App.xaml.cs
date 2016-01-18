@@ -23,14 +23,17 @@ namespace Customers
                 {
                     var task = Application.Current?.MainPage?.DisplayAlert(info.Title, info.Message, info.Cancel);
                     if (task != null)
-                        await task;
+                        info?.OnCompleted?.Invoke();
                 });
 
-            MessagingService.Current.Subscribe<MessagingServiceQuestionWithAction>(MessageKeys.DisplayQuestion, async (service, info) =>
+            MessagingService.Current.Subscribe<MessagingServiceQuestion>(MessageKeys.DisplayQuestion, async (service, info) =>
                 {
                     var task = Application.Current?.MainPage?.DisplayAlert(info.Title, info.Question, info.Positive, info.Negative);
-                    if (task != null && await task)
-                        info?.SuccessAction?.Invoke();
+                    if (task != null)
+                    {
+                        var result = await task;
+                        info?.OnCompleted?.Invoke(result);
+                    }
                 });
 
             MessagingService.Current.Subscribe(MessageKeys.PopAsync, async (service) =>

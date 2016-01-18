@@ -11,12 +11,15 @@ namespace Customers
 
             SubscribeToDisplayAlertMessages();
 
+            SubscribeToNavigationMessages();
+
             if (Device.OS == TargetPlatform.iOS)
                 navPage.BarTextColor = Color.White;
-
-            customerListPage.BindingContext = new CustomerListViewModel();
         }
 
+        /// <summary>
+        /// Subscribes to messages for displaying alerts.
+        /// </summary>
         static void SubscribeToDisplayAlertMessages()
         {
             MessagingService.Current.Subscribe<MessagingServiceAlert>(MessageKeys.DisplayAlert, async (service, info) =>
@@ -36,16 +39,22 @@ namespace Customers
                     }
                 });
 
-            MessagingService.Current.Subscribe(MessageKeys.PopAsync, async (service) =>
-                {
-                    var task = Application.Current?.MainPage?.Navigation?.PopAsync();
-                    if (task != null)
-                        await task;
-                });
-
             MessagingService.Current.Subscribe(MessageKeys.DisplayGeocodingError, async (service) =>
                 {
                     var task = Application.Current?.MainPage?.DisplayAlert("Geocoding Error", "An eror occurred while converting the street address to GPS coordinates.", "OK");
+                    if (task != null)
+                        await task;
+                });
+        }
+
+        /// <summary>
+        /// Subscribes to messages for navigation.
+        /// </summary>
+        static void SubscribeToNavigationMessages()
+        {
+            MessagingService.Current.Subscribe(MessageKeys.PopAsync, async (service) =>
+                {
+                    var task = Application.Current?.MainPage?.Navigation?.PopAsync();
                     if (task != null)
                         await task;
                 });

@@ -3,7 +3,11 @@
 	<Application.MainPage>
 		<NavigationPage x:Name="navPage">
 			<x:Arguments>
-				<local:CustomerListPage x:Name="customerListPage" Title="Customers" />
+				<local:CustomerListPage x:Name="customerListPage" Title="Customers">
+					<local:CustomerListPage.BindingContext>
+						<local:CustomerListViewModel />
+					</local:CustomerListPage.BindingContext>
+				</local:CustomerListPage>
 			</x:Arguments>
 		</NavigationPage>
 	</Application.MainPage>

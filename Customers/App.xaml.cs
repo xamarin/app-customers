@@ -26,7 +26,10 @@ namespace Customers
                 {
                     var task = Application.Current?.MainPage?.DisplayAlert(info.Title, info.Message, info.Cancel);
                     if (task != null)
+                    {
+                        await task;
                         info?.OnCompleted?.Invoke();
+                    }
                 });
 
             MessagingService.Current.Subscribe<MessagingServiceQuestion>(MessageKeys.DisplayQuestion, async (service, info) =>

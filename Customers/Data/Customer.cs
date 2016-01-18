@@ -1,27 +1,15 @@
 ﻿using System;
 using Newtonsoft.Json;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using MvvmHelpers;
 
 namespace Customers
 {
-    public class Customer : INotifyPropertyChanged
+    public class Customer : ObservableObject
     {
-        #region INotifyPropertyChanged implementation
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
-
         public Customer()
         {
             Id = Guid.NewGuid().ToString();
-            PhotoUrl = "placeholderProfileImage";
-        }
-
-        protected void OnPropertyChanged([CallerMemberName] string property = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+            PhotoUrl = "placeholderProfileImage.png";
         }
 
         public string Id { get; set; }
@@ -32,12 +20,9 @@ namespace Customers
             get { return _FirstName; }
             set
             {
-                if (_FirstName == value)
-                    return;
-                _FirstName = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(DisplayName));
-                OnPropertyChanged(nameof(DisplayLastNameFirst));
+                SetProperty(ref _FirstName, value);
+                OnPropertyChanged(nameof(DisplayName)); // because DisplayName is dependent on FirstName, we need to manually call OnPropertyChanged() on DisplayName
+                OnPropertyChanged(nameof(DisplayLastNameFirst)); // because DisplayLastNameFirst is dependent on FirstName, we need to manually call OnPropertyChanged() on DisplayLastNameFirst
             }
         }
 
@@ -47,12 +32,9 @@ namespace Customers
             get { return _LastName; }
             set
             {
-                if (_LastName == value)
-                    return;
-                _LastName = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(DisplayName));
-                OnPropertyChanged(nameof(DisplayLastNameFirst));
+                SetProperty(ref _LastName, value);
+                OnPropertyChanged(nameof(DisplayName)); // because DisplayName is dependent on LastName, we need to manually call OnPropertyChanged() on DisplayName
+                OnPropertyChanged(nameof(DisplayLastNameFirst)); // because DisplayLastNameFirst is dependent on LastName, we need to manually call OnPropertyChanged() on DisplayLastNameFirst
             }
         }
 
@@ -60,52 +42,28 @@ namespace Customers
         public string Company
         {
             get { return _Company; }
-            set
-            {
-                if (_Company == value)
-                    return;
-                _Company = value;
-                OnPropertyChanged();
-            }
+            set { SetProperty(ref _Company, value); }
         }
 
         string _JobTitle;
         public string JobTitle
         {
             get { return _JobTitle; }
-            set
-            {
-                if (_JobTitle == value)
-                    return;
-                _JobTitle = value;
-                OnPropertyChanged();
-            }
+            set { SetProperty(ref _JobTitle, value); }
         }
 
         string _Email;
         public string Email
         {
             get { return _Email; }
-            set
-            {
-                if (_Email == value)
-                    return;
-                _Email = value;
-                OnPropertyChanged();
-            }
+            set { SetProperty(ref _Email, value); }
         }
 
         string _Phone;
         public string Phone
         {
             get { return _Phone; }
-            set
-            {
-                if (_Phone == value)
-                    return;
-                _Phone = value;
-                OnPropertyChanged();
-            }
+            set { SetProperty(ref _Phone, value); }
         }
 
         string _Street;
@@ -114,11 +72,8 @@ namespace Customers
             get { return _Street; }
             set
             {
-                if (_Street == value)
-                    return;
-                _Street = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(AddressString));
+                SetProperty(ref _Street, value);
+                OnPropertyChanged(nameof(AddressString)); // because AddressString is dependent on Street, we need to manually call OnPropertyChanged() on AddressString
             }
         }
             
@@ -128,11 +83,8 @@ namespace Customers
             get { return _Unit; }
             set
             {
-                if (_Unit == value)
-                    return;
-                _Unit = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(AddressString));
+                SetProperty(ref _Unit, value);
+                OnPropertyChanged(nameof(AddressString)); // because AddressString is dependent on Unit, we need to manually call OnPropertyChanged() on AddressString
             }
         }
 
@@ -142,13 +94,8 @@ namespace Customers
             get { return _City; }
             set
             {
-                if (_City == value)
-                    return;
-                _City = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(AddressString));
-                OnPropertyChanged(nameof(CityState));
-                OnPropertyChanged(nameof(CityStatePostal));
+                SetProperty(ref _City, value);
+                OnPropertyChanged(nameof(AddressString)); // because AddressString is dependent on City, we need to manually call OnPropertyChanged() on AddressString
             }
         }
 
@@ -158,13 +105,9 @@ namespace Customers
             get { return _PostalCode; }
             set
             {
-                if (_PostalCode == value)
-                    return;
-                _PostalCode = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(AddressString));
-                OnPropertyChanged(nameof(StatePostal));
-                OnPropertyChanged(nameof(CityStatePostal));
+                SetProperty(ref _PostalCode, value);
+                OnPropertyChanged(nameof(AddressString)); // because AddressString is dependent on PostalCode, we need to manually call OnPropertyChanged() on AddressString
+                OnPropertyChanged(nameof(StatePostal)); // because StatePostal is dependent on PostalCode, we need to manually call OnPropertyChanged() on StatePostal
             }
         }
 
@@ -175,14 +118,9 @@ namespace Customers
             get { return _State; }
             set
             {
-                if (_State == value)
-                    return;
-                _State = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(AddressString));
-                OnPropertyChanged(nameof(CityState));
-                OnPropertyChanged(nameof(StatePostal));
-                OnPropertyChanged(nameof(CityStatePostal));
+                SetProperty(ref _State, value);
+                OnPropertyChanged(nameof(AddressString)); // because AddressString is dependent on State, we need to manually call OnPropertyChanged() on AddressString
+                OnPropertyChanged(nameof(StatePostal)); // because StatePostal is dependent on State, we need to manually call OnPropertyChanged() on StatePostal
             }
         }
 
@@ -192,11 +130,8 @@ namespace Customers
             get { return _PhotoUrl; }
             set
             {
-                if (_PhotoUrl == value)
-                    return;
-                _PhotoUrl = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(SmallPhotoUrl));
+                SetProperty(ref _PhotoUrl, value);
+                OnPropertyChanged(nameof(SmallPhotoUrl)); // because SmallPhotoUrl is dependent on PhotoUrl, we need to manually call OnPropertyChanged() on SmallPhotoUrl
             }
         }
 
@@ -227,18 +162,6 @@ namespace Customers
         public string DisplayLastNameFirst
         {
             get { return String.Format("{0}, {1}", LastName, FirstName); }
-        }
-
-        [JsonIgnore]
-        public string CityState
-        {
-            get { return City + ", " + State; }
-        }
-
-        [JsonIgnore]
-        public string CityStatePostal
-        {
-            get { return CityState + " " + PostalCode; }
         }
 
         [JsonIgnore]

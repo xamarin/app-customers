@@ -17,6 +17,53 @@ namespace Customers
             _RootFolder = FileSystem.Current.LocalStorage;
         }
 
+        #region IDataSource implementation
+
+        public async Task SaveItem(Customer item)
+        {
+            if (_Customers.Any(c => c.Id == item.Id))
+            {
+                int i = _Customers.IndexOf(item);
+                _Customers[i] = item;
+            }
+            else
+            {
+                _Customers.Add(item);
+            }
+
+            await WriteFile(_RootFolder, _FileName, JsonConvert.SerializeObject(_Customers));
+        }
+
+        public async Task DeleteItem(string id)
+        {
+            _Customers.RemoveAll(c => c.Id == id);
+
+            await WriteFile(_RootFolder, _FileName, JsonConvert.SerializeObject(_Customers));
+        }
+
+        public async Task<Customer> GetItem(string id)
+        {
+            return _Customers.SingleOrDefault(x => x.Id == id);
+        }
+
+        public async Task<ICollection<Customer>> GetItems(int start = 0, int count = 100, string query = "")
+        {
+            if (!_IsInitialized)
+                await Initialize();
+
+            await Latency;
+
+            var items = CustomerDataSourceHelper
+                .BasicQueryFilter(_Customers, query)
+                .Skip(start)
+                .Take(count)
+                .ToList();
+
+            return items;
+        }
+
+        #endregion
+
         const string _FileName = "customers.json";
 
         IFolder _RootFolder;
@@ -121,53 +168,6 @@ namespace Customers
                 return Task.Delay(ms);
             }
         }
-
-        #region IDataSource implementation
-
-        public async Task SaveItem(Customer item)
-        {
-            if (_Customers.Any(c => c.Id == item.Id))
-            {
-                int i = _Customers.IndexOf(item);
-                _Customers[i] = item;
-            }
-            else
-            {
-                _Customers.Add(item);
-            }
-
-            await WriteFile(_RootFolder, _FileName, JsonConvert.SerializeObject(_Customers));
-        }
-
-        public async Task DeleteItem(string id)
-        {
-            _Customers.RemoveAll(c => c.Id == id);
-
-            await WriteFile(_RootFolder, _FileName, JsonConvert.SerializeObject(_Customers));
-        }
-
-        public async Task<Customer> GetItem(string id)
-        {
-            return _Customers.SingleOrDefault(x => x.Id == id);
-        }
-
-        public async Task<ICollection<Customer>> GetItems(int start = 0, int count = 100, string query = "")
-        {
-            if (!_IsInitialized)
-                await Initialize();
-
-            await Latency;
-
-            var items = CustomerDataSourceHelper
-                .BasicQueryFilter(_Customers, query)
-                .Skip(start)
-                .Take(count)
-                .ToList();
-
-            return items;
-        }
-
-        #endregion
     }
 
     public static class CustomerDataSourceHelper

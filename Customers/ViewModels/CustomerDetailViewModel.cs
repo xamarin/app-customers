@@ -169,20 +169,23 @@ namespace Customers
 
         void ExecuteDeleteCustomerCommand()
         {
-            MessagingService.Current.SendMessage<MessagingServiceQuestionWithAction>(MessageKeys.DisplayQuestion, new MessagingServiceQuestionWithAction()
+            MessagingService.Current.SendMessage<MessagingServiceQuestion>(MessageKeys.DisplayQuestion, new MessagingServiceQuestion()
                 {
                     Title = String.Format("Delete {0}?", Customer.DisplayName),
                     Question = null,
                     Positive = "Delete",
                     Negative = "Cancel",
-                    SuccessAction = new Action(() =>
+                    OnCompleted = new Action<bool>(result =>
                         {
-                            // send a message that we want the given customer to be deleted
-                            MessagingService.Current.SendMessage<Customer>(MessageKeys.DeleteCustomer, this.Customer);
+                            if (result)
+                            {
+                                // send a message that we want the given customer to be deleted
+                                MessagingService.Current.SendMessage<Customer>(MessageKeys.DeleteCustomer, this.Customer);
 
-                            MessagingService.Current.SendMessage(MessageKeys.PopAsync);
+                                MessagingService.Current.SendMessage(MessageKeys.PopAsync);
 
-                            MessagingService.Current.SendMessage(MessageKeys.PopAsync);
+                                MessagingService.Current.SendMessage(MessageKeys.PopAsync);
+                            }
                         })
                 });
         }
@@ -313,7 +316,7 @@ namespace Customers
 
             var pin = new Pin() { Position = position };
 
-            CrossExternalMaps.Current.NavigateTo(pin.Label, pin.Position.Latitude, pin.Position.Longitude, NavigationType.Driving);
+            await CrossExternalMaps.Current.NavigateTo(pin.Label, pin.Position.Latitude, pin.Position.Longitude, NavigationType.Driving);
         }
 
         public void SetupMap()

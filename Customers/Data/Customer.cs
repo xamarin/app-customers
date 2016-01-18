@@ -76,17 +76,6 @@ namespace Customers
                 OnPropertyChanged(nameof(AddressString)); // because AddressString is dependent on Street, we need to manually call OnPropertyChanged() on AddressString
             }
         }
-            
-        string _Unit;
-        public string Unit
-        {
-            get { return _Unit; }
-            set
-            {
-                SetProperty(ref _Unit, value);
-                OnPropertyChanged(nameof(AddressString)); // because AddressString is dependent on Unit, we need to manually call OnPropertyChanged() on AddressString
-            }
-        }
 
         string _City;
         public string City
@@ -143,9 +132,8 @@ namespace Customers
             get
             {
                 return string.Format(
-                    "{0}{1} {2} {3} {4}",
+                    "{0} {1} {2} {3}",
                     Street,
-                    !string.IsNullOrWhiteSpace(Unit) ? " " + Unit + "," : !string.IsNullOrWhiteSpace(Street) ? "," : "",
                     !string.IsNullOrWhiteSpace(City) ? City + "," : "",
                     State,
                     PostalCode);

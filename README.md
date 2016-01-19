@@ -1,4 +1,3 @@
-<img src="https://www.bitrise.io/app/7210fb7015b6b6b6.svg?token=y5K_xmtDXKdEzUprMqbWTg" />
 # app-customers
 <img src="https://raw.githubusercontent.com/xamarin/app-customers/master/Screenshots/Customers_Screens.jpg" />
 
@@ -14,6 +13,9 @@ Includes integrations such as:
 * making calls
 * sending text messages
 * email composition
+
+##Build Status
+<img src="https://www.bitrise.io/app/7210fb7015b6b6b6.svg?token=y5K_xmtDXKdEzUprMqbWTg" />
 
 ## Google Maps API key (Android)
 For Android, you'll need to obtain a Google Maps API key:

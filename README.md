@@ -1,4 +1,5 @@
 # app-customers
+Build status: <img src="https://www.bitrise.io/app/7210fb7015b6b6b6.svg?token=y5K_xmtDXKdEzUprMqbWTg" />
 <img src="https://raw.githubusercontent.com/xamarin/app-customers/master/Screenshots/Customers_Screens.jpg" />
 
 A simple Xamarin.Forms demo app with three primary screens:

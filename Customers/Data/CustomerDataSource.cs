@@ -68,7 +68,7 @@ namespace Customers
 
         IFolder _RootFolder;
 
-        TimeSpan _LatencyTimeSpan = TimeSpan.FromSeconds(1.5);
+        readonly TimeSpan _LatencyTimeSpan = TimeSpan.FromSeconds(1.5);
 
         bool _IsInitialized;
 

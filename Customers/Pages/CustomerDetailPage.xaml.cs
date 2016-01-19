@@ -27,6 +27,9 @@ namespace Customers
             MessagingService.Current.Subscribe<CustomerDetailViewModel>(MessageKeys.NavigateToEditPage, async (service, viewmodel) =>
                 await Navigation.PushAsync(new CustomerEditPage() { BindingContext = ViewModel }));
 
+            // Typically, is preferable to call into the viewmodel for OnAppearing() logic to be performed,
+            // but we're not doing that in this case because we need to interact with the Xamarin.Forms.Map property on this Page.
+            // In the future, the Map type and it's properties may get more binding support, so that the map setup can be omitted from code-behind.
             await SetupMap();
         }
 
@@ -38,6 +41,10 @@ namespace Customers
             MessagingService.Current.Unsubscribe<CustomerDetailViewModel>(MessageKeys.NavigateToEditPage);
         }
 
+        /// <summary>
+        /// Sets up the map.
+        /// </summary>
+        /// <returns>A Task.</returns>
         async Task SetupMap()
         {
             if (ViewModel.HasAddress)

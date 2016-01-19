@@ -1,5 +1,8 @@
 ﻿#!/bin/bash
 
+# Usage:
+# sh googleMapsApiKeyUtil.sh -m Properties/AndroidManifest.xml -p GOOGLE_MAPS_API_KEY -g [you actual Google Maps API key]
+
 manifestPath=
 placeholderKey=
 googleMapsKey=

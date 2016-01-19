@@ -14,12 +14,12 @@ namespace Customers.Droid
 	{
 		protected override void OnCreate (Bundle bundle)
 		{
+			// this line is essential to wiring up the toolbar styles defined in ~/Resources/layout/toolbar.axml
+			FormsAppCompatActivity.ToolbarResource = Resource.Layout.toolbar;
 			Xamarin.Insights.Initialize (XamarinInsights.ApiKey, this);
 			base.OnCreate (bundle);
 			Forms.Init (this, bundle);
 			FormsMaps.Init (this, bundle);
-			// this line is essential to wiring up the toolbar styles defined in ~/Resources/layout/toolbar.axml
-			FormsAppCompatActivity.ToolbarResource = Resource.Layout.toolbar;
 			ImageCircleRenderer.Init ();
 			LoadApplication (new App ());
 		}

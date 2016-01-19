@@ -45,7 +45,7 @@
     <CodesignProvision>cee08c73-84bf-4108-9b67-c4442313ed4d</CodesignProvision>
     <MtouchI18n>other</MtouchI18n>
     <BuildIpa>true</BuildIpa>
-    <IpaPackageName>CustomersiOS</IpaPackageName>
+    <IpaPackageName>Customers</IpaPackageName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -78,7 +78,7 @@
     <MtouchUseSGen>true</MtouchUseSGen>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchProfiling>true</MtouchProfiling>
-    <IpaPackageName>CustomersiOS</IpaPackageName>
+    <IpaPackageName>Customers</IpaPackageName>
     <MtouchI18n>other</MtouchI18n>
     <BuildIpa>true</BuildIpa>
   </PropertyGroup>

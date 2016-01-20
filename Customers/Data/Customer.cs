@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using MvvmHelpers;
 
-namespace Customers 
+namespace Customers
 {
     public class Customer : ObservableObject
     {

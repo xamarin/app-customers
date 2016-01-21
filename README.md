@@ -15,7 +15,7 @@ Includes integrations such as:
 * email composition
 
 ##Build Status
-<img src="https://www.bitrise.io/app/7210fb7015b6b6b6.svg?token=y5K_xmtDXKdEzUprMqbWTg" />
+[![Build Status](https://www.bitrise.io/app/7210fb7015b6b6b6.svg?token=y5K_xmtDXKdEzUprMqbWTg&branch=master)](https://www.bitrise.io/app/7210fb7015b6b6b6)
 
 ## Google Maps API key (Android)
 For Android, you'll need to obtain a Google Maps API key:

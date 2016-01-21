@@ -5,7 +5,7 @@ using FormsToolkit;
 using Xamarin;
 using System;
 
-namespace Customers 
+namespace Customers
 {
     public partial class CustomerDetailPage : ContentPage
     {

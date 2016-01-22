@@ -20,7 +20,7 @@ app:
     XAMARIN_PROJECT_FILENAME_ANDROID: Customers.Droid.csproj
   - opts:
       is_expand: true
-    XAMARIN_CONFIG_IOS: Debug
+    XAMARIN_CONFIG_IOS: Release
   - opts:
       is_expand: true
     XAMARIN_CONFIG_ANDROID: Release
@@ -35,10 +35,22 @@ app:
     XAMARIN_OUTPUT_FILENAME_IOS: Customers.ipa
   - opts:
       is_expand: true
+    XAMARIN_OUTPUT_DSYM_UNZIPPED_FILENAME: CustomersiOS.app.dSYM
+  - opts:
+      is_expand: true
+    XAMARIN_OUTPUT_DSYM_ZIPPED_FILENAME: CustomersiOS.app.dSYM.zip
+  - opts:
+      is_expand: true
     XAMARIN_OUTPUT_FILENAME_ANDROID_UNSIGNED: com.xamarin.customers.apk
   - opts:
       is_expand: true
     XAMARIN_OUTPUT_FILENAME_ANDROID_SIGNED: signed-com.xamarin.customers.apk
+  - opts:
+      is_expand: true
+    XAMARIN_IOS_INFOPLIST_FILEPATH: "$XAMARIN_PROJECT_FOLDERPATH_IOS/Info.plist"
+  - opts:
+      is_expand: true
+    XAMARIN_ANDROID_MANIFESTXML_FILEPATH: "$XAMARIN_PROJECT_FOLDERPATH_ANDROID/Properties/AndroidManifest.xml"
   - opts:
       is_expand: true
     XAMARIN_PROJECT_FILEPATH_IOS: "$XAMARIN_PROJECT_FOLDERPATH_IOS/$XAMARIN_PROJECT_FILENAME_IOS"
@@ -47,13 +59,28 @@ app:
     XAMARIN_PROJECT_FILEPATH_ANDROID: "$XAMARIN_PROJECT_FOLDERPATH_ANDROID/$XAMARIN_PROJECT_FILENAME_ANDROID"
   - opts:
       is_expand: true
-    XAMARIN_IPA_PATH: "$XAMARIN_PROJECT_FOLDERPATH_IOS/bin/$XAMARIN_PLATFORM_IOS/$XAMARIN_CONFIG_IOS/$XAMARIN_OUTPUT_FILENAME_IOS"
+    XAMARIN_OUTPUT_FOLDERPATH_IOS: "$XAMARIN_PROJECT_FOLDERPATH_IOS/bin/$XAMARIN_PLATFORM_IOS/$XAMARIN_CONFIG_IOS"
   - opts:
       is_expand: true
-    XAMARIN_APK_SOURCE_PATH: "$XAMARIN_PROJECT_FOLDERPATH_ANDROID/bin/$XAMARIN_PLATFORM_ANDROID/$XAMARIN_CONFIG_ANDROID/$XAMARIN_OUTPUT_FILENAME_ANDROID_UNSIGNED"
+    XAMARIN_OUTPUT_FOLDERPATH_ANDROID: "$XAMARIN_PROJECT_FOLDERPATH_ANDROID/bin/$XAMARIN_PLATFORM_ANDROID/$XAMARIN_CONFIG_ANDROID"
   - opts:
       is_expand: true
-    XAMARIN_APK_DESTINATION_PATH: "$XAMARIN_PROJECT_FOLDERPATH_ANDROID/bin/$XAMARIN_PLATFORM_ANDROID/$XAMARIN_CONFIG_ANDROID/$XAMARIN_OUTPUT_FILENAME_ANDROID_SIGNED"
+    XAMARIN_PROJECT_FILEPATH_ANDROID: "$XAMARIN_PROJECT_FOLDERPATH_ANDROID/$XAMARIN_PROJECT_FILENAME_ANDROID"
+  - opts:
+      is_expand: true
+    XAMARIN_IPA_PATH: "$XAMARIN_OUTPUT_FOLDERPATH_IOS/$XAMARIN_OUTPUT_FILENAME_IOS"
+  - opts:
+      is_expand: true
+    XAMARIN_APK_SOURCE_PATH: "$XAMARIN_OUTPUT_FOLDERPATH_ANDROID/$XAMARIN_OUTPUT_FILENAME_ANDROID_UNSIGNED"
+  - opts:
+      is_expand: true
+    XAMARIN_APK_DESTINATION_PATH: "$XAMARIN_OUTPUT_FOLDERPATH_ANDROID/$XAMARIN_OUTPUT_FILENAME_ANDROID_SIGNED"
+  - opts:
+      is_expand: true
+    XAMARIN_OUTPUT_DSYM_UNZIPPED_FILEPATH: "$XAMARIN_OUTPUT_FOLDERPATH_IOS/$XAMARIN_OUTPUT_DSYM_UNZIPPED_FILENAME"
+  - opts:
+      is_expand: true
+    XAMARIN_OUTPUT_DSYM_ZIPPED_FILEPATH: "$XAMARIN_OUTPUT_FOLDERPATH_IOS/$XAMARIN_OUTPUT_DSYM_ZIPPED_FILENAME"
 trigger_map:
 - pattern: master
   is_pull_request_allowed: false
@@ -67,13 +94,19 @@ workflows:
         - ssh_key_save_path: "$HOME/.ssh/steplib_ssh_step_id_rsa"
     - git-clone: {}
     - certificate-and-profile-installer: {}
-    - xamarin-user-management: {}
+    - xamarin-user-management:
+        title: Xamarin Login
     - nuget-restore:
+        title: Restore NuGets
         inputs:
         - xamarin_solution: "$XAMARIN_SOLUTION_FILEPATH"
     - xamarin-components-restore:
+        title: Restore Components
         inputs:
         - xamarin_solution: "$XAMARIN_SOLUTION_FILEPATH"
+    - set-xcode-build-number@1.0.1:
+        inputs:
+        - plist_path: "$XAMARIN_IOS_INFOPLIST_FILEPATH"
     - xamarin-builder@0.9.2:
         title: Build iOS
         inputs:
@@ -81,12 +114,24 @@ workflows:
         - xamarin_configuration: "$XAMARIN_CONFIG_IOS"
         - xamarin_platform: "$XAMARIN_PLATFORM_IOS"
         - is_clean_build: 'true'
-    - script:
+    - script@1.1.0:
+        title: Upload DSYMs to Xamarin Insights
         inputs:
         - content: |-
             #!/bin/bash
 
-            sed -i '' "s/GOOGLE_MAPS_API_KEY/$GOOGLE_MAPS_API_KEY/g" "Droid/Properties/AndroidManifest.xml"
+            zip -r $XAMARIN_OUTPUT_DSYM_ZIPPED_FILEPATH $XAMARIN_OUTPUT_DSYM_UNZIPPED_FILEPATH
+
+            curl -F "dsym=@$XAMARIN_OUTPUT_DSYM_ZIPPED_FILEPATH;type=application/zip" https://xaapi.xamarin.com/api/dsym?apikey=$XAMARIN_INSIGHTS_KEY
+          opts:
+            is_expand: true
+    - script:
+        title: Inject Google Maps API key
+        inputs:
+        - content: |-
+            #!/bin/bash
+
+            sed -i '' "s/GOOGLE_MAPS_API_KEY/$GOOGLE_MAPS_API_KEY/g" "$XAMARIN_PROJECT_FOLDERPATH_ANDROID/Properties/AndroidManifest.xml"
           opts:
             is_expand: true
         - working_dir: ''
@@ -104,6 +149,7 @@ workflows:
         inputs:
         - apk_path: "$XAMARIN_APK_SOURCE_PATH"
     - xamarin-user-management:
+        title: Xamarin Logout
         inputs:
         - xamarin_action: logout
     - deploy-to-bitrise-io:

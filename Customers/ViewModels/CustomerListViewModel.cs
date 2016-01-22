@@ -9,7 +9,7 @@ using FormsToolkit;
 
 namespace Customers
 {
-    public class CustomerListViewModel : BaseViewModel
+    public class CustomerListViewModel : NavigationAwareBaseViewModel
     {
         public CustomerListViewModel()
         {
@@ -98,14 +98,13 @@ namespace Customers
             get
             {
                 return _NewCustomerCommand ??
-                (_NewCustomerCommand = new Command(ExecuteNewCustomerCommand));
+                    (_NewCustomerCommand = new Command(async () => await ExecuteNewCustomerCommand()));
             }
         }
 
-        void ExecuteNewCustomerCommand()
+        async Task ExecuteNewCustomerCommand()
         {
-            // send message to navigate to edit page (new customer)
-            MessagingService.Current.SendMessage(MessageKeys.NavigateToEditPage, new CustomerDetailViewModel(new Customer()));
+            await PushAsync(new CustomerEditPage() { BindingContext = new CustomerDetailViewModel(new Customer()) });
         }
 
         Command _DialNumberCommand;

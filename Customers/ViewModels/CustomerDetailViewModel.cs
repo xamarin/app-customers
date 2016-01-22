@@ -11,7 +11,7 @@ using FormsToolkit;
 
 namespace Customers
 {
-    public class CustomerDetailViewModel : BaseViewModel
+    public class CustomerDetailViewModel : NavigationAwareBaseViewModel
     {
         bool _IsNewCustomer;
 
@@ -78,11 +78,11 @@ namespace Customers
             get
             {
                 return _SaveCustomerCommand ??
-                (_SaveCustomerCommand = new Command(ExecuteSaveCustomerCommand));
+                    (_SaveCustomerCommand = new Command(() => ExecuteSaveCustomerCommand()));
             }
         }
 
-        void ExecuteSaveCustomerCommand()
+        async Task ExecuteSaveCustomerCommand()
         {
             if (String.IsNullOrWhiteSpace(Customer.LastName) || String.IsNullOrWhiteSpace(Customer.FirstName))
             {
@@ -104,11 +104,9 @@ namespace Customers
             }
             else
             {
-                // send a message that we want the given customer to be saved
                 MessagingService.Current.SendMessage<Customer>(MessageKeys.SaveCustomer, this.Customer);
 
-                // perform a pop in order to navigate back to the customer list
-                MessagingService.Current.SendMessage(MessageKeys.PopAsync);
+                await PopAsync();
             }
         }
 
@@ -143,13 +141,13 @@ namespace Customers
             get
             {
                 return _EditCustomerCommand ??
-                (_EditCustomerCommand = new Command(ExecuteEditCustomerCommand));
+                    (_EditCustomerCommand = new Command(async () => await ExecuteEditCustomerCommand()));
             }
         }
 
-        void ExecuteEditCustomerCommand()
+        async Task ExecuteEditCustomerCommand()
         {
-            MessagingService.Current.SendMessage<CustomerDetailViewModel>(MessageKeys.NavigateToEditPage, this);
+            await PushAsync(new CustomerEditPage() { BindingContext = this });
         }
 
 
@@ -163,7 +161,7 @@ namespace Customers
             get
             {
                 return _DeleteCustomerCommand ??
-                (_DeleteCustomerCommand = new Command(ExecuteDeleteCustomerCommand));
+                    (_DeleteCustomerCommand = new Command(ExecuteDeleteCustomerCommand));
             }
         }
 
@@ -175,16 +173,16 @@ namespace Customers
                     Question = null,
                     Positive = "Delete",
                     Negative = "Cancel",
-                    OnCompleted = new Action<bool>(result =>
+                    OnCompleted = new Action<bool>(async result =>
                         {
                             if (result)
                             {
+                                await PopAsync(false);
+
+                                await PopAsync();
+
                                 // send a message that we want the given customer to be deleted
                                 MessagingService.Current.SendMessage<Customer>(MessageKeys.DeleteCustomer, this.Customer);
-
-                                MessagingService.Current.SendMessage(MessageKeys.PopAsync);
-
-                                MessagingService.Current.SendMessage(MessageKeys.PopAsync);
                             }
                         })
                 });

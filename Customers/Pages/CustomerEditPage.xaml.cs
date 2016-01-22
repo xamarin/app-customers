@@ -18,6 +18,11 @@ namespace Customers
                 Title = null; // because iOS already displays the previous page's title with the back button, we don't want to display it twice.
         }
 
+        /// <summary>
+        /// Ensures the state field has 2 characters at most.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The PropertyChangedEventArgs</param>
         void StateEntry_PropertyChanged (object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Text")
@@ -35,6 +40,11 @@ namespace Customers
             }
         }
 
+        /// <summary>
+        /// Ensures the zip code field has 5 characters at most.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The PropertyChangedEventArgs</param>
         void PostalCode_PropertyChanged (object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Text")

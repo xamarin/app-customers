@@ -11,7 +11,7 @@ namespace Customers
 
             SubscribeToDisplayAlertMessages();
 
-            SubscribeToNavigationMessages();
+//            SubscribeToNavigationMessages();
 
             if (Device.OS == TargetPlatform.iOS)
                 navPage.BarTextColor = Color.White;
@@ -53,15 +53,15 @@ namespace Customers
         /// <summary>
         /// Subscribes to messages for navigation.
         /// </summary>
-        static void SubscribeToNavigationMessages()
-        {
-            MessagingService.Current.Subscribe(MessageKeys.PopAsync, async (service) =>
-                {
-                    var task = Application.Current?.MainPage?.Navigation?.PopAsync();
-                    if (task != null)
-                        await task;
-                });
-        }
+//        static void SubscribeToNavigationMessages()
+//        {
+//            MessagingService.Current.Subscribe(MessageKeys.PopAsync, async (service) =>
+//                {
+//                    var task = Application.Current?.MainPage?.Navigation?.PopAsync();
+//                    if (task != null)
+//                        await task;
+//                });
+//        }
     }
 }
 

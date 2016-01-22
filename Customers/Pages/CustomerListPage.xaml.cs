@@ -22,18 +22,26 @@ namespace Customers
             fab.Clicked = AndroidAddButtonClicked;
         }
 
+        /// <summary>
+        /// The action to take when a list item is tapped.
+        /// </summary>
+        /// <param name="sender"> The sender.</param>
+        /// <param name="e">The ItemTappedEventArgs</param>
         void ItemTapped (object sender, ItemTappedEventArgs e)
         {
-            // send message to navigate to detail page
-            MessagingService.Current.SendMessage<CustomerDetailViewModel>(MessageKeys.NavigateToDetailPage, new CustomerDetailViewModel((Customer)e.Item));
+            Navigation.PushAsync(new CustomerDetailPage() { BindingContext = new CustomerDetailViewModel((Customer)e.Item) });
 
             ((ListView)sender).SelectedItem = null;
         }
 
+        /// <summary>
+        /// The action to take when the + button is clicked on Android.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The EventArgs</param>
         void AndroidAddButtonClicked (object sender, EventArgs e)
         {
-            // send message to navigate to edit page (new customer)
-            MessagingService.Current.SendMessage(MessageKeys.NavigateToEditPage);
+            Navigation.PushAsync(new CustomerEditPage() { BindingContext = new CustomerDetailViewModel(new Customer()) });
         }
 
         protected override void OnAppearing()
@@ -41,32 +49,6 @@ namespace Customers
             base.OnAppearing();
 
             ViewModel.LoadCustomersCommand.Execute(null);
-
-            // subscribe to messages to navigate to detail page
-            MessagingService.Current.Subscribe<CustomerDetailViewModel>(MessageKeys.NavigateToDetailPage, async (service, viewmodel) =>
-                await Navigation.PushAsync(new CustomerDetailPage() { BindingContext = viewmodel }));
-
-            // subscribe to messages to navigate to edit page (new customer)
-            MessagingService.Current.Subscribe(MessageKeys.NavigateToEditPage, async (service) =>
-                await Navigation.PushAsync(new CustomerEditPage() { BindingContext = new CustomerDetailViewModel(new Customer()) }));
-
-            // subscribe to messages to navigate to edit page (existing customer)
-            MessagingService.Current.Subscribe<CustomerDetailViewModel>(MessageKeys.NavigateToEditPage, async (service, viewmodel) =>
-                await Navigation.PushAsync(new CustomerEditPage() { BindingContext = viewmodel }));
-        }
-
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-
-            // unsubscribe from messages to navigate to detail page
-            MessagingService.Current.Unsubscribe<CustomerDetailViewModel>(MessageKeys.NavigateToDetailPage);
-
-            // unsubscribe from messages to navigate to edit page (new customer)
-            MessagingService.Current.Unsubscribe(MessageKeys.NavigateToEditPage);
-
-            // unsubscribe from messages to navigate to edit page (existing customer)
-            MessagingService.Current.Unsubscribe<CustomerDetailViewModel>(MessageKeys.NavigateToEditPage);
         }
     }
 }

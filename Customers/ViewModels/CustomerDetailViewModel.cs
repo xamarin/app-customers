@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Xamarin.Forms;
-using Xamarin.Forms.Maps;
 using System.Linq;
-using Plugin.Messaging;
+using System.Threading.Tasks;
+using FormsToolkit;
 using Plugin.ExternalMaps;
 using Plugin.ExternalMaps.Abstractions;
-using MvvmHelpers;
-using FormsToolkit;
+using Plugin.Messaging;
+using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 
 namespace Customers
 {
-    public class CustomerDetailViewModel : NavigationAwareBaseViewModel
+    public class CustomerDetailViewModel : BaseNavigationViewModel
     {
         bool _IsNewCustomer;
 

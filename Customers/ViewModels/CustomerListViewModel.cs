@@ -1,15 +1,14 @@
-﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Xamarin.Forms;
-using System;
-using Plugin.Messaging;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
-using MvvmHelpers;
+using System.Threading.Tasks;
 using FormsToolkit;
+using Plugin.Messaging;
+using Xamarin.Forms;
 
 namespace Customers
 {
-    public class CustomerListViewModel : NavigationAwareBaseViewModel
+    public class CustomerListViewModel : BaseNavigationViewModel
     {
         public CustomerListViewModel()
         {

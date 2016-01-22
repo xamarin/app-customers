@@ -1,5 +1,4 @@
-﻿using System;
-using MvvmHelpers;
+﻿using MvvmHelpers;
 using Xamarin.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -9,11 +8,11 @@ namespace Customers
     /// <summary>
     /// Implements the INavigation interface on top of BaseViewModel.
     /// </summary>
-    public abstract class NavigationAwareBaseViewModel : BaseViewModel, INavigation
+    public abstract class BaseNavigationViewModel : BaseViewModel, INavigation
     {
         readonly INavigation _Navigation;
 
-        protected NavigationAwareBaseViewModel()
+        protected BaseNavigationViewModel()
         {
             // If Navigation is available on Application.Current.MainPage, get it.
             _Navigation = Application.Current?.MainPage?.Navigation;

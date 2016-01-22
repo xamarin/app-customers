@@ -43,7 +43,7 @@ namespace Customers
 
         public async Task<Customer> GetItem(string id)
         {
-            return _Customers.SingleOrDefault(x => x.Id == id);
+            return await Task.FromResult(_Customers.SingleOrDefault(x => x.Id == id));
         }
 
         public async Task<ICollection<Customer>> GetItems(int start = 0, int count = 100, string query = "")

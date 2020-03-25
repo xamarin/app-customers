@@ -1,3 +1,9 @@
+# Sample Deprecated & Replaced
+
+This sample has officially been deprecated and replaced with the "[My Contacts](https://github.com/xamarin/app-contacts)" sample application that showcases Xamarin.Forms and an ASP.NET Core backend.
+
+This repo is left here for historical purposes, back links, and is read-only.
+
 # app-customers
 <img src="https://raw.githubusercontent.com/xamarin/app-customers/master/Screenshots/Customers_Screens.jpg" />
 
